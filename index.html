@@ -1,11 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IFM025921</title>
+    <title>Cours Développement Mobile iOS</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>IFM025921</h1>
+    <header>
+        <h1>Développement d'application mobile pour iOS</h1>
+    </header>
+    <div class="container">
+        <nav class="module-list">
+            <ul>
+                <li><a href="#" onclick="showModule(1)">Module 01</a></li>
+                <li><a href="#" onclick="showModule(2)">Module 02</a></li>
+            </ul>
+        </nav>
+        
+        <main class="module-content">
+            <!-- Module 1 -->
+            <section id="module-1" class="module-section">
+                <div class="module-header">
+                    <div class="module-number">01</div>
+                    <h2>Module 1</h2>
+                </div>
+                <h3>Notes de cours</h3>
+                <ul>
+                    <li>
+                        <a href="notes-de-cours/note_m1.html">Introduction aux structures de données</a>
+                    </li>
+                </ul>
+                <h3>Laboratoires</h3>
+                <ul>
+                    <li>
+                        <a href="exercices/ex_m1.html">Installation des logiciels</a>
+                    </li>
+                </ul>
+            </section>
+        </main>
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>
