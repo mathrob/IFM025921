@@ -13,10 +13,21 @@ header {
   text-align: center;
 }
 
+.footer {
+  background-color: #35424a;
+  color: white;
+  text-align: center;
+  padding: 2px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
 .container {
   width: 80%;
   margin: auto;
   overflow: hidden;
+  padding-bottom: 100px;
 }
 
 .module-section {
