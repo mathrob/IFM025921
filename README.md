@@ -1,5 +1,3 @@
-# README.md
-
 # Cours de Développement d'Applications Mobiles iOS
 
 Bienvenue dans le cours de développement d'applications mobiles pour iOS. Ce projet contient tous les matériaux nécessaires pour suivre le cours, y compris des notes de cours et des exercices pratiques.
@@ -16,7 +14,7 @@ Bienvenue dans le cours de développement d'applications mobiles pour iOS. Ce pr
 
 ## Instructions pour les Étudiants
 
-1. Consultez **index.html** pour accéder aux modules et aux ressources.
+1. Consultez [ce lien](https://mathrob.github.io/IFM025921/) pour accéder aux modules et aux ressources.
 2. Téléchargez les exercices et complétez-les pour renforcer vos compétences.
 3. Référez-vous aux notes de cours pour une compréhension approfondie des concepts.
 
