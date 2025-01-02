@@ -1,40 +1,1071 @@
 <!DOCTYPE html>
 <html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>IFM025921</title>
-    <link rel="stylesheet" href="../style.css" />
-  </head>
-  <body>
-    <header>
-      <h1 style="color: white">Module 2 - Note de cours</h1>
-    </header>
-    <div class="container">
-      <a href="../index.html" class="back-link">← Retour au module principal</a>
 
-      <section id="module-1" class="module-section">
-        <h2>Titre du Module 2</h2>
-        <p>
-          Ce module couvre les concepts avancés du développement d'applications
-          iOS, y compris la gestion de la mémoire, l'architecture MVC, et
-          l'utilisation des frameworks iOS. Les étudiants apprendront à créer
-          des applications plus complexes et à gérer les interactions
-          utilisateur de manière efficace.
-        </p>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IFM025921</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" />
+  <link rel="stylesheet" href="../style.css" />
+</head>
 
-        <h2>Objectifs d'apprentissage</h2>
-        <ul>
-          <li>Comprendre l'architecture MVC dans le développement iOS.</li>
-          <li>
-            Gérer la mémoire et optimiser les performances des applications.
-          </li>
-          <li>
-            Utiliser des frameworks iOS pour enrichir les fonctionnalités des
-            applications.
-          </li>
-        </ul>
-      </section>
-    </div>
-  </body>
+<body>
+  <header>
+    <h1 style="color: white">Module 2 - Note de cours</h1>
+  </header>
+  <div class="container">
+    <a href="../index.html" class="back-link">← Retour au module principal</a>
+
+    <section id="module-2-playground" class="module-section">
+      <h1 id="playground">Playground</h1>
+      <p>
+        Le playground est un outil de développement intégré à Xcode qui permet
+        d'écrire du code Swift et de voir les résultats en temps réel. Il est
+        très utile pour tester des algorithmes ou des idées rapidement.
+      </p>
+
+      <h2>Créer un projet playground</h2>
+      <p>
+        Pour ouvrir un playground, il suffit de cliquer sur "File" dans la
+        barre de menu, puis "New" et enfin "Playground". Il est possible de
+        choisir entre un playground vide ou un playground interactif.
+      </p>
+
+      <h3>Vidéo démonstrative</h3>
+      <video style="width: 65%; height: auto" controls>
+        <source src="../videos/playground.mov" />
+      </video>
+
+      <h3>Utilisation du playground</h3>
+      <video style="width: 65%; height: auto" controls>
+        <source src="../videos/playground-usage.mov" />
+      </video>
+    </section>
+
+    <section id="module-2" class="module-section">
+      <h1 id="swift-1">Introduction au langage Swift</h1>
+
+      <a href="https://docs.swift.org/swift-book/documentation/the-swift-programming-language" target="_blank" style="color: red; font-size: large; text-decoration: underline;" >Référence officielle</a>
+
+      <p>
+        Swift est un langage de programmation moderne, développé par Apple et
+        présenté en 2014 lors de la WWDC (Worldwide Developers Conference).
+        Créé pour remplacer Objective-C, il est puissant, facile à apprendre
+        et inspiré de nombreux langages comme Python, Ruby et Rust. Swift est
+        open source, ce qui le rend accessible à tous, et constitue la base
+        idéale pour développer des applications dans l’écosystème Apple.
+      </p>
+
+      <h2 id="commentaires">Les commentaires</h2>
+      <p>Swift propose trois types de commentaires :</p>
+      <ul>
+        <li>
+          <code>//</code> : Un commentaire classique pour des annotations
+          simples (aucun support de formatage).
+        </li>
+        <li>
+          <code>//:</code> : Un commentaire supportant le markup, souvent
+          utilisé pour documenter le code dans Xcode.
+        </li>
+        <li>
+          <code>/* */</code> : Un commentaire multiligne pour des annotations
+          plus longues.
+        </li>
+      </ul>
+
+      <pre><code class="language-swift">
+    // Ceci est un commentaire classique
+    
+    //: Ceci est un commentaire Swift supportant le markup
+    
+    /* Ceci 
+            est un 
+                    commentaire 
+                                multiligne */
+  </code></pre>
+
+      <h2 id="variables-constantes-types">Variables, constantes et types</h2>
+      <p>
+        Swift peut inférer automatiquement le type des variables et des
+        constantes, mais il est également possible de l’indiquer explicitement
+        :
+      </p>
+      <ul>
+        <li>
+          <strong>Inférence :</strong> Le type est déterminé en fonction de la
+          valeur attribuée.
+        </li>
+        <li>
+          <strong>Annotation :</strong> Le type est défini explicitement avec
+          "<strong>:</strong>"
+        </li>
+      </ul>
+      <pre><code class="language-swift">
+    // Variable
+    var nombre = 10       // Inférence : Swift déduit que 'nombre' est un Int
+    var autreNombre: Int  // Annotation explicite
+    autreNombre = 20
+
+    // Constante
+    let constante = 30    // Inférence : Swift déduit que 'constante' est un Int
+    let autreConstante: Int = 40 // Annotation explicite
+
+    autreConstante = 50 // Erreur : impossible de modifier une constante
+  </code></pre>
+
+      <p>
+        Vous pouvez déclarer plusieurs constantes ou variables sur une seule
+        ligne, en les séparant par des virgules
+      </p>
+      <pre><code class="language-swift">
+    var x = 0.0, y = 0.0, z = 0.0
+    let x = 0.0, y = 0.0, z = 0.0
+  </code></pre>
+
+      <p>
+        Les noms de variables et de constantes peuvent contenir presque tous
+        les caractères, y compris les caractères Unicode :
+      </p>
+      <pre><code class="language-swift">
+    let π = 3.14159
+    let 你好 = "你好世界"
+    let 🐶🐮 = "dogcow"
+    let bébé = "👶🏽"
+  </code></pre>
+
+      <h2 id="interpolation">L'interpolation</h2>
+      <p>
+        L'interpolation permet d'insérer des variables ou des constantes dans
+        une chaîne de caractères :
+      </p>
+      <pre><code class="language-swift">
+    let prenom = "Mathieu"
+    let age = 20
+    var message = "Bonjour, je m'appelle \(prenom) et j'ai \(age) ans."
+    print(message) // Affiche : Bonjour, je m'appelle Mathieu et j'ai 20 ans.
+  </code></pre>
+
+      <h2 id="types-donnees">Les types de données</h2>
+      <p>Swift propose plusieurs types de données :</p>
+
+      <pre><code class="language-swift">
+    var numero: Int     // Nombres entiers, positifs ou négatifs
+    var uNumero: UInt   // Nombres entiers, positifs uniquement
+    var booleen: Bool   // True ou false
+    var chaine: String  // Texte
+    var double: Double  // Nombres décimaux avec une précision double
+    var flottant: Float // Nombres décimaux avec une précision simple
+  </code></pre>
+
+      <h2 id="structures-conditionnelles">Structures conditionnelles</h2>
+      <p>
+        Swift supporte des structures conditionnelles comme
+        <strong>if</strong>, <strong>else if</strong>, <strong>else</strong>,
+        <strong>switch</strong>, et l'opérateur ternaire :
+      </p>
+      <pre><code class="language-swift">
+    var x = 7
+
+    // Condition avec if
+    if x > 5 {
+        print("x est supérieur à 5")
+    }
+
+    // Condition avec if et else
+    if x > 10 {
+        print("x est supérieur à 10")
+    } else {
+        print("x est inférieur ou égal à 10")
+    }
+
+    // Condition avec if, else if et else
+    if x == 0 {
+        print("x est nul")
+    } else if x < 0 {
+        print("x est négatif")
+    } else {
+        print("x est positif")
+    }
+
+    // 
+
+    // Opérateur ternaire
+    var message = x > 0 ? "Positif" : "Négatif"
+
+    // Switch case
+    switch x {
+    case 1, 2, 3:
+        print("Petit nombre")
+    case 7:
+        print("Nombre premier")
+    default:
+        print("Autre")
+    }
+  </code></pre>
+
+      <h2 id="boucles">Les boucles</h2>
+      <p>Swift propose plusieurs types de boucles :</p>
+      <pre><code class="language-swift">
+    // Boucle for
+    for i in 0...5 {
+        print(i) // Affiche les nombres de 0 à 5
+    }
+    
+    for i in 0..<5 {
+        print(i) // Affiche les nombres de 0 à 4
+    }
+
+    // le underscore indique au compilateur de ne pas se preoccuper de l'affectation
+    for _ in 0..<5 {
+        print("Hello") // Affiche "Hello" 5 fois
+    }
+
+    // Boucle while
+    var i = 0
+    while i < 5 {
+        print(i)
+        i += 1
+    }
+
+    // Boucle repeat-while (do-while)
+    var j = 0
+    repeat {
+        print(j)
+        j += 1
+    } while j < 5
+  </code></pre>
+
+      <h2 id="fonctions">Les fonctions</h2>
+
+      <h3>Fonction sans paramètre</h3>
+      <p>
+        Une fonction sans paramètre est une fonction qui ne prend rien en
+        entrée pour effectuer son travail. Elle exécute toujours la même
+        action, sans avoir besoin d’informations supplémentaires.
+      </p>
+      <pre><code class="language-swift">
+    func direBonjour() {
+        print("Bonjour !")
+    }
+
+    direBonjour() // Affiche : Bonjour !
+    </code></pre>
+
+      <h3>Fonction avec paramètres</h3>
+      <p>
+        Une fonction avec paramètres est une fonction qui prend des
+        informations en entrée pour effectuer son travail. Ces informations,
+        qu’on appelle des paramètres, permettent à la fonction de s’adapter et
+        de produire un résultat différent selon ce qu’on lui donne.
+      </p>
+      <pre><code class="language-swift">
+    func direBonjour(prenom: String) {
+        print("Bonjour, \(prenom) !")
+    }
+
+    direBonjour(prenom: "Mathieu") // Affiche : Bonjour, Mathieu !
+  </code></pre>
+
+      <h3>Fonction avec valeur de retour</h3>
+      <p>
+        Une fonction avec valeur de retour est une fonction qui, après avoir
+        exécuté son travail, renvoie un résultat que l’on peut utiliser
+        ailleurs dans le programme. Ce résultat est appelé la valeur de
+        retour.
+      </p>
+      <pre><code class="language-swift">
+    func additionner(a: Int, b: Int) -> Int {
+        return a + b
+    }
+
+    let resultat = additionner(a: 5, b: 3)
+    print(resultat) // Affiche : 8
+</code></pre>
+
+      <h3>Fonction avec paramètres variadiques</h3>
+      <p>
+        Une fonction avec paramètre variadique est une fonction qui peut
+        accepter un nombre illimité de valeurs pour un paramètre donné. Cela
+        signifie qu’on peut passer autant d’arguments qu’on le souhaite pour
+        ce paramètre, sans devoir en fixer un nombre exact à l’avance.
+      </p>
+      <pre><code class="language-swift">
+    func moyenne(_ nombres: Double...) -> Double {
+        var total = 0.0
+        for nombre in nombres {
+            total += nombre
+        }
+        return total / Double(nombres.count)
+    }
+
+    let moy = moyenne(1, 2, 3, 4, 5)
+    print(moy) // Affiche : 3.0
+  </code></pre>
+
+      <h3>Fonction avec paramètres par défaut</h3>
+      <p>
+        Une fonction avec un paramètre par défaut est une fonction où certains
+        paramètres ont une valeur déjà définie si l’utilisateur n’en fournit
+        pas lorsqu’il appelle la fonction. Ces valeurs par défaut sont
+        utilisées automatiquement.
+      </p>
+      <pre><code class="language-swift">
+    func direBonjour(prenom: String = "Inconnu") {
+        print("Bonjour, \(prenom) !")
+    }
+
+    direBonjour() // Affiche : Bonjour, Inconnu !
+    direBonjour(prenom: "Mathieu") // Affiche : Bonjour, Mathieu !
+</code></pre>
+
+      <h3>Fonction avec paramètres inout</h3>
+      <p>
+        Une fonction avec paramètres inout est une fonction qui peut modifier
+        directement la valeur d’une variable passée en argument. Cela
+        fonctionne en permettant à la fonction d’accéder à l’intérieur de la
+        variable au lieu d’utiliser une copie de sa valeur.
+      </p>
+      <pre><code class="language-swift">
+    func doubler(_ nombre: inout Int) {
+        nombre *= 2
+    }
+
+    var x = 10
+    doubler(&x)
+    print(x) // Affiche : 20
+</code></pre>
+
+      <h3>Fonction avec valeur de retour optionnelle</h3>
+      <p>
+        Une fonction avec valeur de retour optionnelle est une fonction qui
+        peut soit :
+        <li>Renvoyer une valeur (comme une fonction classique),</li>
+        <li>
+          Soit renvoyer rien (ou plutôt <strong>nil</strong>, qui signifie
+          “pas de valeur”).
+        </li>
+      </p>
+      <p>
+        Cela permet de gérer des cas où une fonction peut échouer ou ne pas
+        avoir de réponse valable.
+      </p>
+      <pre><code class="language-swift">
+    func diviser(_ a: Double, par b: Double) -> Double? {
+        if b == 0 {
+            return nil
+        }
+        return a / b
+    }
+
+    if let resultat = diviser(10, par: 2) {
+        print(resultat) // Affiche : 5.0
+    } else {
+        print("Division par zéro !")
+    }
+</code></pre>
+
+      <h3>Fonction avec étiquettes d'argument personnalisées</h3>
+      <p>
+        Les étiquettes d'argument permettent de nommer les paramètres d'une
+        fonction de manière plus explicite lors de son appel. Elles rendent le
+        code plus lisible et plus compréhensible.
+      </p>
+      <pre><code class="language-swift">
+    func direBonjour(a prenom: String) {
+        print("Bonjour, \(prenom) !")
+    }
+
+    direBonjour(a: "Mathieu") // Affiche : Bonjour, Mathieu !
+</code></pre>
+
+      <h3>Fonction avec étiquettes d'argument omises</h3>
+      <p>
+        Il est possible d'omettre les étiquettes d'argument pour rendre le
+        code plus concis. Cela est utile lorsque le nom du paramètre est déjà
+        explicite.
+      </p>
+      <pre><code class="language-swift">
+    func direBonjour(_ prenom: String) {
+        print("Bonjour, \(prenom) !")
+    }
+
+    direBonjour("Mathieu") // Affiche : Bonjour, Mathieu !
+</code></pre>
+
+      <h3>Fonction avec étiquettes d'argument pour les paramètres suivants</h3>
+      <p>
+        Il est possible de définir des étiquettes d'argument pour les
+        paramètres suivants, afin de rendre le code plus lisible et plus
+        compréhensible.
+      </p>
+      <pre><code class="language-swift">
+    func additionner(_ a: Int, et b: Int) -> Int {
+        return a + b
+    }
+
+    let somme = additionner(5, et: 3)
+    print(somme) // Affiche : 8
+</code></pre>
+
+      <h3>
+        Fonction avec étiquettes d'argument pour les paramètres précédents
+      </h3>
+      <p>
+        Il est possible de définir des étiquettes d'argument pour les
+        paramètres précédents, afin de rendre le code plus lisible et plus
+        compréhensible.
+      </p>
+      <pre><code class="language-swift">
+    func additionner(a: Int, _ b: Int) -> Int {
+        return a + b
+    }
+
+    let total = additionner(a: 5, 3)
+    print(total) // Affiche : 8
+</code></pre>
+
+      <h2 id="structures">Les structures de données</h2>
+      <p>
+        Les structures de données en Swift sont des outils essentiels pour
+        organiser, stocker et manipuler des informations dans un programme.
+        Swift propose plusieurs structures intégrées, puissantes et flexibles,
+        qui couvrent la majorité des besoins de développement.
+      </p>
+
+      <h3>Les tableaux</h3>
+      <p>
+        Un tableau est une liste ordonnée d’éléments de même type. Il permet
+        de stocker plusieurs valeurs dans une seule variable.
+      </p>
+
+      <pre><code class="language-swift">
+  var fruits: [String] = ["Pomme", "Banane", "Orange"]
+  fruits.append("Mangue") // Ajouter un élément
+  fruits.remove(at: 1) // Supprimer l'élément à l'index 1
+  print(fruits) // Affiche : ["Pomme", "Orange", "Mangue"]
+  </code></pre>
+
+      <ul>
+        <li><strong>Caractéristiques :</strong>
+          <ol>
+            <li><strong>Indexé</strong> : Chaque élément a une position spécifique (commençant à 0).</li>
+            <li><strong>Mutable ou immuable</strong> : Dépend si le tableau est déclaré avec <strong>var</strong>
+              (modifiable) ou <strong>let</strong> (non modifiable).</li>
+            <li><strong>Peut être vide</strong> : var fruits: [String] = []</li>
+          </ol>
+      </ul>
+
+      <h3>Les dictionnaires</h3>
+      <p>
+        Un dictionnaire est une collection non ordonnée de paires clé-valeur. Chaque clé est unique et associée à une
+        valeur.
+      </p>
+      <pre><code class="language-swift">
+  var capitales: [String: String] = ["France": "Paris", "Italie": "Rome"]
+  capitales["Espagne"] = "Madrid" // Ajouter une clé et une valeur
+  capitales["Italie"] = "Venise" // Modifier une valeur
+  capitales.removeValue(forKey: "France") // Supprimer une clé
+  print(capitales) // Affiche : ["Italie": "Venise", "Espagne": "Madrid"]
+      </code></pre>
+
+      <ul>
+        <li><strong>Caractéristiques :</strong>
+          <ol>
+            <li>Rapide pour rechercher des valeurs à partir de clés.</li>
+            <li>Les clés peuvent être de n’importe quel type conforme à Hashable (exemple : String, Int, etc.).</li>
+          </ol>
+      </ul>
+
+      <h3>Les ensembles (set)</h3>
+      <p>Un ensemble est une collection non ordonnée d’éléments uniques.</p>
+      <pre><code class="language-swift">
+  var couleurs: Set< String > = ["Rouge", "Vert", "Bleu"]
+  couleurs.insert("Jaune") // Ajouter un élément
+  couleurs.remove("Vert") // Supprimer un élément
+  print(couleurs) // Affiche : ["Rouge", "Bleu", "Jaune"]
+        </code></pre>
+
+      <ul>
+        <li><strong>Caractéristiques :</strong>
+          <ol>
+            <li>Les éléments sont uniques et non ordonnés.</li>
+            <li>Utilisé pour des opérations comme union, intersection ou soustraction.</li>
+          </ol>
+      </ul>
+
+      <strong>Exemple d'opérations sur les ensembles</strong>
+      <pre><code class="language-swift">
+  let a: Set = [1, 2, 3]
+  let b: Set = [3, 4, 5]
+  print(a.union(b)) // [1, 2, 3, 4, 5] (union)
+  print(a.intersection(b)) // [3] (intersection)
+  print(a.subtracting(b)) // [1, 2] (soustraction)
+          </code></pre>
+
+      <h3 id="tuples">Les tuples</h3>
+      <p>
+        Un tuple regroupe plusieurs valeurs dans une seule entité. Contrairement aux tableaux, les éléments d’un tuple
+        peuvent être de types différents.
+      </p>
+      <pre><code class="language-swift">
+  let personne = ("Alice", 25, true)
+  print(personne.0) // Affiche : Alice
+  print(personne.1) // Affiche : 25
+  print(personne.2) // Affiche : true
+          </code></pre>
+      <ul>
+        <li><strong>Caractéristiques :</strong>
+          <ol>
+            <li>Peut contenir des valeurs de types différents.</li>
+            <li>Les éléments d’un tuple peuvent être nommés ou non.</li>
+          </ol>
+      </ul>
+
+      <strong>Exemple de tuple nommé</strong>
+      <pre><code class="language-swift">
+  let personne = (nom: "Alice", age: 25, estEtudiante: true)
+  print(personne.nom) // Affiche : Alice
+            </code></pre>
+
+      <h2 id="struct">Structures personnalisées (struct)</h2>
+      <p>
+        Les structures (struct) sont l’un des types fondamentaux en Swift. Elles permettent de définir des types
+        personnalisés qui peuvent contenir des propriétés (variables et constantes) et des méthodes (fonctions). Les
+        struct sont largement utilisées pour organiser des données et ajouter des fonctionnalités dans un programme
+        Swift.
+      </p>
+      <ul>
+        <li><strong>Caractéristiques des struct:</strong>
+          <ol>
+            <li>Valeur (Value Type) :
+              <ul>
+                <li>
+                  En Swift, les structures sont des types valeur, ce qui signifie que lorsque vous les assignez à une
+                  variable ou les passez à une fonction, elles sont copiées au lieu d’être référencées.
+                </li>
+              </ul>
+            </li>
+            <li>
+              Propriétés :
+              <ul>
+                <li>
+                  Une structure peut avoir des propriétés stockées (valeurs) et des propriétés calculées.
+                </li>
+              </ul>
+            </li>
+            <li>
+              Méthodes :
+              <ul>
+                <li>
+                  Les structures peuvent inclure des fonctions qui agissent sur leurs propriétés. </li>
+              </ul>
+            </li>
+            <li>
+              Initialisation :
+              <ul>
+                <li>
+                  Swift génère automatiquement un initialiseur par défaut pour les structures si toutes les propriétés
+                  sont initialisées.
+                </li>
+              </ul>
+            </li>
+            <li>
+              Conformité aux Protocoles :
+              <ul>
+                <li>
+                  Les struct peuvent adopter des protocoles pour garantir qu’elles respectent certaines exigences.
+                </li>
+            </li>
+          </ol>
+      </ul>
+
+      <h3>Déclaration et Utilisation des struct</h3>
+      <pre><code class="language-swift">
+  struct Point {
+    var x: Double
+    var y: Double
+    
+    // Méthode pour déplacer le point
+    mutating func move(dx: Double, dy: Double) {
+        x += dx
+        y += dy
+    }
+  }
+  
+  // Création d'une instance
+  var point = Point(x: 3.0, y: 4.0)
+  
+  // Affichage des coordonnées
+  print("Point initial : (\(point.x), \(point.y))")
+  
+  // Déplacement du point
+  point.move(dx: 2.0, dy: -1.0)
+  print("Point après déplacement : (\(point.x), \(point.y))")
+      </code></pre>
+
+      <strong>Exemple de struct avec initialisateur personnalisé</strong>
+      <pre><code class="language-swift">
+  struct Rectangle {
+    var width: Double
+    var height: Double
+    
+    // Initialiseur personnalisé
+    init(width: Double, height: Double) {
+        self.width = width
+        self.height = height
+    }
+    
+    // Calcul de l'aire (propriété calculée)
+    var area: Double {
+        return width * height
+    }
+  }
+  
+  let rectangle = Rectangle(width: 5.0, height: 10.0)
+  print("Aire du rectangle : \(rectangle.area)")
+      </code></pre>
+
+      <strong>Immutabilité et propriétés mutables</strong>
+      <p>Une instance d’une structure définie comme <strong>let</strong> est immutable. Les propriétés ne peuvent pas
+        être modifiées.</p>
+      <pre><code class="language-swift">
+  let immutablePoint = Point(x: 1.0, y: 2.0)
+  immutablePoint.x = 5.0 // Erreur : Impossible de modifier une propriété d'une instance constante
+      </code></pre>
+
+      <strong>Structures imbriquées</strong>
+      <p>Une structure peut contenir d’autres structures. Par exemple, un rectangle peut être défini à partir de deux
+        points.</p>
+      <pre><code class="language-swift">
+  struct Point {
+    var x: Double
+    var y: Double
+  }
+  
+  struct Rectangle {
+      var topLeft: Point
+      var bottomRight: Point
+      
+      var area: Double {
+          let width = bottomRight.x - topLeft.x
+          let height = bottomRight.y - topLeft.y
+          return width * height
+      }
+  }
+      
+  let rect = Rectangle(topLeft: Point(x: 0, y: 10), bottomRight: Point(x: 5, y: 0))
+  print("Aire du rectangle : \(rect.area)")
+    </code></pre>
+
+      <h2 id="classes">Les classes</h2>
+      <p>
+        Les classes sont des types de données de base en Swift, qui permettent de créer des objets avec des propriétés
+        et
+        des méthodes. Les classes sont des types référence, ce qui signifie que lorsqu’on les assigne à une variable ou
+        qu’on les passe à une fonction, elles sont partagées plutôt que copiées.
+      </p>
+      <ul>
+        <li><strong>Caractéristiques des class:</strong>
+          <ol>
+            <li>Type Référence :
+              <ul>
+                <li>
+                  Les instances de classe sont partagées. Les modifications faites à une référence affectent toutes les
+                  autres références pointant vers la même instance.
+                </li>
+              </ul>
+            </li>
+            <li>
+              Héritage :
+              <ul>
+                <li>
+                  Les classes peuvent hériter les propriétés, méthodes et initialiseurs d’une autre classe.
+                </li>
+              </ul>
+            </li>
+            <li>
+              Déinitialiseurs :
+              <ul>
+                <li>
+                  Les classes peuvent inclure un deinit pour effectuer un nettoyage avant que l’instance ne soit
+                  libérée.</li>
+              </ul>
+            </li>
+            <li>
+              Mutabilité :
+              <ul>
+                <li>
+                  Les propriétés peuvent être modifiées même si l’instance est déclarée avec let, sauf si elles sont
+                  marquées comme constantes (let dans la classe).
+                </li>
+              </ul>
+            </li>
+            <li>
+              Conformité aux protocoles :
+              <ul>
+                <li>
+                  Comme les struct, les classes peuvent adopter des protocoles pour garantir qu’elles respectent
+                  certaines exigences.
+                </li>
+            </li>
+          </ol>
+      </ul>
+
+      <pre><code class="language-swift">
+  class Personne {
+    var prenom: String
+    var age: Int
+
+    init(prenom: String, age: Int) {
+        self.prenom = prenom
+        self.age = age
+    }
+
+    func direBonjour() {
+        print("Bonjour, je m'appelle \(prenom) et j'ai \(age) ans.")
+    }
+  }
+  
+  let personne = Personne(prenom: "Mathieu", age: 20)
+  personne.direBonjour() // Affiche : Bonjour, je m'appelle Mathieu et j'ai 20 ans.
+
+  personne.age = 27
+  personne.direBonjour() // Affiche : Bonjour, je m'appelle Mathieu et j'ai 27 ans.
+    </code></pre>
+
+      <h3>Héritage</h3>
+      <p>
+        Une classe peut hériter d’une autre classe pour partager et étendre ses fonctionnalités.
+      </p>
+      <pre><code class="language-swift">
+  class Animal {
+    var name: String
+    
+    init(name: String) {
+        self.name = name
+    }
+    
+    func makeSound() {
+        print("\(name) fait un bruit.")
+    }
+  }
+  
+  // Classe dérivée
+  class Dog: Animal {
+    func bark() {
+        print("\(name) aboie.")
+    }
+    
+    // Redéfinition d'une méthode
+    override func makeSound() {
+        print("\(name) fait : Woof!")
+    }
+  }
+    
+  let dog = Dog(name: "Rex")
+  dog.makeSound()
+  dog.bark()
+    </code></pre>
+
+      <h3>Déinitialiseur</h3>
+      <p>
+        Un déinitialiseur (deinit) est une méthode spéciale utilisée dans les classes pour exécuter du code juste avant
+        que l’instance de la classe ne soit détruite. Cela permet de libérer des ressources, fermer des connexions ou
+        effectuer un nettoyage nécessaire.
+      </p>
+      <ul>
+        <li>
+          <strong>Caractéristiques principales :</strong>
+          <ol>
+            <li>
+              <strong>Uniquement pour les classes</strong> : Les déinitialiseurs ne sont pas disponibles pour les struct
+              ou enum.
+            </li>
+            <li>
+              <strong>Automatique</strong> : Le déinitialiseur est appelé automatiquement par le système de gestion de
+              mémoire de Swift (ARC) lorsque l’instance n’est plus référencée.
+            </li>
+            <li>
+              <strong>Sans paramètres ni retour</strong> : Vous ne pouvez pas passer d’arguments ou retourner une valeur
+              depuis un déinitialiseur.
+            </li>
+          </ol>
+        </li>
+      </ul>
+
+      <strong>Syntaxe d’un déinitialiseur</strong>
+      <pre><code class="language-swift">
+  deinit {
+    // Code de nettoyage
+  }
+    </code></pre>
+
+      <strong>Exemple : gestion de ressources</strong>
+      <pre><code class="language-swift">
+  class FileHandler {
+    var fileName: String
+    
+    init(fileName: String) {
+        self.fileName = fileName
+        print("Fichier \(fileName) ouvert.")
+    }
+    
+    deinit {
+        print("Fichier \(fileName) fermé.")
+    }
+  }
+  
+  // Bloc pour limiter la portée
+  do {
+    let handler = FileHandler(fileName: "document.txt")
+    // À la fin du bloc, handler est libéré et le déinitialiseur est appelé
+  }
+    </code></pre>
+
+      <p>
+        Le déinitialiseur est utile pour gérer la mémoire et nettoyer les ressources associées à une instance
+        lorsqu’elle est détruite. Swift s’en charge automatiquement via l’ARC, mais le déinitialiseur permet d’ajouter
+        un traitement spécifique si nécessaire.
+      </p>
+
+      <h2 id="optionnels">Les optionnels</h2>
+      <p>
+        Les optionnels sont une fonctionnalité clé de Swift qui permet de gérer les valeurs manquantes ou inexistantes.
+        Ils sont utilisés pour indiquer qu’une variable ou une constante peut soit contenir une valeur, soit être nulle
+        (nil). Cela offre une manière sûre et explicite de travailler avec des données qui peuvent être absentes, tout
+        en évitant les erreurs courantes liées à des pointeurs nuls.
+      </p>
+      <ul>
+        <li>
+          <strong>Avantages des optionnels</strong>
+          <ol>
+            <li><strong>Sécurité</strong> : Les optionnels évitent les plantages liés à l’utilisation de variables nil.</li>
+            <li><strong>Lisibilité</strong> : Le code est explicite quant à la possibilité d’absence de valeur.</li>
+            <li><strong>Contrôle</strong> : Vous avez plusieurs mécanismes pour gérer et valider les valeurs manquantes.</li>
+          </ol>
+        </li>
+      </ul>
+
+      <h3>Déclaration d’un optionnel</h3>
+      <p>
+        Un optionnel est déclaré en ajoutant un point d’interrogation (?) après le type de la variable.
+      </p>
+      <pre><code class="language-swift">
+  var name: String?  // Peut contenir une valeur de type String ou être nil
+  name = "Alice"     // Contient une valeur
+  name = nil         // Maintenant, aucune valeur n'est présente
+    </code></pre>
+
+      <h3>Accès aux valeurs optionnelles</h3>
+      <p>
+        Pour utiliser la valeur d’un optionnel, il faut d’abord la “déballer” (unwrap). Il existe plusieurs façons de le faire.
+      </p>
+
+      <strong>Déballage forcé (!)</strong>
+      <p>
+        Utilisé lorsque vous êtes certain que l’optionnel contient une valeur. Cependant, si l’optionnel est nil, cela provoque une erreur à l’exécution.
+      </p>
+      <pre><code class="language-swift">
+  var name: String? = "Alice"
+  print(name!)  // Affiche "Alice"
+      </code></pre>
+
+      <p>⚠️ <strong style="color: red; font-size: larger;">Attention</strong> : Évitez d’utiliser le déballage forcé à moins d’être sûr à <strong>100%</strong> que l’optionnel n’est pas nil.</p>
+
+      <strong>Déballage conditionnel (if let)</strong>
+      <p>
+        Permet de vérifier si une valeur est présente et de la déballer de manière sécurisée.
+      </p>
+      <pre><code class="language-swift">
+  var name: String? = "Alice"
+  if let unwrappedName = name {
+      print("Bonjour, \(unwrappedName)!")
+  } else {
+      print("Aucun nom fourni.")
+  }
+      </code></pre>
+
+      <strong>Déballage avec guard let</strong>
+      <p>
+        Utilisé pour forcer une valeur non-nil dans une fonction ou un bloc de code et quitter si la condition échoue.
+      </p>
+      <pre><code class="language-swift">
+  func greetUser(name: String?) {
+    guard let unwrappedName = name else {
+        print("Nom manquant.")
+        return
+    }
+    print("Bonjour, \(unwrappedName)!")
+  }    
+      </code></pre>
+
+      <strong>Opérateur de coalescence (??)</strong>
+      <p>
+        Permet de fournir une valeur par défaut si l’optionnel est nil.
+      </p>
+      <pre><code class="language-swift">
+  let username: String? = nil
+  let displayName = username ?? "Utilisateur inconnu"
+  print(displayName)  // Affiche "Utilisateur inconnu"
+      </code></pre>
+
+      <strong>Optionnels implicites</strong>
+      <p>
+        Si une valeur optionnelle est garantie d’avoir une valeur après son initialisation, on peut utiliser un optionnel implicite en ajoutant un point d’exclamation (!) après le type.
+      </p>
+      <pre><code class="language-swift">
+  var email: String! = "test@example.com"
+  print(email)  // Pas besoin de déballage explicite
+      </code></pre>
+
+      <p>⚠️ <strong style="color: red; font-size: larger;">Attention</strong> : Cependant, l’utilisation des optionnels implicites doit être limitée, car elle comporte les mêmes risques que le déballage forcé.</p>
+      
+      <h2 id="protocole">Protocole</h2>
+      <p>
+        En Swift, un protocole est un modèle (ou contrat) qui définit un ensemble de propriétés, méthodes, ou autres exigences qu’une classe, une structure, ou une énumération doit implémenter. Les protocoles permettent d’organiser le code, de garantir un comportement uniforme entre les types, et de faciliter l’utilisation du polymorphisme.
+      </p>
+
+      <h3>Déclaration d’un protocole</h3>
+      <p>
+        Un protocole est déclaré à l’aide du mot-clé <strong>protocol</strong>, suivi de son nom et de ses exigences.
+      </p>
+      <pre><code class="language-swift">
+  protocol Vehicule {
+    var nombreDeRoues: Int { get }
+    func demarrer()
+  }
+      </code></pre>
+      <ul>
+        <li>
+          <strong>Propriétés</strong>
+          <ol>
+            <li>
+              var nombreDeRoues: Int { get } signifie que tout type qui adopte ce protocole doit avoir une propriété nommée nombreDeRoues en lecture seule.
+            </li>
+            <li>
+              Si tu utilises { get set }, la propriété doit être lisible et modifiable.
+            </li>
+          </ol>
+        </li>
+        <li>
+          <strong>Méthodes</strong>
+          <ol>
+            <li>
+              func demarrer() indique que tout type adoptant ce protocole doit implémenter une méthode nommée demarrer.
+            </li>
+          </ol>
+        </li>
+      </ul>
+
+      <h3>Adoption d’un protocole</h3>
+      <p>
+        Une classe, une structure ou une énumération peut adopter un protocole en implémentant ses exigences.
+      </p>
+      <pre><code class="language-swift">
+  struct Voiture: Vehicule {
+    var nombreDeRoues: Int = 4
+    
+    func demarrer() {
+        print("La voiture démarre !")
+    }
+  }
+  
+  let maVoiture = Voiture()
+  maVoiture.demarrer() // Affiche : La voiture démarre !
+      </code></pre>
+
+      <h3>Protocoles avec propriétés mutables</h3>
+      <p>
+        Si une propriété doit être modifiable par une classe ou une structure adoptant le protocole, ajoute { get set }.
+      </p>
+      <pre><code class="language-swift">
+  protocol Personne {
+    var nom: String { get set }
+    func sePresenter()
+  }
+  
+  struct Etudiant: Personne {
+    var nom: String
+    
+    func sePresenter() {
+        print("Bonjour, je m'appelle \(nom) !")
+    }
+  }
+
+  var etudiant = Etudiant(nom: "Alice")
+  etudiant.sePresenter() // Affiche : Bonjour, je m'appelle Alice !
+      </code></pre>
+
+      <h3>Utiliser des protocoles comme types</h3>
+      <p>
+        Un protocole peut être utilisé comme type pour une variable, une constante ou un paramètre.
+      </p>
+      <pre><code class="language-swift">
+  func afficherDetails(vehicule: Vehicule) {
+    print("Nombre de roues : \(vehicule.nombreDeRoues)")
+    vehicule.demarrer()
+  }
+  
+  let voiture = Voiture()
+  afficherDetails(vehicule: voiture)
+  // Affiche :
+  // Nombre de roues : 4
+  // La voiture démarre !
+      </code></pre>
+
+      <h3>Héritage de protocoles</h3>
+      <p>
+        Un protocole peut hériter d’un ou plusieurs autres protocoles
+      </p>
+      <pre><code class="language-swift">
+  protocol VehiculeMotorise: Vehicule {
+    var typeDeCarburant: String { get }
+  }
+  
+  struct Moto: VehiculeMotorise {
+    var nombreDeRoues: Int = 2
+    var typeDeCarburant: String = "Essence"
+    
+    func demarrer() {
+        print("La moto démarre !")
+    }
+  }
+  
+  let moto = Moto()
+  print(moto.typeDeCarburant) // Affiche : Essence
+      </code></pre>
+    </section>
+  </div>
+  <footer class="footer">
+    <p>Développé par <a href="https://github.com/mathrob" style="color: white; text-decoration: underline;">Mathieu Robson</a> &copy; <span id="current-year"></span></p>
+    <script>
+      document.getElementById("current-year").textContent =
+        new Date().getFullYear();
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script>
+      hljs.highlightAll();
+    </script>
+  </footer>
+  <div class="back-to-top" id="back-to-top">↑</div>
+  <script>
+    const backToTopButton = document.getElementById("back-to-top");
+
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 300) {
+        backToTopButton.style.display = "block";
+      } else {
+        backToTopButton.style.display = "none";
+      }
+    });
+
+    backToTopButton.addEventListener("click", () => {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    });
+  </script>
+</body>
+
 </html>

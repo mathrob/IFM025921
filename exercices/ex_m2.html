@@ -1,36 +1,408 @@
 <!DOCTYPE html>
 <html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>IFM025921</title>
-    <link rel="stylesheet" href="../style.css" />
-  </head>
-  <body>
-    <header>
-      <h1 style="color: white">Module 2 - Exercice</h1>
-    </header>
-    <div class="container">
-      <a href="../index.html" class="back-link">← Retour au module principal</a>
 
-      <section id="module-1" class="module-section">
-        <h2>Tâches à compléter</h2>
-        <ol>
-          <li>
-            <strong>Exercice 1:</strong> Créez une application simple qui
-            affiche "Bonjour, monde!" sur l'écran.
-          </li>
-          <li>
-            <strong>Exercice 2:</strong> Implémentez une fonctionnalité de
-            calculatrice de base (addition, soustraction, multiplication,
-            division).
-          </li>
-          <li>
-            <strong>Exercice 3:</strong> Développez une application qui utilise
-            une API pour afficher des données en temps réel.
-          </li>
-        </ol>
-      </section>
-    </div>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IFM025921</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" />
+  <link rel="stylesheet" href="../style.css" />
+</head>
+
+<body>
+  <header>
+    <h1 style="color: white">Module 2 - Exercice</h1>
+  </header>
+  <div class="container">
+    <a href="../index.html" class="back-link">← Retour au module principal</a>
+
+    <section id="module-2-intro" class="module-section">
+      <h1>Exercice pratique en Swift</h1>
+      <p>
+        Se familiariser avec les éléments de base du langage Swift
+      </p>
+    </section>
+
+    <section id="module-2-exercice1" class="module-section">
+
+      <h2 id="todolist">Exercice 1 : Gestion d’une liste de tâches (To-Do List)</h2>
+      <strong>Objectif</strong>
+      <p>
+        Créer une classe en Swift pour gérer une liste de tâches avec des fonctionnalités avancées telles que l’ajout,
+        la suppression, le marquage comme terminé, et l’affichage détaillé des tâches.
+      </p>
+      <h3>Instructions</h3>
+      <ol>
+        <li>
+          <strong>Définir la classe</strong>
+          <ul>
+            <li>
+              - Créez une classe ToDoList avec les propriétés suivantes :
+              <ul>
+                <li style="margin-left: 20px;">
+                  <strong>tasks</strong>: un tableau de dictionnaires contenant les informations suivantes pour chaque
+                  tâche :
+                  <ol>
+                    <li><strong>description (String)</strong> : la description de la tâche.</li>
+                    <li><strong>isCompleted (Bool)</strong> : le statut de la tâche (terminée ou non).</li>
+                  </ol>
+                </li>
+              </ul>
+            </li>
+            <li>
+              - Ajoutez un initialiseur pour initialiser une liste de tâches vide.
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>Ajouter des méthodes</strong>
+          <ul>
+            <li>- Méthode <strong>addTask</strong> : prend une chaîne de caractères en paramètre et ajoute une tâche non
+              terminée à la liste.</li>
+            <li>- Méthode <strong>completeTask</strong> : prend l’index d’une tâche en paramètre, vérifie si l’index est
+              valide, et marque la tâche comme terminée.</li>
+            <li>- Méthode <strong>removeTask</strong> : prend l’index d’une tâche en paramètre, vérifie si l’index est
+              valide, et supprime la tâche de la liste.</li>
+            <li>- Méthode <strong>showTasks</strong> : affiche toutes les tâches avec leur description et leur statut
+              (“✅” pour terminé, “⏳” pour en cours). Numérotez chaque tâche pour plus de clarté.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Améliorer l’expérience utilisateur</strong>
+          <ul>
+            <li>- Ajoutez une méthode <strong>clearCompletedTasks</strong> pour supprimer toutes les tâches marquées
+              comme terminées.</li>
+            <li>- Implémentez une méthode <strong>searchTask</strong> qui permet de rechercher une tâche par mot-clé et
+              affiche les résultats correspondants.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Tester la classe</strong>
+          <ul>
+            <li>- Créez une instance de ToDoList.</li>
+            <li>- Ajoutez au moins 5 tâches avec des descriptions variées.</li>
+            <li>- Marquez certaines tâches comme terminées.</li>
+            <li>- Affichez la liste des tâches.</li>
+            <li>- Supprimez une tâche par son index.</li>
+            <li>- Recherchez une tâche spécifique par mot-clé.</li>
+            <li>- Affichez la liste mise à jour après avoir supprimé les tâches terminées.</li>
+          </ul>
+        </li>
+      </ol>
+
+      <h3>Exemple de résultat attendu</h3>
+
+      <strong>Liste initiale :</strong>
+      <pre><code class="language-shell">
+  1. ⏳ Faire les courses
+  2. ⏳ Réviser pour l'examen
+  3. ⏳ Appeler le médecin
+  4. ⏳ Nettoyer la maison
+  5. ⏳ Lire un chapitre de livre
+      </code></pre>
+
+      <strong>Après avoir marqué “Faire les courses” et “Appeler le médecin” comme terminées :</strong>
+      <pre><code class="language-shell">
+  1. ✅ Faire les courses
+  2. ⏳ Réviser pour l'examen
+  3. ✅ Appeler le médecin
+  4. ⏳ Nettoyer la maison
+  5. ⏳ Lire un chapitre de livre
+      </code></pre>
+
+      <strong>Après avoir recherché “maison” :</strong>
+      <pre><code class="language-shell">
+  Résultats de la recherche :
+  4. ⏳ Nettoyer la maison
+      </code></pre>
+
+      <strong>Après avoir supprimé les tâches terminées :</strong>
+      <pre><code class="language-shell">
+  1. ⏳ Réviser pour l'examen
+  2. ⏳ Nettoyer la maison
+  3. ⏳ Lire un chapitre de livre
+      </code></pre>
+
+      <br />
+
+      <a href="./download/module2/Module2_Exercice1.playground.zip" class="download-link"
+        style="font-size: x-large; text-decoration: underline;" download>
+        Télécharger la solution
+      </a>
+    </section>
+
+    <section id="module-2-exercice2" class="module-section">
+      <h2 id="convertion-unites">Exercice 2 : Application de Conversion d’Unités</h2>
+      <strong>Objectif</strong>
+      <p>
+        Créer une application de conversion d’unités en utilisant des fonctions en Swift, avec une interface utilisateur
+        interactive via la console.
+      </p>
+
+      <h3>Instructions</h3>
+      <ol>
+        <li>
+          <strong>Définir les fonctions de conversion</strong>
+          <ul>
+            <li>
+              - <strong>convertToCelsius</strong> : Prend une température en Fahrenheit et renvoie son équivalent en
+              Celsius.
+            </li>
+            <li>
+              - <strong>convertToFeet</strong> : Prend une longueur en mètres et renvoie son équivalent en pieds.
+            </li>
+            <li>
+              - <strong>convertToKilograms</strong> : Prend un poids en livres et renvoie son équivalent en kilogrammes.
+            </li>
+          </ul>
+        </li>
+        </ul>
+        </li>
+        <li>
+          <strong>Créer un menu interactif</strong>
+          <ul>
+            <li>
+              - Implémentez un menu permettant à l’utilisateur de choisir la conversion souhaitée :
+              <ol>
+                <li style="margin-left: 20px;">
+                  Fahrenheit → Celsius
+                </li>
+                <li style="margin-left: 20px;">
+                  Mètres → Pieds
+                </li>
+                <li style="margin-left: 20px;">
+                  Livres → Kilogrammes
+                </li>
+              </ol>
+            </li>
+            <li>
+              - Ajoutez une option pour quitter l’application.
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>Valider les entrées utilisateur</strong>
+          <ul>
+            <li>
+              - Assurez-vous que l’utilisateur saisit des nombres valides pour les conversions.
+            </li>
+            <li>
+              - Gérez les erreurs et affichez des messages clairs en cas d’entrée invalide.
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>Tester les conversions</strong>
+          <ul>
+            <li>- Proposez plusieurs scénarios de test pour valider que les conversions fonctionnent correctement.</li>
+          </ul>
+        </li>
+      </ol>
+
+      <h3>Exemple de résultat attendu</h3>
+
+      <strong>Menu principal :</strong>
+      <pre><code class="language-shell">
+  Bienvenue dans l'application de conversion d'unités !
+  Veuillez choisir une option :
+  1. Convertir Fahrenheit en Celsius
+  2. Convertir Mètres en Pieds
+  3. Convertir Livres en Kilogrammes
+  4. Quitter
+      </code></pre>
+
+      <strong>Entrée utilisateur : 1</strong>
+      <pre><code class="language-shell">
+  Entrez la température en Fahrenheit : 98.6
+  Résultat : 98.6°F = 37.0°C
+      </code></pre>
+
+      <strong>Entrée utilisateur : 2</strong>
+      <pre><code class="language-shell">
+  Entrez la longueur en mètres : 10
+  Résultat : 10.0 m = 32.81 pieds
+      </code></pre>
+
+      <strong>Entrée utilisateur : 3</strong>
+      <pre><code class="language-shell">
+  Entrez le poids en livres : 150
+  Résultat : 150.0 lb = 68.04 kg
+      </code></pre>
+
+      <strong>Entrée utilisateur : 4</strong>
+      <pre><code class="language-shell">
+  Merci d'avoir utilisé l'application de conversion. À bientôt !
+      </code></pre>
+
+      <br />
+
+      <a href="./download/module2/Module2_Exercice2.playground.zip" class="download-link"
+        style="font-size: x-large; text-decoration: underline;" download>
+        Télécharger la solution
+      </a>
+    </section>
+
+    <section id="module-2-exercice3" class="module-section">
+      <h2 id="hierarchie-classes">Exercice 3 : Hiérarchie de classes pour les formes géométriques</h2>
+      <strong>Objectif</strong>
+      <p>
+        Créer une hiérarchie de classes en Swift pour représenter différentes formes géométriques, en appliquant les
+        principes d’héritage et de polymorphisme.
+      </p>
+
+      <h3>Instructions</h3>
+      <ol>
+        <li>
+          <strong>Créer une classe de base Shape</strong>
+          <ul>
+            <li>
+              - Propriétés :
+              <ul>
+                <li style="margin-left: 20px;">
+                  <strong>name</strong> : une chaîne représentant le nom de la forme.
+                </li>
+                <li style="margin-left: 20px;">
+                  <strong>area</strong> : une propriété calculée pour retourner l’aire (initialisée à 0.0 dans la classe
+                  de base).
+                </li>
+              </ul>
+            </li>
+            <li>
+              - Méthodes :
+              <ul>
+                <li style="margin-left: 20px;">
+                  Une méthode <strong>displayInfo()</strong> pour afficher le nom de la forme et son aire.
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>Créer les sous-classes de Shape</strong>
+          <ul>
+            <li>
+              - Circle :
+              <ul>
+                <li style="margin-left: 20px;">
+                  <strong>Propriété</strong> : radius (rayon, de type Double).
+                </li>
+                <li style="margin-left: 20px;">
+                  <strong>Méthode</strong> : Implémentez la méthode pour calculer l’aire d’un cercle ( Aire = π * rayon²
+                  ).
+              </ul>
+            </li>
+            <li>
+              - Rectangle :
+              <ul>
+                <li style="margin-left: 20px;">
+                  <strong>Propriétés</strong> : width (largeur) et height (hauteur), toutes deux de type Double.
+                </li>
+                <li style="margin-left: 20px;">
+                  <strong>Méthode</strong> : Redéfinir area pour calculer l’aire ( Aire = largeur * hauteur ).
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>Surchargez displayInfo() dans chaque sous-classe</strong>
+          <ul>
+            <li>
+              - Incluez les propriétés spécifiques (par exemple, le rayon pour un cercle).
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>Ajouter une sous-classe bonus</strong>
+          <ul>
+            <li>
+              - Triangle :
+              <ul>
+                <li style="margin-left: 20px;">
+                  <strong>Propriétés</strong> : base (base) et height (hauteur).
+                </li>
+                <li style="margin-left: 20px;">
+                  <strong>Méthode</strong> : Redéfinir area pour calculer l’aire ( Aire = 0.5 x base x hauteur ).
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>Créer des instances et tester</strong>
+          <ul>
+            <li>
+              - Instanciez des objets des classes Circle, Rectangle et Triangle.
+            </li>
+            <li>
+              - Calculez leurs aires et affichez les informations.
+            </li>
+          </ul>
+        </li>
+      </ol>
+
+      <h3>Exemple de résultat attendu</h3>
+
+      <pre><code class="language-swift">
+  // Tester les classes
+  let circle = Circle(radius: 5.0)
+  circle.displayInfo()
+
+  let rectangle = Rectangle(width: 10.0, height: 4.0)
+  rectangle.displayInfo()
+
+  let triangle = Triangle(base: 6.0, height: 3.0)
+  triangle.displayInfo()
+      </code></pre>
+
+      <strong>Résultat :</strong>
+      <pre><code class="language-shell">
+  Forme : Cercle, Rayon : 5.0, Aire : 78.54
+  Forme : Rectangle, Largeur : 10.0, Hauteur : 4.0, Aire : 40.00
+  Forme : Triangle, Base : 6.0, Hauteur : 3.0, Aire : 9.00
+      </code></pre>
+
+      <br />
+
+      <a href="./download/module2/Module2_Exercice3.playground.zip" class="download-link"
+        style="font-size: x-large; text-decoration: underline;" download>
+        Télécharger la solution
+      </a>
+
+
+
+    </section>
+  </div>
+  <footer class="footer">
+    <p>Développé par <a href="https://github.com/mathrob" style="color: white; text-decoration: underline;">Mathieu
+        Robson</a> &copy; <span id="current-year"></span></p>
+    <script>
+      document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script>
+      hljs.highlightAll();
+    </script>
+  </footer>
+  <div class="back-to-top" id="back-to-top">↑</div>
+  <script>
+    const backToTopButton = document.getElementById('back-to-top');
+
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 300) {
+        backToTopButton.style.display = 'block';
+      } else {
+        backToTopButton.style.display = 'none';
+      }
+    });
+
+    backToTopButton.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+  </script>
+</body>
+
 </html>
