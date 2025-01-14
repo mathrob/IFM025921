@@ -43,9 +43,10 @@
     </section>
 
     <section id="module-2" class="module-section">
-      <h1 id="swift-1">Introduction au langage Swift</h1>
+      <h1 id="swift-1">Introduction au langage Swift (Partie 1)</h1>
 
-      <a href="https://docs.swift.org/swift-book/documentation/the-swift-programming-language" target="_blank" style="color: red; font-size: large; text-decoration: underline;" >Référence officielle</a>
+      <a href="https://docs.swift.org/swift-book/documentation/the-swift-programming-language" target="_blank"
+        style="color: red; font-size: large; text-decoration: underline;">Référence officielle</a>
 
       <p>
         Swift est un langage de programmation moderne, développé par Apple et
@@ -839,9 +840,11 @@
         <li>
           <strong>Avantages des optionnels</strong>
           <ol>
-            <li><strong>Sécurité</strong> : Les optionnels évitent les plantages liés à l’utilisation de variables nil.</li>
+            <li><strong>Sécurité</strong> : Les optionnels évitent les plantages liés à l’utilisation de variables nil.
+            </li>
             <li><strong>Lisibilité</strong> : Le code est explicite quant à la possibilité d’absence de valeur.</li>
-            <li><strong>Contrôle</strong> : Vous avez plusieurs mécanismes pour gérer et valider les valeurs manquantes.</li>
+            <li><strong>Contrôle</strong> : Vous avez plusieurs mécanismes pour gérer et valider les valeurs manquantes.
+            </li>
           </ol>
         </li>
       </ul>
@@ -858,19 +861,22 @@
 
       <h3>Accès aux valeurs optionnelles</h3>
       <p>
-        Pour utiliser la valeur d’un optionnel, il faut d’abord la “déballer” (unwrap). Il existe plusieurs façons de le faire.
+        Pour utiliser la valeur d’un optionnel, il faut d’abord la “déballer” (unwrap). Il existe plusieurs façons de le
+        faire.
       </p>
 
       <strong>Déballage forcé (!)</strong>
       <p>
-        Utilisé lorsque vous êtes certain que l’optionnel contient une valeur. Cependant, si l’optionnel est nil, cela provoque une erreur à l’exécution.
+        Utilisé lorsque vous êtes certain que l’optionnel contient une valeur. Cependant, si l’optionnel est nil, cela
+        provoque une erreur à l’exécution.
       </p>
       <pre><code class="language-swift">
   var name: String? = "Alice"
   print(name!)  // Affiche "Alice"
       </code></pre>
 
-      <p>⚠️ <strong style="color: red; font-size: larger;">Attention</strong> : Évitez d’utiliser le déballage forcé à moins d’être sûr à <strong>100%</strong> que l’optionnel n’est pas nil.</p>
+      <p>⚠️ <strong style="color: red; font-size: larger;">Attention</strong> : Évitez d’utiliser le déballage forcé à
+        moins d’être sûr à <strong>100%</strong> que l’optionnel n’est pas nil.</p>
 
       <strong>Déballage conditionnel (if let)</strong>
       <p>
@@ -911,18 +917,23 @@
 
       <strong>Optionnels implicites</strong>
       <p>
-        Si une valeur optionnelle est garantie d’avoir une valeur après son initialisation, on peut utiliser un optionnel implicite en ajoutant un point d’exclamation (!) après le type.
+        Si une valeur optionnelle est garantie d’avoir une valeur après son initialisation, on peut utiliser un
+        optionnel implicite en ajoutant un point d’exclamation (!) après le type.
       </p>
       <pre><code class="language-swift">
   var email: String! = "test@example.com"
   print(email)  // Pas besoin de déballage explicite
       </code></pre>
 
-      <p>⚠️ <strong style="color: red; font-size: larger;">Attention</strong> : Cependant, l’utilisation des optionnels implicites doit être limitée, car elle comporte les mêmes risques que le déballage forcé.</p>
-      
+      <p>⚠️ <strong style="color: red; font-size: larger;">Attention</strong> : Cependant, l’utilisation des optionnels
+        implicites doit être limitée, car elle comporte les mêmes risques que le déballage forcé.</p>
+
       <h2 id="protocole">Protocole</h2>
       <p>
-        En Swift, un protocole est un modèle (ou contrat) qui définit un ensemble de propriétés, méthodes, ou autres exigences qu’une classe, une structure, ou une énumération doit implémenter. Les protocoles permettent d’organiser le code, de garantir un comportement uniforme entre les types, et de faciliter l’utilisation du polymorphisme.
+        En Swift, un protocole est un modèle (ou contrat) qui définit un ensemble de propriétés, méthodes, ou autres
+        exigences qu’une classe, une structure, ou une énumération doit implémenter. Les protocoles permettent
+        d’organiser le code, de garantir un comportement uniforme entre les types, et de faciliter l’utilisation du
+        polymorphisme.
       </p>
 
       <h3>Déclaration d’un protocole</h3>
@@ -940,7 +951,8 @@
           <strong>Propriétés</strong>
           <ol>
             <li>
-              var nombreDeRoues: Int { get } signifie que tout type qui adopte ce protocole doit avoir une propriété nommée nombreDeRoues en lecture seule.
+              var nombreDeRoues: Int { get } signifie que tout type qui adopte ce protocole doit avoir une propriété
+              nommée nombreDeRoues en lecture seule.
             </li>
             <li>
               Si tu utilises { get set }, la propriété doit être lisible et modifiable.
@@ -1037,7 +1049,8 @@
     </section>
   </div>
   <footer class="footer">
-    <p>Développé par <a href="https://github.com/mathrob" style="color: white; text-decoration: underline;">Mathieu Robson</a> &copy; <span id="current-year"></span></p>
+    <p>Développé par <a href="https://github.com/mathrob" style="color: white; text-decoration: underline;">Mathieu
+        Robson</a> &copy; <span id="current-year"></span></p>
     <script>
       document.getElementById("current-year").textContent =
         new Date().getFullYear();
