@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IFM025921</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" />
+  <link rel="stylesheet" href="../style.css" />
+</head>
+
+<body>
+  <header>
+    <h1 style="color: white">Module 3 - Exercice</h1>
+  </header>
+  <div class="container">
+    <a href="../index.html" class="back-link">← Retour au module principal</a>
+
+    <section id="module-3-intro" class="module-section">
+      <h1>Exercice pratique en Swift</h1>
+      <p>
+        Se familiariser avec les éléments de base du langage Swift
+      </p>
+    </section>
+
+    <section id="module-2-exercice1" class="module-section">
+
+      <h1>Le paquet de cartes</h1>
+      <p>Dans le cadre de cette pratique, vous devez développer deux classes
+        Swift :</p>
+      <ol>
+        <li>La première classe, nommée <strong>Carte</strong>, représente une carte à jouer
+          (de valeur 2 à 10, valet, dame, roi ou as, et de famille pique,
+          coeur, carreau ou trèfle).</li>
+        <li>La seconde classe, nommée <strong>Paquet</strong>, représente un paquet de cartes
+          à jouer (c.à.d. contenant d’instances de Carte).</li>
+      </ol>
+      <p>Ci-dessous vous trouverez les spécifications de ces deux classes.</p>
+
+      <ul>
+        <h3>Classe Carte</h3>
+        <ol>
+          <li>La classe doit disposer d’un attribut <strong>famille</strong>, de type
+            énumératif dont la valeur est soit <strong>.Pique</strong>, <strong>.Coeur</strong>,
+            <strong>.Carreau</strong> ou
+            <strong>.Trèfle</strong>.
+          </li>
+          <li>La classe doit disposer d’un attribut <strong>valeur</strong> contenant la valeur
+            de la carte, de 2 à 14 (11 pour le valet, 12 pour la dame, 13
+            pour le roi et 14 pour l’as). Le mutateur de cet attribut doit
+            valider la valeur attribuée afin que <strong>valeur</strong> contienne toujours
+            une valeur entre 2 et 14, inclusivement.</li>
+          <li>La classe doit être désignée « <strong>CustomStringConvertible</strong> » et
+            disposer d’une fonction membre <strong>description</strong> qui retourne un
+            <strong>String</strong> décrivant la valeur et famille de la carte (p.ex. "3♥").
+          </li>
+        </ol>
+      </ul>
+
+      <ul>
+        <h3>Classe Paquet</h3>
+        <ol>
+          <li>La classe doit disposer d’un attribut privé servant à stocker
+            des instances de <strong>Carte</strong>.</li>
+          <li>La classe doit disposer d’un initialiseur permettant soit de
+            créer un paquet de cartes vide, soit de créer un paquet
+            contenant les 52 cartes traditionnelles d’un paquet. Lorsqu’un
+            paquet de 52 cartes est créé, celui-ci doit être brassé (c.à.d.
+            ses cartes doivent être dans un ordre aléatoire).</li>
+          <li>La classe doit disposer d’un attribut membre permettant de
+            retirer la première carte du paquet et de la retourner. Si le
+            paquet est vide, la fonction doit retourner <strong>nil</strong>.</li>
+          <li>La classe doit disposer d’une fonction membre retirant et
+            retournant le nombre demandé de cartes du début du paquet. Les
+            cartes retirées doivent être retournées dans une nouvelle
+            instance de <strong>Paquet</strong>. Si le paquet contient moins de cartes que
+            demandées, le paquet retourné doit contenir les cartes restantes
+            (au pire cas, un paquet vide est retourné).</li>
+          <li>La classe doit disposer d’une fonction membre retournant le
+            nombre de cartes restantes de chaque famille.</li>
+          <li>La classe doit être désignée « <strong>CustomStringConvertible</strong> » et
+            disposer d’une fonction membre <strong>description</strong> qui retourne un
+            <strong>String</strong> énumérant le contenu du paquet (p.ex. "[ 3♥ R♠ A♦ 7♥
+            8♣ ]").
+          </li>
+        </ol>
+      </ul>
+
+      <h3>Code pilote</h3>
+      <p>Voici un code pilote vous permettant de tester vos classes :</p>
+      <figure>
+        <img src="../imgs/pilote_carte.png" alt="Code pilote vous permettant de tester vous classes"
+          style="width: 65%; height: auto" />
+      </figure>
+
+      <br />
+
+      <a href="./download/module3/Cartes_corrige.zip" class="download-link"
+        style="font-size: x-large; text-decoration: underline;" download>
+        Télécharger la solution
+      </a>
+    </section>
+  </div>
+  <footer class="footer">
+    <p>Développé par <a href="https://github.com/mathrob" style="color: white; text-decoration: underline;">Mathieu
+        Robson</a> &copy; <span id="current-year"></span></p>
+    <script>
+      document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script>
+      hljs.highlightAll();
+    </script>
+  </footer>
+  <div class="back-to-top" id="back-to-top">↑</div>
+  <script>
+    const backToTopButton = document.getElementById('back-to-top');
+
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 300) {
+        backToTopButton.style.display = 'block';
+      } else {
+        backToTopButton.style.display = 'none';
+      }
+    });
+
+    backToTopButton.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+  </script>
+</body>
+
+</html>

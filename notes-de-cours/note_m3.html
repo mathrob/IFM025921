@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IFM025921</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" />
+  <link rel="stylesheet" href="../style.css" />
+</head>
+
+<body>
+  <header>
+    <h1 style="color: white">Module 3 - Note de cours</h1>
+  </header>
+  <div class="container">
+    <a href="../index.html" class="back-link">← Retour au module principal</a>
+
+    <section id="module-3" class="module-section">
+      <h1 id="swift-2">Introduction au langage Swift (Partie 2)</h1>
+
+      <a href="https://docs.swift.org/swift-book/documentation/the-swift-programming-language" target="_blank"
+        style="color: red; font-size: large; text-decoration: underline;">Référence officielle</a>
+
+      <h2 id="accessibilite">Accessibilité</h2>
+      <p>En Swift, le contrôle d’accès est un mécanisme essentiel qui détermine la visibilité et l’accessibilité des
+        différentes parties de votre code, telles que les classes, les structures, les fonctions et les propriétés. Il
+        vous permet de restreindre l’accès à certaines parties de votre code afin de protéger son intégrité et
+        d’encapsuler les détails d’implémentation.</p>
+
+      <h3>Niveaux d’accès en Swift</h3>
+      <ul>
+        <li><strong>Open</strong> : Ce niveau d’accès permet à une entité d’être accessible et subclassable en dehors du
+          module où elle est définie. C’est le niveau d’accès le plus permissif.</li>
+        <li><strong>Public</strong> : Une entité public est accessible depuis n’importe quel module, mais ne peut être
+          subclassée ou surchargée qu’à l’intérieur du module où elle est définie.</li>
+        <li><strong>Internal (par défaut)</strong> : Une entité internal est accessible uniquement au sein du module où
+          elle est définie. C’est le niveau d’accès par défaut en Swift, ce qui signifie que si vous ne spécifiez pas
+          explicitement un niveau d’accès, l’entité sera internal.</li>
+        <li><strong>Fileprivate</strong> : Une entité fileprivate est accessible uniquement à l’intérieur du fichier
+          source où elle est définie.</li>
+        <li><strong>Private</strong> : Une entité private est accessible uniquement dans la portée immédiate où elle est
+          définie, comme au sein de la même classe ou de la même extension.</li>
+      </ul>
+
+      <h3>Exemples :</h3>
+      <pre><code class="language-swift">
+  public class PublicClass {
+    open func openMethod() {
+        // Peut être surchargée en dehors du module
+    }
+    
+    public func publicMethod() {
+        // Peut être appelée en dehors du module, mais ne peut être surchargée qu'à l'intérieur
+    }
+    
+    internal func internalMethod() {
+        // Accessible uniquement au sein du module
+    }
+    
+    fileprivate func fileprivateMethod() {
+        // Accessible uniquement dans ce fichier source
+    }
+    
+    private func privateMethod() {
+        // Accessible uniquement dans cette classe
+    }
+  }
+      </code></pre>
+
+      <h3>Bonnes pratiques :</h3>
+      <ul>
+        <li><strong>Encapsulation</strong> : Utilisez le niveau d’accès le plus restrictif possible pour une entité,
+          afin de limiter son utilisation non intentionnelle et de protéger les détails d’implémentation.</li>
+        <li><strong>API publique</strong> : Lorsque vous développez une bibliothèque ou un framework, exposez uniquement
+          les parties nécessaires de votre code en utilisant public ou open, et gardez le reste internal ou private.
+        </li>
+        <li><strong>Clarté</strong> : Spécifiez explicitement les niveaux d’accès pour améliorer la lisibilité et la
+          maintenance du code.</li>
+      </ul>
+      <p>En comprenant et en appliquant correctement ces niveaux d’accès, vous pouvez créer des applications iOS plus
+        robustes et mieux structurées, tout en protégeant les parties sensibles de votre code.</p>
+
+      <h2 id="gettersetter">Getters et Setters</h2>
+      <p>En Swift, les propriétés peuvent utiliser des accesseurs (get) et des mutateurs (set) pour contrôler l’accès en
+        lecture ou en écriture.</p>
+      <pre><code class="language-swift">
+  class Person {
+    private var _age: Int = 0
+
+    var age: Int {
+        get { return _age }
+        set { _age = newValue }
+    }
+  }
+
+  let person = Person()
+  person.age = 25
+  print(person.age) // Affiche : 25
+      </code></pre>
+
+      <h2 id="methodes-type">Méthodes de type</h2>
+      <p>En Swift, les méthodes de type sont des fonctions qui appartiennent directement à une classe ou une structure,
+        et non à une instance spécifique. Pour les définir, on utilise les mots-clés static ou class.</p>
+
+      <h3>Méthode de type avec static</h3>
+      <p>Ici, additionner est une méthode de type définie avec static. Elle peut être appelée directement sur le type
+        Math sans créer d’instance.</p>
+      <pre><code class="language-swift">
+  struct Math {
+    static func additionner(a: Int, b: Int) -> Int {
+        return a + b
+    }
+  }
+      
+  let resultat = Math.additionner(a: 5, b: 3)
+  print(resultat) // Affiche : 8
+      </code></pre>
+
+      <h3>Méthode de type avec class</h3>
+      <p>Dans cet exemple, la méthode de type description est définie avec class, permettant aux sous-classes de la
+        surcharger. Ainsi, Chien fournit sa propre implémentation de description.</p>
+      <pre><code class="language-swift">
+  class Animal {
+    class func description() -> String {
+        return "Ceci est un animal."
+    }
+  }
+  
+  class Chien: Animal {
+    override class func description() -> String {
+        return "Ceci est un chien."
+    }
+  }
+  
+  print(Animal.description()) // Affiche : Ceci est un animal.
+  print(Chien.description())  // Affiche : Ceci est un chien.
+      </code></pre>
+
+      <h3>Quand utiliser static ou class ?</h3>
+      <ul>
+        <li>Utilisez <strong>static</strong> lorsque vous ne souhaitez pas que la méthode de type puisse être redéfinie
+          par des sous-classes.</li>
+        <li>Utilisez <strong>class</strong> lorsque vous souhaitez permettre aux sous-classes de redéfinir la méthode de
+          type pour fournir une implémentation spécifique.</li>
+      </ul>
+
+      <h2 id="lazy-property">Propriétés paresseuses (Lazy property)</h2>
+      <p>En Swift, une propriété paresseuse (lazy property) est une propriété dont la valeur n’est calculée et
+        initialisée qu’au moment où elle est utilisée pour la première fois. Cela permet d’optimiser les performances en
+        retardant des calculs coûteux ou en différant l’initialisation d’objets jusqu’à ce qu’ils soient réellement
+        nécessaires.</p>
+
+      <h3>Déclaration d’une propriété paresseuse</h3>
+      <p>Pour déclarer une propriété paresseuse, on utilise le mot-clé lazy avant la déclaration de la propriété. Les
+        propriétés paresseuses doivent toujours être des variables (var), car leur valeur peut ne pas être initialisée
+        au moment de la création de l’instance.</p>
+
+      <h3>Exemple</h3>
+      <pre><code class="language-swift">
+  class DataLoader {
+    lazy var data: [String] = loadData()
+
+    func loadData() -> [String] {
+        // Simuler un chargement de données
+        print("Chargement des données...")
+        return ["Donnée1", "Donnée2", "Donnée3"]
+    }
+  }
+  
+  let loader = DataLoader()
+  // À ce stade, la propriété 'data' n'est pas encore initialisée
+  print(loader.data) // Déclenche l'appel à 'loadData' et initialise 'data'
+    </code></pre>
+
+      <h3>Explications</h3>
+      <ol>
+        <li>Dans cet exemple, la classe DataLoader possède une propriété paresseuse data.</li>
+        <li>La méthode loadData() simule le chargement de données et est utilisée pour initialiser data.</li>
+        <li>Lorsque l’instance loader est créée, la propriété data n’est pas immédiatement initialisée.</li>
+        <li>L’accès à loader.data pour la première fois déclenche l’appel à loadData(), initialise data et affiche
+          “Chargement des données…”.</li>
+      </ol>
+
+      <h3>Avantages des propriétés paresseuses</h3>
+      <ul>
+        <li><strong>Optimisation des performances</strong> : Les propriétés paresseuses permettent d’éviter des calculs
+          ou des initialisations inutiles jusqu’à ce qu’ils soient réellement nécessaires.</li>
+        <li><strong>Gestion de ressources</strong> : Utile pour différer l’allocation de ressources coûteuses en mémoire
+          ou en temps de calcul.</li>
+      </ul>
+
+      <ul>
+        <li>
+          <h3>Remarques importantes</h3>
+        </li>
+        <ol>
+          <li>Les propriétés paresseuses sont initialisées une seule fois. Après leur première utilisation, elles
+            conservent leur valeur.</li>
+          <li>Elles ne peuvent pas être des constantes (let), car leur valeur n’est pas définie lors de l’initialisation
+            de l’instance.</li>
+          <li>Les propriétés paresseuses sont particulièrement utiles lorsque la valeur initiale dépend de facteurs
+            externes ou de calculs complexes qui ne sont pas disponibles ou nécessaires au moment de l’initialisation de
+            l’objet.</li>
+        </ol>
+      </ul>
+
+
+      <h2 id="override">Override</h2>
+      <p>En Swift, le mot-clé override est utilisé pour indiquer qu’une méthode, une propriété ou un sous-script d’une
+        classe dérivée redéfinit l’implémentation héritée de sa classe parente. Cela permet à une sous-classe de fournir
+        une version spécifique d’une fonctionnalité définie dans sa superclasse.</p>
+
+      <h3>Pourquoi utiliser override ?</h3>
+      <p>L’utilisation du mot-clé override garantit que vous redéfinissez intentionnellement une méthode ou une
+        propriété existante dans la superclasse. Swift vérifie alors que la méthode ou la propriété que vous tentez de
+        redéfinir existe bien dans la superclasse, évitant ainsi les erreurs potentielles dues à des fautes de frappe ou
+        à des incohérences.</p>
+
+      <h3>Exemple de redéfinition de méthode</h3>
+      <pre><code class="language-swift">
+  class Animal {
+    func makeSound() {
+        print("Animal sound")
+    }
+  }
+
+  class Dog: Animal {
+    override func makeSound() {
+        print("Bark")
+    }
+  }
+
+  let dog = Dog()
+  dog.makeSound() // Affiche : Bark
+      </code></pre>
+
+      <h3>Accéder à l’implémentation de la superclasse</h3>
+      <p>Il est possible, dans une méthode redéfinie, d’appeler l’implémentation de la superclasse en utilisant le
+        mot-clé super. Cela peut être utile si vous souhaitez étendre le comportement hérité plutôt que de le remplacer
+        complètement.</p>
+      <pre><code class="language-swift">
+  class Animal {
+    func makeSound() {
+        print("Son d'animal")
+    }
+  }
+  
+  class Chat: Animal {
+    override func makeSound() {
+        super.makeSound()
+        print("Miauler")
+    }
+  }
+  
+  let monChat = Chat()
+  monChat.makeSound()
+  // Affiche :
+  // Son d'animal
+  // Miauler
+      </code></pre>
+      <h3>Remarques importantes :</h3>
+      <ol>
+        <li>Le mot-clé override est obligatoire en Swift lorsque vous redéfinissez une méthode, une propriété ou un
+          sous-script hérité. Cela permet au compilateur de vérifier que la redéfinition correspond bien à une
+          déclaration existante dans la superclasse.</li>
+        <li>Si vous tentez de redéfinir une méthode ou une propriété qui n’existe pas dans la superclasse, le
+          compilateur générera une erreur, vous aidant ainsi à détecter les incohérences dans votre code.</li>
+        <li>Il est possible d’empêcher une méthode ou une propriété d’être redéfinie dans une sous-classe en la
+          déclarant avec le mot-clé final. Par exemple :</li>
+      </ol>
+      <pre><code class="language-swift">
+  class Animal {
+    final func makeSound() {
+    print("Son d'animal")
+    }
+  }
+      </code></pre>
+      <p>Toute tentative de redéfinir makeSound() dans une sous-classe entraînera une erreur de compilation.</p>
+
+      <h2 id="wrappers">Wrappers de propriété</h2>
+      <p>En Swift, les wrappers de propriété (property wrappers) sont une fonctionnalité qui permet d’ajouter une couche
+        de logique autour de la gestion des propriétés. Ils facilitent la réutilisation de comportements courants, comme
+        la validation des données ou la gestion du stockage, sans répéter le même code pour chaque propriété.</p>
+
+      <h3>Qu’est-ce qu’un wrapper de propriété?</h3>
+      <p>
+        Un wrapper de propriété est une structure ou une classe qui encapsule une propriété, en ajoutant une logique
+        personnalisée lors de l’accès en lecture ou en écriture. Cela permet de séparer la logique de gestion des
+        données de la définition de la propriété elle-même.
+      </p>
+
+      <h3>Comment définir un wrapper de propriété?</h3>
+      <p>
+        Pour créer un wrapper de propriété, on utilise l’attribut @propertyWrapper et on définit une propriété nommée
+        wrappedValue qui représente la valeur encapsulée. Par exemple, voici un wrapper qui garantit que toutes les
+        chaînes de caractères assignées sont automatiquement mises en majuscules :
+      </p>
+      <pre><code class="language-swift">
+  @propertyWrapper
+  struct Majuscule {
+    private var valeur: String = ""
+
+    var wrappedValue: String {
+        get { valeur }
+        set { valeur = newValue.uppercased() }
+    }
+  }
+      </code></pre>
+      <p>
+        Dans cet exemple, chaque fois qu’une nouvelle valeur est assignée à wrappedValue, elle est convertie en
+        majuscules avant d’être stockée.
+      </p>
+
+      <h3>Utilisation d’un wrapper de propriété</h3>
+      <p>
+        Une fois le wrapper défini, on peut l’appliquer à une propriété en utilisant l’annotation correspondante. Par
+        exemple, si nous avons une structure Utilisateur et que nous voulons que le nom soit toujours en majuscules :
+      </p>
+      <pre><code class="language-swift">
+  struct Utilisateur {
+    @Majuscule var nom: String
+  }
+  
+  var utilisateur = Utilisateur()
+  utilisateur.nom = "Jean Dupont"
+  print(utilisateur.nom) // Affiche : JEAN DUPONT
+      </code></pre>
+      <p>Ici, la propriété nom utilise le wrapper Majuscule, garantissant que toute valeur assignée est automatiquement
+        convertie en majuscules.</p>
+      <h3>Avantages des wrappers de propriété</h3>
+      <ul>
+        <li><strong>Réutilisabilité</strong> : Ils permettent de définir une logique une seule fois et de l’appliquer à
+          plusieurs propriétés, réduisant ainsi le code redondant.</li>
+        <li><strong>Séparation des préoccupations</strong> : Ils isolent la logique de gestion des données de la
+          définition des propriétés, rendant le code plus clair et plus maintenable.</li>
+        <li><strong>Personnalisation</strong> : Ils offrent la possibilité d’ajouter des comportements spécifiques aux
+          propriétés sans modifier leur interface publique.</li>
+      </ul>
+
+      <h3>Limitations</h3>
+      <p>Il est important de noter que les wrappers de propriété ne peuvent pas participer à la gestion des erreurs et
+        qu’il n’est pas possible d’appliquer plusieurs wrappers à une même propriété.</p>
+
+      <h2 id="gestion-erreur">Gestion des erreurs</h2>
+      <p>
+        En Swift, la gestion des erreurs permet de répondre aux situations inattendues qui peuvent survenir lors de
+        l’exécution d’un programme, comme l’échec de la lecture d’un fichier ou une connexion réseau interrompue. Swift
+        offre des mécanismes robustes pour détecter, propager et gérer ces erreurs de manière contrôlée.
+      </p>
+
+      <h3>Définition des erreurs</h3>
+      <p>
+        Les erreurs en Swift sont représentées par des types qui adoptent le protocole Error. Généralement, on utilise
+        des énumérations pour définir les différentes erreurs possibles :
+      </p>
+      <pre><code class="language-swift">
+  enum ErreurFichier: Error {
+    case fichierIntrouvable
+    case lectureImpossible
+  }
+      </code></pre>
+
+      <h3>Propagation des erreurs</h3>
+      <p>
+        Une fonction susceptible de générer une erreur doit être marquée avec le mot-clé throws. Pour signaler une
+        erreur, on utilise l’instruction throw :
+      </p>
+      <pre><code class="language-swift">
+  func lireFichier(chemin: String) throws -> String {
+    // Vérifier si le fichier existe
+    guard fichierExiste(chemin) else {
+        throw ErreurFichier.fichierIntrouvable
+    }
+    // Tentative de lecture du fichier
+    // ...
+  }
+      </code></pre>
+
+      <h3>Appel des fonctions pouvant générer des erreurs</h3>
+      <p>
+        Lorsqu’on appelle une fonction qui peut générer une erreur, on utilise le mot-clé try. Cet appel doit être
+        effectué dans un bloc do-catch pour gérer les éventuelles erreurs:
+      </p>
+      <pre><code class="language-swift">
+  do {
+    let contenu = try lireFichier(chemin: "chemin/vers/fichier.txt")
+    print(contenu)
+  } catch ErreurFichier.fichierIntrouvable {
+      print("Erreur : Fichier introuvable.")
+  } catch ErreurFichier.lectureImpossible {
+      print("Erreur : Lecture du fichier impossible.")
+  } catch {
+      print("Erreur inattendue : \(error).")
+  }
+      </code></pre>
+
+      <h3>Autres moyens de gérer les erreurs</h3>
+      <p>
+        Swift propose également des moyens alternatifs pour gérer les erreurs :
+      </p>
+
+      <p><strong>try?</strong> : Convertit le résultat en une valeur optionnelle. Si une erreur est lancée, la valeur
+        est nil :</p>
+      <pre><code class="language-swift">
+  if let contenu = try? lireFichier(chemin: "chemin/vers/fichier.txt") {
+    print(contenu)
+  } else {
+    print("Erreur lors de la lecture du fichier.")
+  }
+      </code></pre>
+
+      <p><strong>try!</strong> : Affirme que l’appel ne générera pas d’erreur. Si une erreur survient, le programme
+        plantera :</p>
+      <pre><code class="language-swift">
+  let contenu = try! lireFichier(chemin: "chemin/vers/fichier.txt")
+  print(contenu)
+      </code></pre>
+
+      <h3>Résumé</h3>
+
+      <p>La gestion des erreurs en Swift est essentielle pour créer des applications robustes et fiables. En définissant
+        clairement les erreurs possibles, en les propageant de manière appropriée et en les gérant avec des blocs
+        do-catch, vous pouvez anticiper et réagir efficacement aux situations inattendues qui pourraient survenir lors
+        de l’exécution de votre programme.</p>
+
+      <h2 id="any">Any et AnyObject</h2>
+      <p>En Swift, les types spéciaux Any et AnyObject offrent une flexibilité accrue lors de la manipulation de données
+        de types variés.</p>
+      <ul>
+        <li>
+          <strong>Any</strong>
+          <ul style="list-style-type: circle;">
+            <li style="margin-left: 30px;">Représente une instance de n’importe quel type, qu’il s’agisse de classes,
+              structures, énumérations, fonctions ou types optionnels.</li>
+            <li style="margin-left: 30px;">Utile lorsque vous travaillez avec des collections de données hétérogènes ou
+              lorsque le type exact n’est pas connu à la compilation.</li>
+          </ul>
+        </li>
+      </ul>
+
+      <pre><code class="language-swift">
+  let collectionMixte: [Any] = [42, "Bonjour", 3.14, true]
+      </code></pre>
+
+      <ul>
+        <strong>AnyObject</strong>
+        <ul style="list-style-type: circle;">
+          <li style="margin-left: 30px;">Représente une instance de n’importe quel type de classe.</li>
+          <li style="margin-left: 30px;">Utile lorsque vous souhaitez travailler spécifiquement avec des types référence
+            et vous assurer que seules des instances de classes sont utilisées.</li>
+        </ul>
+      </ul>
+      <pre><code class="language-swift">
+  class MaClasse {}
+  let tableauObjets: [AnyObject] = [MaClasse(), NSString(string: "Bonjour")]
+      </code></pre>
+
+      <h3>Différences clés</h3>
+      <ul>
+        <li>- Any peut représenter n’importe quel type, y compris les types valeur (structures, énumérations) et les
+          types référence (classes).</li>
+        <li>- AnyObject est limité aux types de classe uniquement.</li>
+        <li>- Lorsque vous travaillez avec des collections susceptibles de contenir à la fois des types valeur et des
+          types référence, utilisez Any. Si la collection doit contenir uniquement des instances de classe, utilisez
+          AnyObject.</li>
+      </ul>
+
+      <h3>Conversion de type</h3>
+      <p>
+        Lorsque vous récupérez des valeurs à partir d’une collection de Any ou AnyObject, il est souvent nécessaire de
+        les convertir vers leur type d’origine
+      </p>
+      <pre><code class="language-swift">
+  let collectionMixte: [Any] = [42, "Bonjour", 3.14]
+  if let premierÉlément = collectionMixte[0] as? Int {
+      print("Le premier élément est un entier : \(premierÉlément)")
+  }
+      </code></pre>
+
+      <h3>Bonnes pratiques</h3>
+      <ul>
+        <li>- Utilisez Any et AnyObject avec parcimonie. Il est généralement préférable de travailler avec des types
+          spécifiques pour maintenir la sécurité et la clarté du code.</li>
+      </ul>
+
+      <h2 id="extention">Extensions</h2>
+      <p>
+        En Swift, les extensions permettent d’ajouter de nouvelles fonctionnalités à des classes, structures,
+        énumérations ou protocoles existants, même si vous n’avez pas accès à leur code source original. Cette capacité
+        est particulièrement utile pour enrichir des types prédéfinis ou provenant de bibliothèques tierces, sans
+        modifier leur implémentation initiale.
+      </p>
+
+      <h3>Utilisations courantes des extensions</h3>
+      <p><strong>Ajouter des méthodes d’instance et de type</strong> : Vous pouvez introduire de nouvelles méthodes qui
+        étendent les capacités d’un type existant.</p>
+      <pre><code class="language-swift">
+  extension Int {
+    func estPair() -> Bool {
+        return self % 2 == 0
+    }
+  }
+
+  let nombre = 4
+  print(nombre.estPair()) // Affiche : true
+      </code></pre>
+
+      <p><strong>Ajouter des propriétés calculées</strong> : Vous pouvez définir des propriétés qui calculent leur
+        valeur à partir d’autres propriétés existantes.</p>
+      <pre><code class="language-swift">
+  extension Double {
+    var enKilomètres: Double {
+        return self * 1_000.0
+    }
+  }
+  
+  let distance = 5.0
+  print("\(distance.enKilomètres) mètres") // Affiche : 5000.0 mètres
+      </code></pre>
+
+      <p><strong>Fournir des implémentations par défaut pour des protocoles</strong> : En utilisant des extensions, vous
+        pouvez offrir des implémentations par défaut pour les méthodes d’un protocole, réduisant ainsi le besoin
+        d’implémentations répétitives.</p>
+      <pre><code class="language-swift">
+  protocol Identifiable {
+    var id: String { get }
+    func afficherID()
+  }
+
+  extension Identifiable {
+    func afficherID() {
+        print("Mon identifiant est \(id).")
+    }
+  }
+
+  struct Utilisateur: Identifiable {
+    var id: String
+  }
+
+  let utilisateur = Utilisateur(id: "12345")
+  utilisateur.afficherID() // Affiche : Mon identifiant est 12345.
+      </code></pre>
+
+      <p><strong>Conformer un type existant à un protocole</strong> : Les extensions permettent de déclarer qu’un type
+        existant adopte un protocole, et de fournir les implémentations nécessaires.</p>
+      <pre><code class="language-swift">
+  struct Point {
+    var x: Double
+    var y: Double
+  }
+  
+  extension Point: CustomStringConvertible {
+    var description: String {
+        return "Point(x: \(x), y: \(y))"
+    }
+  }
+  
+  let point = Point(x: 3.0, y: 4.0)
+  print(point) // Affiche : Point(x: 3.0, y: 4.0)
+      </code></pre>
+
+      <h3>Limitations des extensions</h3>
+      <ol>
+        <li>Les extensions ne peuvent pas ajouter de propriétés stockées ou de variables d’instance.</li>
+        <li>Elles ne peuvent pas redéfinir les méthodes existantes ou les propriétés d’un type.</li>
+        <li>Si une méthode ajoutée par une extension entre en conflit avec une méthode existante, le comportement peut
+          être imprévisible.</li>
+      </ol>
+
+      <h3>Bonnes pratiques</h3>
+      <ol>
+        <li>Utilisez les extensions pour regrouper des fonctionnalités similaires, améliorant ainsi la lisibilité et la
+          maintenance du code.</li>
+        <li>Évitez d’utiliser les extensions pour remplacer des sous-classes lorsque l’héritage est plus approprié.</li>
+        <li>Documentez clairement les extensions pour indiquer qu’elles ajoutent des fonctionnalités à des types
+          existants.</li>
+      </ol>
+
+      <p>
+        Les extensions sont un outil puissant en Swift, offrant une flexibilité accrue pour adapter et enrichir les
+        types existants selon les besoins spécifiques de votre application.
+      </p>
+    </section>
+  </div>
+  <footer class="footer">
+    <p>Développé par <a href="https://github.com/mathrob" style="color: white; text-decoration: underline;">Mathieu
+        Robson</a> &copy; <span id="current-year"></span></p>
+    <script>
+      document.getElementById("current-year").textContent =
+        new Date().getFullYear();
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script>
+      hljs.highlightAll();
+    </script>
+  </footer>
+  <div class="back-to-top" id="back-to-top">↑</div>
+  <script>
+    const backToTopButton = document.getElementById("back-to-top");
+
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 300) {
+        backToTopButton.style.display = "block";
+      } else {
+        backToTopButton.style.display = "none";
+      }
+    });
+
+    backToTopButton.addEventListener("click", () => {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    });
+  </script>
+</body>
+
+</html>
