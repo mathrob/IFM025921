@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IFM025921</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" />
+  <link rel="stylesheet" href="../style.css" />
+</head>
+
+<body>
+  <header>
+    <h1 style="color: white">Module 4 - Exercice</h1>
+  </header>
+  <div class="container">
+    <a href="../index.html" class="back-link">← Retour au module principal</a>
+
+    <section id="module-4" class="module-section">
+      <h1>Ma première application iOS</h1>
+      <p>
+        Pratiquer la gestion des états (@State), l’interaction utilisateur (boutons, sliders, textfields, pickers), et
+        la gestion de vues dynamiques en SwiftUI.
+      </p>
+
+      <h2>Instruction</h2>
+      <ol>
+        <li>
+          <strong>Texte principal</strong>
+          <ul style="list-style-type: circle;">
+            <li style="margin-left: 30px;">Affichez un texte dynamique contenant le message saisi par l’utilisateur.
+            </li>
+            <li style="margin-left: 30px;">
+              Le texte doit :
+              <ul style="list-style-type: square;">
+                <li style="margin-left: 60px;">Pouvoir changer de taille en fonction d’un slider (échelle de 0.5 à 3.5).
+                </li>
+                <li style="margin-left: 60px;">Changer de couleur en fonction d’une sélection effectuée via un Picker.
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>Personnalisation</strong>
+          <ul style="list-style-type: circle;">
+            <li style="margin-left: 30px;">Ajoutez un champ de saisie (TextField) pour que l’utilisateur puisse
+              personnaliser le contenu du texte.</li>
+            <li style="margin-left: 30px;">Fournissez un Picker permettant de choisir la couleur d’arrière-plan de
+              l’application.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Bouton de réinitialisation</strong>
+          <ul style="list-style-type: circle;">
+            <li style="margin-left: 30px;">Créez un bouton intitulé “Reset” pour réinitialiser tous les paramètres.</li>
+            <ul style="list-style-type: square;">
+              <li style="margin-left: 60px;">Taille du texte : 1.9</li>
+              <li style="margin-left: 60px;">Message affiché : “Hello, World!”</li>
+              <li style="margin-left: 60px;">Couleur du texte : Noir</li>
+              <li style="margin-left: 60px;">Couleur de l’arrière-plan : Jaune</li>
+            </ul>
+          </ul>
+        </li>
+        <li>
+          <strong>Interface utilisateur</strong>
+          <ul style="list-style-type: circle;">
+            <li style="margin-left: 30px;">Organisez les éléments de l’interface dans une pile verticale (VStack).</li>
+            <li style="margin-left: 30px;">Assurez-vous que le bouton de réinitialisation soit visuellement distinct
+              (par exemple, un fond rouge avec du texte blanc).</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Couleurs disponibles</strong>
+          <ul style="list-style-type: circle;">
+            <li style="margin-left: 30px;">Couleur du texte : Noir, Rouge, Bleu.</li>
+            <li style="margin-left: 30px;">Couleur de l’arrière-plan : Jaune, Vert, Orange.</li>
+        </li>
+      </ol>
+
+      <h2>Fonctionnalités de l’application</h2>
+      <ol>
+        <li>L’utilisateur peut ajuster la taille du texte en temps réel avec un slider.</li>
+        <li>Le texte s’actualise immédiatement selon les saisies ou sélections faites.</li>
+        <li>Le bouton Reset permet de restaurer les valeurs par défaut, quel que soit l’état actuel de l’application.
+        </li>
+      </ol>
+
+      <h2>Démonstration</h>
+      <div>
+        <iframe width="330" height="630" src="https://www.youtube.com/embed/cFkXMPTvvAo" frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen></iframe>
+      </div>
+
+      <br />
+
+      <a href="./download/module4/MaPremiereApplicationIOS.zip" class="download-link" style="font-size: x-large; text-decoration: underline;"
+        download>
+        Télécharger la solution
+      </a>
+    </section>
+  </div>
+  <footer class="footer">
+    <p>Développé par <a href="https://github.com/mathrob" style="color: white; text-decoration: underline;">Mathieu
+        Robson</a> &copy; <span id="current-year"></span></p>
+    <script>
+      document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script>
+      hljs.highlightAll();
+    </script>
+  </footer>
+  <div class="back-to-top" id="back-to-top">↑</div>
+  <script>
+    const backToTopButton = document.getElementById('back-to-top');
+
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 300) {
+        backToTopButton.style.display = 'block';
+      } else {
+        backToTopButton.style.display = 'none';
+      }
+    });
+
+    backToTopButton.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+  </script>
+</body>
+
+</html>

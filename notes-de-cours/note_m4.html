@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IFM025921</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" />
+  <link rel="stylesheet" href="../style.css" />
+</head>
+
+<body>
+  <header>
+    <h1 style="color: white">Module 4 - Note de cours</h1>
+  </header>
+  <div class="container">
+    <a href="../index.html" class="back-link">← Retour au module principal</a>
+
+    <section id="module-4" class="module-section">
+      <h1 id="swiftui">SwiftUI</h1>
+      <p>SwiftUI est un framework moderne développé par Apple pour créer des interfaces utilisateur de manière
+        déclarative sur ses plateformes, notamment iOS, macOS, watchOS et tvOS. Intégré à Xcode, SwiftUI simplifie le
+        processus de développement en utilisant le langage Swift et en offrant une approche intuitive basée sur des
+        déclarations visuelles. Ce framework permet aux développeurs de concevoir des interfaces réactives et
+        adaptatives tout en réduisant le code nécessaire et en facilitant l’intégration des mises à jour et des
+        animations.</p>
+
+      <h2 id="structure-app">Structure d'une application</h2>
+      <p>Une application SwiftUI est principalement composée des éléments suivants :</p>
+      <figure>
+        <img src="../imgs/swiftui-architecture.png" alt="image de l'architecture d'une application IOS"
+          style="width: 65%; height: auto" />
+        <p style="font-size: 13px;">Référence : Neil Smyth. <em>iOS 18 App Development Essentials</em>. Payload Media,
+          Inc.</p>
+      </figure>
+
+      <ul>
+        <li>
+          <strong>App</strong>
+          <ul style="list-style-type: circle;">
+            <li style="margin-left: 30px;">C’est l’élément au plus haut niveau de l’application.</li>
+            <li style="margin-left: 30px;">Il gère le cycle de vie de l’application et l’ensemble des instances de
+              scènes.</li>
+            <li style="margin-left: 30px;">Une application SwiftUI contient généralement une seule instance de App.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Scene</strong>
+          <ul style="list-style-type: circle;">
+            <li style="margin-left: 30px;">Une scène représente une fenêtre ou une section visible de l’application.
+            </li>
+            <li style="margin-left: 30px;">Sur iOS et watchOS, une scène correspond généralement à une vue plein écran.
+            </li>
+            <li style="margin-left: 30px;">Sur macOS et iPadOS, une application peut contenir plusieurs scènes, comme
+              des fenêtres multiples ou des interfaces en onglets.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>View</strong>
+          <ul style="list-style-type: circle;">
+            <li style="margin-left: 30px;">Les vues sont les éléments visuels de base de l’interface utilisateur, comme
+              des boutons, des champs de texte ou des étiquettes.</li>
+            <li style="margin-left: 30px;">Chaque scène contient une hiérarchie de vues organisées selon leur
+              disposition logique.</li>
+            <li style="margin-left: 30px;">Les vues peuvent être :
+              <ul style="list-style-type: square;">
+                <li style="margin-left: 30px;"><strong>Individuelles</strong> : par exemple, un champ de texte ou un
+                  bouton.</li>
+                <li style="margin-left: 30px;"><strong>Composites</strong> : un conteneur regroupant plusieurs vues
+                  (comme un VStack ou HStack).</li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+
+      <h2 id="projet-reel">Voyons cela dans un projet réel</h2>
+      <a href="https://developer.apple.com/tutorials/swiftui-concepts/exploring-the-structure-of-a-swiftui-app"
+        target="_blank" style="color: red; font-size: large; text-decoration: underline; margin-bottom: 50px;">Référence
+      </a>
+      <p>
+        Dans cette section, nous allons explorer la structure d’une application SwiftUI en utilisant un exemple simple
+        d’un projet nommé <strong>Exemple</strong>. Consultez le <a style="text-decoration: underline;"
+          href="./note_m1.html#install-xcode">module 1</a> pour savoir comment créer un projet dans Xcode.
+      </p>
+
+      <h3>ExempleApp</h3>
+      <p>
+        La structure commence par une déclaration de la structure nommée <strong>ExempleApp</strong> (nom du projet
+        suivi de "App"), qui agit comme la porte d’entrée de notre application "Exemple". Penchons-nous sur le contenu
+        de ce fichier et décortiquons ce code :
+      </p>
+
+      <figure>
+        <img src="../imgs/App.png" style="width: 65%; height: auto" />
+      </figure>
+
+      <div style="display: flex; align-items: center;">
+        <p style="flex: 1;">
+          Pour accéder aux symboles et aux fonctionnalités de SwiftUI, l'application utilise une déclaration
+          d'importation afin d'importer le framework SwiftUI.
+        </p>
+        <img src="../imgs/import.png" style="width: 35%; height: auto; margin-right: 350px;" />
+      </div>
+
+      <div style="display: flex; align-items: center; margin-top: 50px;">
+        <div style="flex: 1;">
+          <p>
+            Pour indiquer le point d'entrée de l'application SwiftUI, l'exemple applique l'attribut
+            <strong>@main</strong> à la structure
+            de l'application.
+          </p>
+          <strong>⚠️ Impotant</strong>
+          <p>
+            Une application SwiftUI ne peut contenir qu'un seul point d'entrée. Toute tentative d'application de
+            l'attribut <strong>@main</strong> à plus d'une structure dans l'application entraîne une erreur de
+            compilation.
+          </p>
+        </div>
+        <img src="../imgs/main.png" style="width: 35%; height: auto; margin-right: 350px;" />
+      </div>
+
+      <div style="display: flex; align-items: center; margin-top: 50px;">
+        <p style="flex: 1;">
+          La structure <strong>ExempleApp</strong> est conforme au protocole <strong><a
+              href="https://developer.apple.com/documentation/SwiftUI/App"
+              style="text-decoration: underline;">App</a></strong> et fournit le contenu ainsi que le comportement de
+          l'application.
+        </p>
+        <img src="../imgs/struct-exempleapp.png" style="width: 35%; height: auto; margin-right: 350px;" />
+      </div>
+
+      <div style="display: flex; align-items: center; margin-top: 50px;">
+        <div style="flex: 1;">
+          <p>
+            La structure implémente la propriété calculée <strong>body</strong>, qui est une exigence du protocole App.
+          </p>
+          <p>
+            Cette propriété renvoie le contenu de votre application, décrit comme <strong><a
+                href="https://developer.apple.com/documentation/SwiftUI/Scene"
+                style="text-decoration: underline;">Scene</a></strong>. Une scène contient la
+            hiérarchie des vues qui définit l'interface utilisateur de l'application. SwiftUI fournit différents types
+            de scènes, notamment <strong><a href="https://developer.apple.com/documentation/SwiftUI/WindowGroup"
+                style="text-decoration: underline;">WindowGroup</a></strong>,<strong><a
+                href="https://developer.apple.com/documentation/SwiftUI/Window"
+                style="text-decoration: underline;">Window</a></strong>, <strong><a
+                href="https://developer.apple.com/documentation/SwiftUI/DocumentGroup"
+                style="text-decoration: underline;">DocumentGroup</a></strong> et <strong><a
+                href="https://developer.apple.com/documentation/SwiftUI/Settings"
+                style="text-decoration: underline;">Settings</a></strong>.
+          </p>
+        </div>
+        <img src="../imgs/body.png" style="width: 35%; height: auto; margin-right: 350px;" />
+      </div>
+
+      <div style="display: flex; align-items: center; margin-top: 50px;">
+        <div style="flex: 1;">
+          <p>
+            Cet exemple utilise une WindowGroup pour représenter la fenêtre principale affichée par l'application.
+          </p>
+          <p>
+            SwiftUI offre des comportements spécifiques à chaque plateforme pour le composant WindowGroup. Sur macOS et
+            iPadOS, il est par exemple possible d’ouvrir plusieurs fenêtres au sein d’un même groupe. Sur macOS, il est
+            également possible de combiner plusieurs instances de WindowGroup en un ensemble d’onglets.
+          </p>
+        </div>
+        <img src="../imgs/windowGroup.png" style="width: 35%; height: auto; margin-right: 350px;" />
+      </div>
+
+      <div style="display: flex; align-items: center; margin-top: 50px;">
+        <div style="flex: 1;">
+          <p>
+            La scène contient une vue personnalisée appelée <strong>ContentView</strong>, qui crée une hiérarchie de
+            <strong>view</strong>.
+          </p>
+        </div>
+        <img src="../imgs/contentView.png" style="width: 35%; height: auto; margin-right: 350px;" />
+      </div>
+
+      <h3>ContentView</h3>
+      <p>
+        Dans SwiftUI, une scène contient la hiérarchie des vues d'une application qui seront affichées en tant
+        qu'interface utilisateur. Une hiérarchie de vues définit la disposition de ces dernières par rapport aux autres
+        vues. Dans cet exemple, une scène <strong>WindowGroup</strong> contient la hiérarchie de vues composée par
+        <strong>ContentView</strong> à l'aide d'autres vues.
+      </p>
+      <div style="display: flex; align-items: center; margin-top: 50px;">
+        <img src="../imgs/contentViewfile.png" alt="image de l'architecture d'une application IOS"
+          style="width: 45%; height: auto; flex: 1;" />
+        <figure>
+          <img src="../imgs/viewHierarchy.png" alt="image de l'architecture d'une application IOS"
+            style="width: 65%; height: auto" />
+          <figcaption><a
+              href="https://developer.apple.com/tutorials/swiftui-concepts/exploring-the-structure-of-a-swiftui-app">Apple
+              Developer</a></figcaption>
+        </figure>
+      </div>
+
+      <div style="display: flex; align-items: center; margin-top: 50px;">
+        <div style="flex: 1;">
+          <p>
+            Le code source commence par importer le framework SwiftUI.
+          </p>
+        </div>
+        <img src="../imgs/contentview-import.png" style="width: 35%; height: auto; margin-right: 350px;" />
+      </div>
+
+      <div style="display: flex; align-items: center; margin-top: 50px;">
+        <div style="flex: 1;">
+          <p>
+            ContentView est une structure conforme au protocole <strong><a
+                href="https://developer.apple.com/documentation/SwiftUI/View"
+                style="text-decoration: underline;">View</a></strong>.
+          </p>
+          <p>
+            Une vue définit un ou plusieurs éléments visuels qui apparaissent sur un écran. Une vue est généralement
+            composée d'autres vues, formant ainsi une hiérarchie.
+          </p>
+        </div>
+        <img src="../imgs/contentview-struct.png" style="width: 35%; height: auto; margin-right: 350px;" />
+      </div>
+
+      <div style="display: flex; align-items: center; margin-top: 50px;">
+        <div style="flex: 1;">
+          <p>
+            ContentView met en œuvre la propriété <strong>body</strong> comme le fait la structure
+            <strong>ExempleApp</strong> dans la section précédente.
+          </p>
+          <strong>Remarque</strong>
+          <p>
+            L’implémentation de la propriété <strong>body</strong> est un modèle courant que l’on retrouve dans tout le
+            code SwiftUI. Par exemple, lorsqu’une structure adopte des protocoles comme App, Scene et View.
+          </p>
+        </div>
+        <img src="../imgs/contentview-body.png" style="width: 35%; height: auto; margin-right: 350px;" />
+      </div>
+
+      <div style="display: flex; align-items: center; margin-top: 50px;">
+        <div style="flex: 1;">
+          <p>
+            ContentView contient la vue <strong><a href="https://developer.apple.com/documentation/SwiftUI/VStack"
+                style="text-decoration: underline;">VStack</a></strong> fournie par SwiftUI, qui organise les sous-vues
+            verticalement.
+          </p>
+          <p>
+            Une <strong><a href="https://developer.apple.com/documentation/SwiftUI/VStack"
+                style="text-decoration: underline;">VStack</a></strong> affiche simultanément toutes les vues qu'elle
+            contient, qu'elles soient à l'écran ou hors écran. L'utilisation de VStack est idéale lorsque vous avez un
+            petit nombre de vues secondaires. Toutefois, si votre application doit afficher beaucoup plus de vues
+            secondaires, envisagez d'utiliser <strong><a
+                href="https://developer.apple.com/documentation/SwiftUI/LazyVStack"
+                style="text-decoration: underline;">LazyVStack</a></strong>, qui ne les rend que lorsque l'application
+            doit les afficher à l'écran.
+          </p>
+        </div>
+        <img src="../imgs/contentview-vstack.png" style="width: 35%; height: auto; margin-right: 350px;" />
+      </div>
+
+      <div style="display: flex; align-items: center; margin-top: 50px;">
+        <div style="flex: 1;">
+          <p>
+            La première sous-vue de VStack est <strong><a
+              href="https://developer.apple.com/documentation/SwiftUI/Image"
+              style="text-decoration: underline;">Image</a></strong>, une vue qui affiche une image.
+          </p>
+          <p>
+            Cet exemple affiche l'image d'un globe à l'aide de la méthode d'initialisation <strong><a href="https://developer.apple.com/documentation/SwiftUI/Image/init(systemName:)"
+              style="text-decoration: underline;">init(systemName :)</a></strong>. Cette méthode crée une vue d'image qui affiche le symbole du système. Les images de symboles, comme le globe, proviennent de <strong><a href="https://developer.apple.com/sf-symbols/"
+                style="text-decoration: underline;">SF Symbols</a></strong>, une bibliothèque d'icônes que vous pouvez utiliser dans votre application.
+          </p>
+        </div>
+        <img src="../imgs/contentview-image.png" style="width: 35%; height: auto; margin-right: 350px;" />
+      </div>
+
+      <div style="display: flex; align-items: center; margin-top: 50px;">
+        <div style="flex: 1;">
+          <p>
+            ContentView applique le modificateur de vue <strong><a href="https://developer.apple.com/documentation/SwiftUI/View/imageScale(_:)"
+              style="text-decoration: underline;">imageScale(_:)</a></strong> à la vue de l'image afin de mettre cette dernière à l'échelle dans la vue, à la taille relative <strong><a href="https://developer.apple.com/documentation/SwiftUI/Image/Scale/large"
+                style="text-decoration: underline;">Image.Scale.large</a></strong>.
+          </p>
+        </div>
+        <img src="../imgs/contentview-imagescale.png" style="width: 35%; height: auto; margin-right: 350px;" />
+      </div>
+
+      <div style="display: flex; align-items: center; margin-top: 50px;">
+        <div style="flex: 1;">
+          <p>
+            Le modificateur <strong><a href="https://developer.apple.com/documentation/SwiftUI/View/foregroundColor(_:)"
+              style="text-decoration: underline;">foregroundColor(_:)</a></strong> ajoute de la couleur à l'image.
+          </p>
+          <p>
+            Dans cet exemple, ContentView applique la couleur sémantique <strong><a href="https://developer.apple.com/documentation/SwiftUI/Color/accentColor"
+              style="text-decoration: underline;">accentColor</a></strong>, qui reflète la couleur d'accentuation du système ou de l'application. Pour en savoir plus sur les représentations des couleurs, se référer à la page <strong><a href="https://developer.apple.com/documentation/SwiftUI/Color"
+                style="text-decoration: underline;">Color</a></strong>.
+          </p>
+        </div>
+        <img src="../imgs/contentview-foregroundstyle.png" style="width: 35%; height: auto; margin-right: 350px;" />
+      </div>
+
+      <div style="display: flex; align-items: center; margin-top: 50px;">
+        <div style="flex: 1;">
+          <p>
+            La deuxième sous-vue de VStack est <strong><a href="https://developer.apple.com/documentation/SwiftUI/Text"
+              style="text-decoration: underline;">Text</a></strong>, une vue qui affiche une ou plusieurs lignes de texte en lecture seule.
+          </p>
+        </div>
+        <img src="../imgs/contentview-text.png" style="width: 35%; height: auto; margin-right: 350px;" />
+      </div>
+
+      <div style="display: flex; align-items: center; margin-top: 50px;">
+        <div style="flex: 1;">
+          <p>
+            ContentView applique le modificateur <strong><a href="https://developer.apple.com/documentation/SwiftUI/View/padding(_:_:)"
+              style="text-decoration: underline;">padding(_:_:)</a></strong> au VStack, ajoutant une quantité par défaut de marge — spécifique à la plateforme — aux bords de la vue VStack.          </p>
+        </div>
+        <img src="../imgs/contentview-padding.png" style="width: 35%; height: auto; margin-right: 350px;" />
+      </div>
+
+      <div style="display: flex; align-items: center; margin-top: 50px;">
+        <div style="flex: 1;">
+          <p>
+            Ce code est une annotation utilisée dans SwiftUI pour activer l’aperçu en temps réel dans Xcode.
+Cela permet aux développeurs de voir et d’interagir avec la conception de leur interface sans exécuter l’application sur un simulateur ou un appareil physique.
+          </p>
+        </div>
+        <img src="../imgs/contentview-preview.png" style="width: 35%; height: auto; margin-right: 350px;" />
+      </div>
+
+    </section>
+  </div>
+  <footer class="footer">
+    <p>Développé par <a href="https://github.com/mathrob" style="color: white; text-decoration: underline;">Mathieu
+        Robson</a> &copy; <span id="current-year"></span></p>
+    <script>
+      document.getElementById("current-year").textContent =
+        new Date().getFullYear();
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script>
+      hljs.highlightAll();
+    </script>
+  </footer>
+  <div class="back-to-top" id="back-to-top">↑</div>
+  <script>
+    const backToTopButton = document.getElementById("back-to-top");
+
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 300) {
+        backToTopButton.style.display = "block";
+      } else {
+        backToTopButton.style.display = "none";
+      }
+    });
+
+    backToTopButton.addEventListener("click", () => {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    });
+  </script>
+</body>
+
+</html>
