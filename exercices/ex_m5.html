@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IFM025921</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" />
+  <link rel="stylesheet" href="../style.css" />
+</head>
+
+<body>
+  <header>
+    <h1 style="color: white">Module 5 - Exercice</h1>
+  </header>
+  <div class="container">
+    <a href="../index.html" class="back-link">← Retour au module principal</a>
+
+    <section id="module-5" class="module-section">
+      <h1>Car Store</h1>
+
+      <h2>Mise en situation</h2>
+      <p>
+        Compléter le projet en utilisant les différentes « View » comme les « List », « Navigation » et « Form » vues en
+        classe.
+      </p>
+
+      <h2>Instructions</h2>
+      <ol>
+        <li>Compléter le fichier « ContentView.swift » afin qu’il représente le modèle ci-dessous.</li>
+        <ul>
+          <li>a. Vous devez afficher la liste des voitures.</li>
+          <li>b. Vous devez ajouter un bouton « Add » menant vers le fichier « AddNewCar.swift ».</li>
+          <li>c. Vous devez ajouter un bouton « Edit » permettant de déplacer les items dans la liste.</li>
+          <li>d. Il faut pouvoir sélectionner une voiture afin de voir les détails de celle-ci.</li>
+          <li>e. Vous devez ajouter un effet de « scroll » pour lorsque la liste est trop longue.</li>
+          <li> <img src="../imgs/ex_carstore.png" alt="Module 5"
+              style="width: 90%; margin-top: 20px; margin-bottom: 20px;" />
+          </li>
+        </ul>
+        <li>Compléter le fichier « CarDetail.swift » afin qu’il représente le modèle ci-dessous.</li>
+        <ul>
+          <li>a. Vous devez ajouter un effet de « scroll » pour lorsque la liste est trop longue.</li>
+          <li> 
+            <img src="../imgs/carstore-detailpage.png" alt="Module 5"
+            style="width: 90%; margin-top: 20px; margin-bottom: 20px;" />
+        </li>
+        </ul>
+        <li>Compléter le fichier « AddNewCar.swift » afin qu’il représente le modèle ci-dessous.</li>
+        <ul>
+          <li>a.	La voiture doit s’ajouter à la liste de voitures lorsque le formulaire est rempli et que le bouton « Add Car » est cliqué. </li>
+          <li>b.	Vous devez ajouter un effet de « scroll » pour lorsque la liste est trop longue.</li>
+          <li> 
+            <img src="../imgs/carstore-addcar.png" alt="Module 5"
+            style="width: 90%; margin-top: 20px; margin-bottom: 20px;" />
+          </li>
+        </ul>
+      </ol>
+
+      <h2 id="info-supp">Informations supplémentaires</h2>
+      <p>
+        Dans le fichier « CarDetail.swift », il y a une icône qui indique si la voiture est hybride ou non. Voici comment vous pouvez afficher cette icône.
+      </p>
+      <img src="../imgs/carstore-image.png" alt="Module 5"
+            style="width: 90%; margin-top: 20px; margin-bottom: 20px;" />
+      <p>
+        Voici comment utiliser la fonction « DataInput » dans le fichier « AddNewCar.swift ».
+      </p>
+      <img src="../imgs/carstore-datainput.png" alt="Module 5"
+            style="width: 90%; margin-top: 20px; margin-bottom: 20px;" />
+      <p>
+        Dans le fichier « ContentView.swift », vous pouvez utiliser la fonction « ListCell » afin d’afficher les items dans la liste.
+      </p>
+
+      <br />
+
+      <a href="./download/module5/CarStore-dist.zip" class="download-link"
+        style="font-size: x-large; text-decoration: underline;" download>
+        Télécharger le projet de base
+      </a>
+
+      <a href="./download/module5/CarStore-Solution.zip" class="download-link"
+        style="font-size: x-large; text-decoration: underline; margin-left: 60px;" download>
+        Télécharger la solution
+      </a>
+
+      <br />
+    </section>
+  </div>
+  <footer class="footer">
+    <p>Développé par <a href="https://github.com/mathrob" style="color: white; text-decoration: underline;">Mathieu
+        Robson</a> &copy; <span id="current-year"></span></p>
+    <script>
+      document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script>
+      hljs.highlightAll();
+    </script>
+  </footer>
+  <div class="back-to-top" id="back-to-top">↑</div>
+  <script>
+    const backToTopButton = document.getElementById('back-to-top');
+
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 300) {
+        backToTopButton.style.display = 'block';
+      } else {
+        backToTopButton.style.display = 'none';
+      }
+    });
+
+    backToTopButton.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+  </script>
+</body>
+
+</html>
