@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IFM025921</title>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" />
+    <link rel="stylesheet" href="../style.css" />
+</head>
+
+<body>
+    <header>
+        <h1 style="color: white">Module 6 - Note de cours</h1>
+    </header>
+    <div class="container">
+        <a href="../index.html" class="back-link">← Retour au module principal</a>
+
+        <section id="module-6-1" class="module-section">
+            <h1 id="concurrence">Concurrence et modificateurs d'événements de cycle de vie</h1>
+
+            <p>SwiftUI est un outil puissant qui simplifie la création d’interfaces utilisateur en gérant
+                automatiquement le cycle de vie des vues. Cela signifie que certaines actions, comme la mise à jour de
+                l’affichage ou la gestion des données, sont prises en charge sans que vous ayez à vous en soucier.</p>
+            <p>Cependant, il arrive que l’on ait besoin de déclencher certaines actions à des moments précis du cycle de
+                vie d’une vue. Par exemple :</p>
+            <ol>
+                <li>Exécuter un code lorsqu’une vue apparaît à l’écran.</li>
+                <li>Nettoyer des ressources lorsqu’une vue disparaît.</li>
+                <li>Lancer une tâche en arrière-plan dès que la vue est affichée.</li>
+            </ol>
+            <p>Pour cela, SwiftUI propose des modificateurs d’événements, qui permettent d’exécuter du code en fonction
+                de l’état de la vue.</p>
+            <p>Dans ce chapitre, nous allons voir comment utiliser quatre des modificateurs d’événements les plus
+                courants en créant un projet qui illustre leur fonctionnement. 🚀</p>
+
+            <h2>🛠️ Conception de l’application : Création d’une interface avec des onglets</h2>
+            <p>Dans cette section, nous allons apprendre à structurer une application avec une interface utilisant des
+                onglets grâce à TabView en SwiftUI. Cela permettra à l’utilisateur de naviguer facilement entre
+                différentes vues.</p>
+
+            <h3>🎯 1. Modification de ContentView.swift</h3>
+            <p>Nous allons commencer par modifier le fichier ContentView.swift pour y intégrer une barre d’onglets
+                contenant deux vues.</p>
+
+            <p><strong>Étape 1 :</strong> Ouvrir <code>ContentView.swift</code></p>
+            <p>Dans votre projet Xcode, ouvrez <code>ContentView.swift</code>, puis remplacez son contenu par le code
+                suivant :</p>
+
+            <pre><code class="swift">
+import SwiftUI
+
+struct ContentView: View {
+    var body: some View {
+        TabView {
+            FirstTabView()
+                .tabItem {
+                    Image(systemName: "01.circle")
+                    Text("Premier")
+                }
+            
+            SecondTabView()
+                .tabItem {
+                    Image(systemName: "02.circle")
+                    Text("Deuxième")
+                }
+        }
+    }
+}
+</code></pre>
+
+            <p>✅ Ici, nous utilisons <code>TabView</code> pour afficher deux vues :</p>
+            <ol>
+                <li><code>FirstTabView()</code> : La première vue avec une icône et un texte “Premier”.</li>
+                <li><code>SecondTabView()</code> : La deuxième vue avec une icône et un texte “Deuxième”.</li>
+            </ol>
+            <p>Les modificateurs <code>.tabItem</code> permettent d’ajouter une icône et un texte pour identifier chaque
+                onglet.</p>
+
+            <h3>2. Création des fichiers de vues pour les onglets</h3>
+
+            <p>Nous allons maintenant créer les fichiers nécessaires pour ces deux vues.</p>
+
+            <div class="step">
+                <p><strong>Étape 2 :</strong> Créer la première vue (<code>FirstTabView</code>)</p>
+                <ol>
+                    <li>Appuyez sur Cmd + N pour ajouter un nouveau fichier.</li>
+                    <li>Dans la fenêtre qui s’affiche, sélectionnez l’onglet iOS, puis choisissez SwiftUI View sous la
+                        section “Interface utilisateur”.</li>
+                    <li>Cliquez sur Suivant, nommez le fichier <code>FirstTabView.swift</code>, puis cliquez sur Créer.
+                    </li>
+                    <li>Remplacez le contenu du fichier par :</li>
+                </ol>
+            </div>
+
+            <pre><code class="swift">
+import SwiftUI
+
+struct FirstTabView: View {
+    var body: some View {
+        Text("Vue Un")
+            .font(.largeTitle)
+            .padding()
+    }
+}
+</code></pre>
+
+            <div class="step">
+                <p><strong>Étape 3 :</strong> Créer la deuxième vue (<code>SecondTabView</code>)</p>
+                <ul>
+                    <li>Répétez les mêmes étapes que pour <code>FirstTabView</code>, mais cette fois-ci, nommez le
+                        fichier <code>SecondTabView.swift</code>.</li>
+                    <li>Remplacez son contenu par :</li>
+                </ul>
+            </div>
+
+            <pre><code class="swift">
+import SwiftUI
+
+struct SecondTabView: View {
+    var body: some View {
+        Text("Vue Deux")
+            .font(.largeTitle)
+            .padding()
+    }
+}
+</code></pre>
+
+            <h3>🎉 3. Test et Résultat</h3>
+            <p>Lancez l’aperçu dans Xcode en cliquant sur Resume ou en exécutant l’application avec Cmd + R. Vous
+                devriez voir une interface avec deux onglets permettant de naviguer entre “Vue Un” et “Vue Deux”.</p>
+
+            <img src="../imgs/tabview.png" alt="" style="margin-left: 100px; width: 200px;">
+
+            <h3>📌 Résumé de ce que nous avons appris :</h3>
+            <ul>
+                <li>✅ TabView permet de créer une navigation par onglets.</li>
+                <li>✅ .tabItem {} ajoute une icône et un texte aux onglets.</li>
+                <li>✅ Nous avons séparé nos vues en fichiers distincts pour une meilleure organisation.</li>
+            </ul>
+
+            <br />
+
+            <h2 id="onappear">🎯 Comprendre les modificateurs onAppear et onDisappear</h2>
+
+            <p>SwiftUI nous permet de réagir aux changements d’affichage des vues grâce aux modificateurs
+                <code>onAppear()</code> et <code>onDisappear()</code>.
+            </p>
+            <ul>
+                <li style="margin-left: 30px;"><code>onAppear</code> : Exécute une action lorsque la vue apparaît à
+                    l’écran.</li>
+                <li style="margin-left: 30px;"><code>onDisappear</code> : Exécute une action lorsque la vue disparaît de
+                    l’écran.</li>
+            </ul>
+            <p>Ces modificateurs sont très utiles pour :</p>
+            <ul>
+                <li style="margin-left: 30px;">✅ Charger des données quand une vue s’affiche.</li>
+                <li style="margin-left: 30px;">✅ Démarrer une animation ou un effet visuel.</li>
+                <li style="margin-left: 30px;">✅ Libérer des ressources ou sauvegarder des informations quand une vue
+                    disparaît.</li>
+            </ul>
+
+            <h3>🛠️ Ajout des modificateurs onAppear et onDisappear</h3>
+            <p>Nous allons maintenant les intégrer dans <code>FirstTabView.swift</code> pour observer leur
+                fonctionnement.</p>
+
+            <div class="step">
+                <p><strong>Étape 1 :</strong> Modifier <code>FirstTabView.swift</code></p>
+                <p>Ouvrez le fichier <code>FirstTabView.swift</code> et remplacez son contenu par :</p>
+            </div>
+
+            <pre><code class="swift">
+import SwiftUI
+
+struct FirstTabView: View {
+    var body: some View {
+        Text("Vue Un")
+            .font(.largeTitle)
+            .padding()
+            .onAppear {
+                print("🔵 FirstTabView est apparu")
+            }
+            .onDisappear {
+                print("🔴 FirstTabView a disparu")
+            }
+    }
+}
+    </code></pre>
+
+            <div class="step">
+                <p><strong>Étape 2 :</strong> Lancer l’application</p>
+                <ol>
+                    <li>Exécutez l’application sur un simulateur ou un appareil avec Cmd + R.</li>
+                    <li>Ouvrez le panneau Console dans Xcode (View → Debug Area → Activate Console).</li>
+                    <li>Observez le message "🔵 FirstTabView est apparu" qui s’affiche lorsque l’onglet est visible.
+                    </li>
+                </ol>
+            </div>
+
+            <div class="step">
+                <p><strong>Étape 3 :</strong> Changer d’onglet</p>
+                <ol>
+                    <li>Cliquez sur l’onglet Deuxième pour afficher <code>SecondTabView</code>.</li>
+                    <li>Vous verrez apparaître le message “🔴 FirstTabView a disparu” dans la console.</li>
+                    <li>Revenez à l’onglet Premier et notez que “🔵 FirstTabView est apparu” est affiché à nouveau.</li>
+                </ol>
+            </div>
+
+            <h3>📌 Explication du fonctionnement</h3>
+            <ol></ol>
+            <li style="margin-left: 30px;">L’application démarre → <code>FirstTabView</code> est affiché →
+                <code>onAppear</code> est déclenché.
+            </li>
+            <li style="margin-left: 30px;">L’utilisateur change d’onglet → <code>FirstTabView</code> disparaît →
+                <code>onDisappear</code> est
+                déclenché.
+            </li>
+            <li style="margin-left: 30px;">L’utilisateur revient sur le premier onglet → <code>onAppear</code> est à
+                nouveau exécuté.</li>
+            </ol>
+
+            <h4>🚀 Pourquoi c’est utile ?</h4>
+            <ul>
+                <li style="margin-left: 30px;">✅ Charger des données dynamiquement à l’apparition d’une vue.</li>
+                <li style="margin-left: 30px;">✅ Nettoyer des ressources lorsqu’une vue n’est plus visible.</li>
+                <li style="margin-left: 30px;">✅ Gérer des interactions utilisateur en fonction de l’affichage.</li>
+            </ul>
+
+            <br />
+
+            <h2 id="onchange">🎯 Comprendre et utiliser onChange en SwiftUI</h2>
+            <p>Le modificateur <code>onChange(of:)</code> permet d’exécuter une action dès qu’une valeur spécifique
+                change. C’est particulièrement utile lorsque vous souhaitez réagir aux modifications d’un état dans
+                votre application.</p>
+
+            <h4>✅ Quand l’utiliser ?</h4>
+            <ol>
+                <li>Pour détecter les changements dans une variable <code>@State</code> et exécuter une action en
+                    conséquence.</li>
+                <li>Pour déclencher un traitement lorsque l’utilisateur modifie une valeur dans l’interface (ex. champ
+                    de texte, sélection dans une liste, changement d’état).</li>
+                <li>En conjonction avec la propriété d’environnement <code>ScenePhase</code> (utilisée pour détecter si
+                    l’application passe en arrière-plan ou revient au premier plan).</li>
+            </ol>
+
+            <h3>🛠️ Ajout du modificateur onChange</h3>
+            <p>Nous allons modifier le fichier <code>SecondTabView.swift</code> pour observer le fonctionnement de
+                <code>onChange</code> lorsqu’un utilisateur tape dans un champ de texte.
+            </p>
+
+            <div class="step">
+                <p><strong>Étape 1 :</strong> Modifier <code>SecondTabView.swift</code></p>
+                <p>Remplacez le contenu du fichier par le code suivant :</p>
+            </div>
+
+            <pre><code class="swift">
+import SwiftUI
+
+struct SecondTabView: View {
+    @State private var text: String = ""
+
+    var body: some View {
+        VStack {
+            Text("Tapez quelque chose :")
+                .font(.headline)
+
+            TextEditor(text: $text)
+                .frame(height: 150)
+                .border(Color.gray, width: 1)
+                .padding()
+                .onChange(of: text) { newValue in
+                    print("🔄 Texte modifié : \(newValue)")
+                }
+        }
+        .padding()
+    }
+}
+
+#Preview {
+    SecondTabView()
+}
+    </code></pre>
+
+            <div class="step">
+                <p><strong>Étape 2 :</strong> Lancer l’application</p>
+                <ol>
+                    <li>Exécutez l’application dans Xcode avec Cmd + R.</li>
+                    <li>Dans le simulateur, tapez du texte dans la zone de saisie.</li>
+                </ol>
+            </div>
+
+            <div class="step">
+                <p><strong>Étape 3 :</strong> Observer les résultats</p>
+                <ul>
+                    <li>Chaque fois que vous tapez une lettre, la console affiche :
+                        <code>🔄 Texte modifié : [nouvelle valeur du texte]</code>
+                    </li>
+                </ul>
+            </div>
+
+            <h3>📌 Explication du fonctionnement</h3>
+            <ol>
+                <li>La variable <code>@State private var text: String = ""</code> est un état qui stocke le texte saisi.
+                </li>
+                <li><code>TextEditor(text: $text)</code> permet à l’utilisateur de modifier cette variable.</li>
+                <li>Le modificateur <code>onChange(of: text)</code> surveille <code>text</code> et exécute du code
+                    chaque fois qu’il change.</li>
+                <li>Ici, on affiche simplement la nouvelle valeur dans la console, mais on pourrait aussi :
+                    <ul style="list-style-type: square;">
+                        <li style="margin-left: 30px;">Sauvegarder les modifications.</li>
+                        <li style="margin-left: 30px;">Mettre à jour une autre partie de l’interface.</li>
+                        <li style="margin-left: 30px;">Déclencher une validation de saisie.</li>
+                    </ul>
+                </li>
+            </ol>
+
+            <h3>🚀 Pourquoi onChange est-il utile ?</h3>
+            <ul>
+                <li style="margin-left: 30px;">✅ Réagir aux entrées utilisateur en temps réel (ex. activer/désactiver un
+                    bouton en fonction de la
+                    saisie).</li>
+                <li style="margin-left: 30px;">✅ Déclencher une mise à jour dynamique (ex. mise à jour d’une liste en
+                    fonction d’un filtre).</li>
+                <li style="margin-left: 30px;">✅ Surveiller des changements d’état système (ex. vérifier si
+                    l’application passe en arrière-plan).
+                </li>
+            </ul>
+        </section>
+
+        <section id="module-6-1" class="module-section">
+            <h1 id="observable">Observable et Environment Objects</h1>
+            <p>
+                Dans ce chapitre, nous allons apprendre à utiliser des objets observables et des objets d’environnement
+                dans SwiftUI. Ces objets sont très utiles pour gérer des données qui changent au cours du temps, comme
+                un compteur qui s’incrémente chaque seconde.
+            </p>
+
+            <h2>🎯 Qu’est-ce qu’un objet observable?</h2>
+            <p>
+                Un objet observable est une sorte de “boîte” où nous stockons des données que nous voulons suivre
+                (observer). Dès que ces données changent, SwiftUI met à jour automatiquement les vues qui utilisent ces
+                données. Par exemple, nous allons créer un objet qui utilise un Timer pour incrémenter un compteur
+                chaque seconde.
+            </p>
+
+            <h3>🛠️ Création d’un objet observable</h3>
+            <p>
+                Commencez par créer une nouvelle classe pour notre objet observable. Cette classe gérera un compteur et
+                mettra à jour cette valeur chaque seconde à l’aide d’un Timer.
+            </p>
+            <p>
+                Voici à quoi cela pourrait ressembler dans un fichier nommé TimerData.swift :
+            </p>
+            <pre><code class="swift">
+import Foundation
+
+@Observable class TimerData {
+
+    var timeCount = 0
+    var timer : Timer?
+
+    init() {
+        // Créer un timer qui se déclenche toutes les secondes
+        timer = Timer.scheduledTimer(
+                    withTimeInterval: 1.0, repeats: true) {_ in
+            self.update() // Appel de la fonction update chaque seconde
+        }
+    }
+
+    // Met à jour le compteur
+    func update() {
+        timeCount += 1
+    }
+
+    // Réinitialise le compteur
+    func resetCount() {
+        timeCount = 0
+    }
+}
+            </code></pre>
+            <p>
+                Ici, chaque fois que le Timer se déclenche, il appelle la fonction update() qui incrémente le compteur.
+            </p>
+
+            <h3>🎯 Création de la vue ContentView</h3>
+            <p>
+                Maintenant que nous avons notre objet observable, nous allons créer une vue qui affichera ce compteur.
+            </p>
+            <ol>
+                <li>Ouvrez le fichier <code>ContentView.swift</code>.</li>
+                <li>Dans la vue, nous allons afficher le compteur et ajouter un bouton pour le réinitialiser.</li>
+            </ol>
+
+            <p>
+                Voici comment vous pouvez écrire cette vue :
+            </p>
+            <pre><code class="swift">
+import SwiftUI
+
+struct ContentView: View {
+
+    var timerData: TimerData = TimerData()
+
+    var body: some View {
+    
+        NavigationView {
+            VStack {
+                Text("Compte à rebours = \(timerData.timeCount)")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .padding()
+                
+                Button(action: resetCount) {
+                    Text("Réinitialiser le compteur")
+                }
+            }
+        }
+    }
+
+    func resetCount() {
+        timerData.resetCount() // Appel pour réinitialiser le compteur
+    }
+}
+
+#Preview {
+    ContentView()
+}
+            </code></pre>
+            <p>
+                Quand vous exécutez cette vue, vous verrez le compteur s’incrémenter chaque seconde, et vous pourrez le réinitialiser en appuyant sur le bouton.
+            </p>
+
+            <h3>🎯 Ajout de la Deuxième Vue</h3>
+            <p>
+                Maintenant, nous allons ajouter une deuxième vue (SecondView) qui affichera également le même compteur. Nous voulons nous assurer que la valeur du compteur est partagée entre les vues.
+            </p>
+            <ol>
+                <li>Créez un nouveau fichier SwiftUI pour <code>SecondView.swift</code>.</li>
+                <li>Cette vue affichera également le compteur, mais elle aura besoin d’accéder au même objet <strong>TimerData</strong>.</li>
+            </ol>
+
+            <p>
+                Voici à quoi cela pourrait ressembler :
+            </p>
+            <pre><code class="swift">
+import SwiftUI
+
+struct SecondView: View {
+
+    var timerData: TimerData
+
+    var body: some View {
+
+        VStack {
+            Text("Deuxième Vue")
+                .font(.largeTitle)
+            Text("Compteur de Timer = \(timerData.timeCount)")
+                .font(.headline)
+        }
+        .padding()
+    }
+}
+
+#Aperçu {
+    SecondView(timerData: TimerData())
+}
+            </code></pre>
+
+            <h3>🎯 Navigation entre les vues</h3>
+            <p>
+                Pour naviguer de la <strong>ContentView</strong> à la <strong>SecondView</strong>, nous devons ajouter un bouton de navigation.
+            </p>
+            <p>
+                Voici comment vous pouvez ajouter un <strong>NavigationLink</strong> dans ContentView pour naviguer vers SecondView :
+            </p>
+            <pre><code class="swift">
+var body: some View {
+    NavigationView {
+        VStack {
+            Text("Compteur de timer = \(timerData.timeCount)")
+                .font(.largeTitle)
+                .fontWeight(.bold)
+                .padding()
+            
+            Button(action: resetCount) {
+                Text("Réinitialiser le compteur")
+            }
+            
+            // Lien pour aller à la deuxième vue
+            NavigationLink(destination: SecondView(timerData: timerData)) {
+                Text("Écran Suivant")
+            }
+            .padding()
+        }
+    }
+}
+            </code></pre>
+            <p>
+                Quand vous appuyez sur le bouton “Écran Suivant”, l’application va naviguer vers la deuxième vue et afficher le même compteur.
+            </p>
+
+            <h3>🎯 Utilisation d’un Objet d’Environnement</h3>
+            <p>
+                Au lieu de passer l’objet TimerData manuellement entre les vues, nous allons utiliser un objet d’environnement. Cela permet de partager facilement des données entre différentes vues sans avoir à les transmettre explicitement.
+            </p>
+            
+            <ol>
+                <li>
+                    Modifiez <code>ContentView.swift</code> pour inclure l’objet <strong>TimerData</strong> dans l’environnement :
+
+                    <pre><code class="swift">
+import SwiftUI
+
+struct ContentView: View {
+    var timerData: TimerData = TimerData()
+
+    var body: some View {
+        NavigationView {
+            VStack {
+                NavigationLink(destination: SecondView()) {
+                    Text("Écran Suivant")
+                }
+                .padding()
+            }
+        }
+        .environment(\.timerData, timerData) // Ajout de l'objet TimerData à l'environnement
+    }
+}
+
+#Preview {
+    ContentView()
+}
+                        </code></pre>
+                </li>
+                <li>
+                    Ensuite, dans SecondView.swift, utilisez le modificateur @Environment pour accéder à l’objet TimerData :
+                    <pre><code class="swift">
+import SwiftUI
+
+struct SecondView: View {
+    @Environment(\.timerData) var timerData: TimerData // Accès à l'objet TimerData via l'environnement
+
+    var body: some View {
+        VStack {
+            Text("Deuxième Vue")
+                .font(.largeTitle)
+            Text("Compteur de Timer = \(timerData.timeCount)")
+                .font(.headline)
+        }
+        .padding()
+    }
+}
+
+#Preview {
+    SecondView()
+}
+                        </code></pre>
+                        <p>Maintenant, les deux vues utilisent le même objet TimerData grâce à l’environnement. Il n’est plus nécessaire de le passer manuellement d’une vue à l’autre.</p>
+                </li>
+            </ol>
+            <h3>Résumé</h3>
+            <p>
+                Dans ce chapitre, vous avez appris à :
+            </p>
+            <ol>
+                <li>✅ Créer un objet observable pour suivre des données qui changent, comme un compteur.</li>
+                <li>✅ Utiliser un objet d’environnement pour partager des données entre plusieurs vues sans avoir à les passer manuellement.</li>
+                <li>✅ Créer des vues interactives qui utilisent ces objets pour afficher et mettre à jour les données dynamiques.</li>
+            </ol>
+            <p>
+                Cela vous permet de créer des applications plus flexibles et plus simples à maintenir, car vous pouvez partager des données entre différentes parties de l’application sans avoir à vous soucier de leur transmission manuelle.
+            </p>
+        </section>
+    </div>
+</body>
+</section>
+</div>
+
+<footer class="footer">
+    <p>Développé par <a href="https://github.com/mathrob" style="color: white; text-decoration: underline;">Mathieu
+            Robson</a> &copy; <span id="current-year"></span></p>
+    <script>
+        document.getElementById("current-year").textContent =
+            new Date().getFullYear();
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script>
+        hljs.highlightAll();
+    </script>
+</footer>
+<div class="back-to-top" id="back-to-top">↑</div>
+<script>
+    const backToTopButton = document.getElementById("back-to-top");
+
+    window.addEventListener("scroll", () => {
+        if (window.scrollY > 300) {
+            backToTopButton.style.display = "block";
+        } else {
+            backToTopButton.style.display = "none";
+        }
+    });
+
+    backToTopButton.addEventListener("click", () => {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+        });
+    });
+</script>
+</body>
+
+</html>
