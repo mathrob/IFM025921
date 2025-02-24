@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IFM025921</title>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" />
+    <link rel="stylesheet" href="../style.css" />
+</head>
+
+<body>
+    <header>
+        <h1 style="color: white">Module 7 - Note de cours</h1>
+    </header>
+    <div class="container">
+        <a href="../index.html" class="back-link">← Retour au module principal</a>
+
+        <section id="module-7" class="module-section">
+                <h1>Intégration d'une API dans une application iOS avec SwiftUI</h1>
+
+                <h2>Introduction</h2>
+                <p>
+                    L'objectif de cette application est de montrer comment consommer une API (ici l’API OpenWeather)
+                    dans un projet iOS natif en utilisant SwiftUI.
+                    L'application permet de récupérer et d’afficher les prévisions météo d'une ville saisie par
+                    l'utilisateur.
+                    Nous utiliserons le modèle de conception <strong>MVVM</strong> pour séparer la logique métier
+                    (récupération et traitement des données) de l'interface utilisateur.
+                </p>
+                <p>
+                    Dans cette fiche, nous allons détailler chaque étape du développement :
+                </p>
+                <ol>
+                    <li>Présentation de l'architecture MVVM</li>
+                    <li>Création des modèles de données</li>
+                    <li>Construction de l'interface avec SwiftUI</li>
+                    <li>Développement du ViewModel pour récupérer les données via l'API</li>
+                    <li>Intégration et affichage des données dans l'application</li>
+                </ol>
+
+                <h2>Architecture de l’application</h2>
+                <h3>Modèle MVVM</h3>
+                <p>
+                    Le modèle <strong>MVVM</strong> (Model-View-ViewModel) vous aide à organiser votre code en séparant
+                    trois parties distinctes :
+                </p>
+                <ul>
+                    <li>
+                        <strong>Model</strong> : Ce sont les structures qui représentent les données renvoyées par
+                        l’API. Par exemple, nous définissons des structures comme <code>WeatherData</code>,
+                        <code>Forecast</code>, <code>Main</code>, <code>Weather</code>, <code>Wind</code> et
+                        <code>City</code> pour correspondre aux données JSON.
+                    </li>
+                    <li>
+                        <strong>View</strong> : Ce sont les écrans et composants d’interface utilisateur créés avec
+                        SwiftUI. Par exemple, <code>ContentView</code> est la vue principale, et nous avons aussi des
+                        composants comme <code>MeteoParHeure</code> et <code>MoreDetailMenu</code> pour afficher
+                        différentes parties de l’information.
+                    </li>
+                    <li>
+                        <strong>ViewModel</strong> : C’est la classe qui fait le lien entre le Model et la View. Ici,
+                        <code>WeatherViewModel</code> gère la récupération des données de l’API, leur décodage et met à
+                        jour les vues.
+                    </li>
+                </ul>
+
+                <h3>Communication et états</h3>
+                <p>
+                    Pour assurer la communication entre la View et le ViewModel et pour gérer les états, SwiftUI propose
+                    plusieurs annotations :
+                </p>
+                <ul>
+                    <li>
+                        <code>@StateObject</code> : Crée et observe le ViewModel dans une vue. Dès que les données
+                        changent, la vue se rafraîchit automatiquement.
+                    </li>
+                    <li>
+                        <code>@Published</code> : Utilisé dans le ViewModel pour signaler que certaines propriétés,
+                        comme <code>weatherData</code>, ont changé.
+                    </li>
+                    <li>
+                        <code>@State</code> : Gère l’état local d’une vue, par exemple le contenu d’un
+                        <code>TextField</code>.
+                    </li>
+                    <li>
+                        <code>@FocusState</code> : Permet de gérer le focus (l'endroit où l'utilisateur tape) sur un
+                        champ de saisie.
+                    </li>
+                </ul>
+
+                <h2>Les Vues</h2>
+                <h3>ContentView</h3>
+                <p>
+                    La <strong>ContentView</strong> est la vue principale de l'application. Elle comporte plusieurs
+                    éléments essentiels :
+                </p>
+                <ul>
+                    <li>
+                        Un arrière-plan dégradé, créé à l'aide de <code>LinearGradient</code>, pour un rendu esthétique.
+                    </li>
+                    <li>
+                        Un <code>TextField</code> qui permet à l'utilisateur de saisir le nom d'une ville.
+                    </li>
+                    <li>
+                        Une condition qui vérifie si des données météo sont disponibles :
+                        <ul>
+                            <li>
+                                Si oui, elle affiche les informations telles que le nom de la ville, la température,
+                                etc.
+                            </li>
+                            <li>
+                                Sinon, elle affiche une vue par défaut avec un champ de saisie.
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <p>
+                    Lorsque l'utilisateur valide sa saisie (en appuyant sur "Entrée"), la méthode
+                    <code>fetchWeather(city:)</code> du ViewModel est appelée pour récupérer les données.
+                </p>
+                <p>Exemple de code pour <code>ContentView</code> :</p>
+
+                <pre><code class="swift">
+import SwiftUI
+
+struct ContentView: View {
+    // Création et observation du ViewModel
+    @StateObject var weatherViewModel = WeatherViewModel()
+    // Variable pour stocker la saisie de l'utilisateur
+    @State private var cityTextInput = ""
+    // Gérer le focus sur le TextField
+    @FocusState private var focus: Bool
+
+    var body: some View {
+        ZStack {
+            // Arrière-plan en dégradé
+            LinearGradient(gradient: Gradient(colors: [.blue, .blue, .blue, .white]),
+                            startPoint: .top, endPoint: .bottom)
+                .ignoresSafeArea()
+
+            VStack {
+                if let weatherData = weatherViewModel.weatherData {
+                    // Affiche le nom de la ville et le pays
+                    Text("\(weatherData.city.name), \(weatherData.city.country)")
+                        .font(.system(size: 30))
+                        .foregroundColor(.white)
+                        .padding(.top, 50)
+                    // Ici, d'autres composants pour afficher les données météo seront ajoutés
+                } else {
+                    // Affichage par défaut quand aucune donnée n'est disponible
+                    VStack {
+                        Spacer()
+                        Image(systemName: "sun.and.horizon.fill")
+                            .symbolRenderingMode(.multicolor)
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 300)
+                        TextField("Ville", text: $cityTextInput)
+                            .textFieldStyle(.roundedBorder)
+                            .padding(.horizontal)
+                            .onSubmit {
+                                weatherViewModel.fetchWeather(city: cityTextInput)
+                            }
+                            .focused($focus)
+                            .autocorrectionDisabled(true)
+                        Spacer()
+                    }
+                    .onAppear {
+                        focus = true
+                    }
+                }
+            }
+            .padding(.horizontal, 10)
+        }
+    }
+}
+                </code></pre>
+
+                <h2>Gestion des données (Modèles)</h2>
+                <p>
+                    Les modèles sont des structures qui représentent les données que nous recevons de l’API.
+                    Pour faciliter la conversion des données JSON en objets Swift, ces structures doivent adopter le
+                    protocole <code>Decodable</code>.
+                </p>
+                <p>Exemple de structure pour <code>WeatherData</code> :</p>
+                <div class="code-block">
+                    <pre><code class="language-swift">
+              struct WeatherData: Decodable {
+                  let list: [Forecast]  // Liste des prévisions météo
+                  let city: City        // Informations sur la ville
+              }
+              
+              struct Forecast: Decodable {
+                  let main: Main        // Informations principales (température, humidité, etc.)
+                  let weather: [Weather]// Description du temps et icônes associées
+                  let wind: Wind        // Informations sur le vent
+                  let dt: TimeInterval  // Date de la prévision en timestamp Unix
+                  let dt_txt: String    // Date au format texte (facultatif)
+              }
+                  </code></pre>
+                </div>
+
+                <h2>Le ViewModel : WeatherViewModel</h2>
+                <p>
+                    Le ViewModel sert d'intermédiaire entre les données (les modèles) et l'affichage (les vues).
+                    Il récupère les données depuis l'API, les décode et les met à disposition pour que la vue puisse les
+                    afficher.
+                </p>
+                <h3>Récupération des données</h3>
+                <p>
+                    La méthode <code>fetchWeather(city:)</code> du ViewModel effectue les étapes suivantes :
+                </p>
+                <ol>
+                    <li>
+                        <strong>Construction de l'URL</strong> : On crée l'URL en insérant le nom de la ville et les
+                        paramètres requis (nombre de prévisions, langue, unités, et votre clé API).
+                    </li>
+                    <li>
+                        <strong>Envoi de la requête</strong> : À l'aide de <code>URLSession</code>, on envoie une
+                        requête réseau asynchrone.
+                    </li>
+                    <li>
+                        <strong>Réception et décodage des données</strong> : Lorsque les données sont reçues, on utilise
+                        <code>JSONDecoder</code> pour les transformer en instances de nos modèles.
+                    </li>
+                    <li>
+                        <strong>Mise à jour de l'interface</strong> : Grâce à <code>DispatchQueue.main.async</code>, on
+                        met à jour la propriété <code>weatherData</code> sur le thread principal pour que l'interface se
+                        rafraîchisse.
+                    </li>
+                </ol>
+                <p>Exemple de code pour la méthode <code>fetchWeather(city:)</code> :</p>
+                <div class="code-block">
+                    <pre><code class="language-swift">
+              class WeatherViewModel: ObservableObject {
+                  // Propriété publiée pour notifier la vue des mises à jour des données
+                  @Published var weatherData: WeatherData?
+                  
+                  // Méthode pour récupérer les données météo pour une ville donnée
+                  func fetchWeather(city: String) {
+                      // Remplacer {VOTRE_API_KEY} par votre clé API OpenWeather
+                      guard let url = URL(string: "https://api.openweathermap.org/data/2.5/forecast?q=\(city)&cnt=4&lang=fr&appid={VOTRE_API_KEY}&units=metric") else {
+                          return
+                      }
+                      
+                      // Envoi d'une requête réseau asynchrone
+                      URLSession.shared.dataTask(with: url) { data, response, error in
+                          // Vérifier que des données ont bien été reçues
+                          guard let data = data else { return }
+                          
+                          do {
+                              // Décoder le JSON en instances de WeatherData
+                              let decodedResponse = try JSONDecoder().decode(WeatherData.self, from: data)
+                              // Mise à jour sur le thread principal pour rafraîchir l'interface
+                              DispatchQueue.main.async {
+                                  self.weatherData = decodedResponse
+                              }
+                          } catch {
+                              // Afficher une erreur dans la console en cas de problème de décodage
+                              print("Erreur lors du décodage du JSON: \(error)")
+                          }
+                      }.resume() // Lancer la tâche réseau
+                  }
+              }
+                  </code></pre>
+                </div>
+
+                <h2>Processus d'intégration de l’API</h2>
+                <p>
+                    Voici un résumé étape par étape du processus d'intégration de l'API dans l'application :
+                </p>
+                <ol>
+                    <li>
+                        <strong>Saisie de la ville :</strong>
+                        <ul>
+                            <li>L'utilisateur saisit le nom d'une ville dans un <code>TextField</code>.</li>
+                            <li>À la validation (événement <code>onSubmit</code>), la méthode
+                                <code>fetchWeather(city:)</code> est appelée dans le ViewModel.
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Construction et envoi de la requête :</strong>
+                        <ul>
+                            <li>Le ViewModel construit l’URL avec les paramètres requis (nom de la ville, clé API,
+                                etc.).</li>
+                            <li>Une requête réseau est envoyée via <code>URLSession</code>.</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Réception et décodage des données :</strong>
+                        <ul>
+                            <li>Les données JSON reçues sont décodées en objets Swift conformes à nos modèles.</li>
+                            <li>En cas d’erreur, un message est affiché dans la console pour le débogage.</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Mise à jour de l’interface :</strong>
+                        <ul>
+                            <li>Le ViewModel met à jour la propriété <code>weatherData</code>.</li>
+                            <li>La vue se rafraîchit automatiquement grâce à <code>@StateObject</code> et
+                                <code>@Published</code>.
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Affichage des informations météo :</strong>
+                        <ul>
+                            <li>La vue principale (<code>ContentView</code>) affiche les informations telles que le nom
+                                de la ville, la température, la description du temps, etc.</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <h2>Bonnes pratiques et points complémentaires</h2>
+                <ul>
+                    <li>
+                        <strong>Séparation des responsabilités :</strong> Gardez la logique de récupération des données
+                        dans le ViewModel et l'affichage dans la View pour faciliter la maintenance.
+                    </li>
+                    <li>
+                        <strong>Mise à jour asynchrone :</strong> Utilisez <code>DispatchQueue.main.async</code> pour
+                        mettre à jour l'interface sur le thread principal, ce qui est essentiel en SwiftUI.
+                    </li>
+                    <li>
+                        <strong>Gestion des erreurs :</strong> Implémentez une gestion d’erreurs robuste pour informer
+                        l’utilisateur en cas de problème (connexion réseau, décodage, etc.).
+                    </li>
+                    <li>
+                        <strong>Utilisation des SF Symbols :</strong> La fonction <code>icon(iconCode:)</code> (non
+                        montrée ici) mappe les codes d’icônes de l’API aux icônes natives d’iOS pour améliorer
+                        l'apparence de l'application.
+                    </li>
+                </ul>
+
+                <h2>Conclusion</h2>
+                <p>
+                    Ce projet illustre concrètement comment intégrer une API externe dans une application iOS utilisant
+                    SwiftUI.
+                    En adoptant le modèle MVVM, nous séparons la logique métier (récupération et traitement des données)
+                    de l'interface utilisateur,
+                    ce qui rend l'application modulaire, facile à maintenir et à faire évoluer.
+                </p>
+        </section>
+    </div>
+</body>
+</section>
+</div>
+
+<footer class="footer">
+    <p>Développé par <a href="https://github.com/mathrob" style="color: white; text-decoration: underline;">Mathieu
+            Robson</a> &copy; <span id="current-year"></span></p>
+    <script>
+        document.getElementById("current-year").textContent =
+            new Date().getFullYear();
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script>
+        hljs.highlightAll();
+    </script>
+</footer>
+<div class="back-to-top" id="back-to-top">↑</div>
+<script>
+    const backToTopButton = document.getElementById("back-to-top");
+
+    window.addEventListener("scroll", () => {
+        if (window.scrollY > 300) {
+            backToTopButton.style.display = "block";
+        } else {
+            backToTopButton.style.display = "none";
+        }
+    });
+
+    backToTopButton.addEventListener("click", () => {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+        });
+    });
+</script>
+</body>
+
+</html>

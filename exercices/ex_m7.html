@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IFM025921</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" />
+  <link rel="stylesheet" href="../style.css" />
+</head>
+
+<body>
+  <header>
+    <h1 style="color: white">Module 5 - Exercice</h1>
+  </header>
+  <div class="container">
+    <a href="../index.html" class="back-link">← Retour au module principal</a>
+
+    <section id="module-5" class="module-section">
+      <h1>WeatherApp API</h1>
+      <p>
+        À partir de l’application météo que vous pouvez télécharger ci-dessous, intégrez une API afin d’obtenir la météo actuelle. Une clé API vous sera fournie. Cependant, je vous recommande de créer un compte avec votre courriel du collège et d’utiliser votre propre clé API.
+      </p>
+
+      <p>
+        Documentation de l’API : <a href="https://openweathermap.org/forecast5#name5" target="_blank">https://openweathermap.org/forecast5#name5</a>
+      </p>
+
+      <h2>Instruction</h2>
+      <p>
+        Les informations suivantes devront provenir de l’API :
+      </p>
+
+      <img src="../imgs/weatherapp.png" alt="" style="margin-left: 100px; width: 1000px;">
+
+      <H3>Informations supplémentaires</H3>
+      <ul>
+        <li>Comment changer les unités fournies par l’API :  <a href="https://openweathermap.org/forecast5#data" target="_blank">https://openweathermap.org/forecast5#data</a></li>
+        <li>Comment changer le langage de la description de la météo :   <a href="https://openweathermap.org/forecast5#multi" target="_blank">https://openweathermap.org/forecast5#multi</a></li>
+        <li>
+          En ce qui concerne le changement des symboles, l’API transmet l’icône relatif au symbole utilisé par Open Weather :    <a href="https://openweathermap.org/weather-conditions" target="_blank">https://openweathermap.org/weather-conditions</a>
+          <pre><code class="json">"weather": [
+  {
+    "id": 800,
+    "main": "Clear",
+    "description": "clear sky",
+    "icon": "01d"
+  }
+],
+          </code></pre>
+
+          <p>Vous pouvez utiliser ces informations pour intégrer les SF Symbole fournis par Apple.</p>
+
+          <pre><code class="swift">switch weatherIcon {
+  case "01d":
+    return "sun.max.fill"
+  case "01n":
+    return "moon.fill"
+    
+    ...
+
+    default:
+      return "--"
+}
+
+          </code></pre>
+        </li>
+        <li>
+          Voici une fonction qui convertit les degrés en points cardinaux.
+          <pre><code class="swift">func windDirection(degrees: Double) -> String {
+    let cardinal = ["N", "NNE", "NE","ENE", "E", "ESE", "SE", "SSE", "S", "SSO", "SO", "OSO", "O", "ONO", "NO", "NNO"]
+    let index = Int((degrees / 22.5).rounded()) % cardinal.count
+    return cardinal[index]
+}
+          </code></pre>
+        </li>
+
+        <li>
+          Voici une fonction qui convertit l’unité hPa en kPa.
+          <pre><code class="swift">func hPaTokPa(_ hPa: Double) -> Double {
+    return hPa / 10.0
+}
+          </code></pre>
+        </li>
+      </ul>
+
+      <p>⚠️ Remarque : Faites attention aux unités. Par exemple, la température donnée par l’API est en kelvin par défaut.</p>
+
+      <br />
+
+      <a href="./download/module7/WeatherAppUI.zip" class="download-link"
+        style="font-size: x-large; text-decoration: underline;" download>
+        Télécharger le projet de base
+      </a>
+
+      <a href="./download/module7/WeatherAppUI-Solution.zip" class="download-link"
+        style="font-size: x-large; text-decoration: underline; margin-left: 60px;" download>
+        Télécharger la solution
+      </a>
+
+      <br />
+    </section>
+  </div>
+  <footer class="footer">
+    <p>Développé par <a href="https://github.com/mathrob" style="color: white; text-decoration: underline;">Mathieu
+        Robson</a> &copy; <span id="current-year"></span></p>
+    <script>
+      document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script>
+      hljs.highlightAll();
+    </script>
+  </footer>
+  <div class="back-to-top" id="back-to-top">↑</div>
+  <script>
+    const backToTopButton = document.getElementById('back-to-top');
+
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 300) {
+        backToTopButton.style.display = 'block';
+      } else {
+        backToTopButton.style.display = 'none';
+      }
+    });
+
+    backToTopButton.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+  </script>
+</body>
+
+</html>
