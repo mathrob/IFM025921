@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IFM025921</title>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" />
+    <link rel="stylesheet" href="../style.css" />
+</head>
+
+<body>
+    <header>
+        <h1 style="color: white">Module 8 - Note de cours</h1>
+    </header>
+    <div class="container">
+        <a href="../index.html" class="back-link">← Retour au module principal</a>
+
+        <section id="module-8-1" class="module-section">
+            <h1 id="grilles">Création de grilles avec LazyVGrid et LazyHGrid</h1>
+
+            <p>Pour une démonstration en vidéo, regardez la vidéo suivante :</p>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/t4Kbg4UnMPc" frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+
+            <h2>Introduction</h2>
+            <h3>Pourquoi utiliser des grilles 🤔</h3>
+            <p>
+                Dans une application iOS, il est souvent nécessaire d’afficher des données sous forme de tableau ou de
+                collection d’éléments visuels alignés. Par exemple :
+            </p>
+            <ul>
+                <li> • Un catalogue de produits dans une boutique en ligne.</li>
+                <li> • Une galerie d’images.</li>
+                <li> • Un tableau de scores dans une application de jeux.</li>
+                <li> • Un calendrier avec des jours répartis sur plusieurs colonnes.</li>
+            </ul>
+            <p>
+                Les stacks (HStack, VStack) et les Listes (List) permettent d’afficher des éléments en ligne ou en
+                colonne, mais ils ne sont pas adaptés pour organiser des données en grille.
+            </p>
+            <p>
+                SwiftUI propose donc <strong>LazyVGrid</strong> et <strong>LazyHGrid</strong>, deux vues permettant
+                d’organiser le contenu sous forme de grille tout en optimisant les performances.
+            </p>
+
+            <h2>Comprendre LazyVGrid et LazyHGrid</h2>
+            <h3>Qu’est-ce qu’une grille paresseuse 🤔</h3>
+            <p>
+                Les vues LazyVGrid et LazyHGrid sont dites paresseuses (lazy) car elles ne créent des cellules que
+                lorsque celles-ci sont visibles à l’écran. Dès qu’une cellule disparaît de l’écran (par exemple en
+                faisant défiler la liste), SwiftUI la supprime temporairement pour économiser la mémoire et améliorer
+                les performances.
+            </p>
+            <p>
+                Cela permet d’afficher un nombre potentiellement infini d’éléments sans ralentir l’application.
+            </p>
+
+            <h4>Différence entre LazyVGrid et LazyHGrid</h4>
+            <table border="1" style="border-collapse: collapse;">
+                <thead>
+                    <tr>
+                        <th style="padding: 4px;">LazyVGrid</th>
+                        <th style="padding: 4px;">LazyHGrid</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="padding: 4px;">Organise les éléments en colonnes</td>
+                        <td style="padding: 4px;">Organise les éléments en lignes</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 4px;">Défilement vertical</td>
+                        <td style="padding: 4px;">Défilement horizontal</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 4px;">Utilise une liste de GridItem pour définir les colonnes</td>
+                        <td style="padding: 4px;">Utilise une liste de GridItem pour définir les lignes</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Syntaxe de base</h3>
+            <p>
+                Une <strong>LazyVGrid</strong> s’écrit comme ceci :
+            </p>
+            <pre><code class="swift">LazyVGrid(
+    columns: [GridItem],   // Définition des colonnes
+    alignment: .center,    // Alignement horizontal des éléments (optionnel)
+    spacing: 10,           // Espacement entre les éléments (optionnel)
+    pinnedViews: []        // Éléments "pinnés" (optionnel)
+) {
+    // Contenu de la grille
+}
+</code></pre>
+
+            <p>
+                Une <strong>LazyHGrid</strong> s’écrit de manière similaire, mais en définissant des lignes plutôt que
+                des colonnes :
+            </p>
+            <pre><code class="swift">LazyHGrid(
+    rows: [GridItem],      // Définition des lignes
+    alignment: .top,       // Alignement vertical des éléments (optionnel)
+    spacing: 10,           // Espacement entre les éléments (optionnel)
+    pinnedViews: []        // Éléments "pinnés" (optionnel)
+) {
+    // Contenu de la grille
+}
+</code></pre>
+
+            <h3>Les GridItems : Définition des colonnes et des lignes</h3>
+            <p>
+                GridItem est utilisé pour définir comment les colonnes (dans une LazyVGrid) ou les lignes (dans une
+                LazyHGrid) doivent être configurées.
+            </p>
+            <h4>Il existe trois types de GridItem :</h4>
+            <table border="1" style="border-collapse: collapse;">
+                <thead>
+                    <tr>
+                        <th style="padding: 4px;">Type de GridItem</th>
+                        <th style="padding: 4px;">Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="padding: 4px;">.fixed(CGFloat)</td>
+                        <td style="padding: 4px;">Définit une colonne/ligne de largeur/hauteur fixe.</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 4px;">.flexible(minimum: CGFloat, maximum: CGFloat)</td>
+                        <td style="padding: 4px;">Ajuste dynamiquement la taille en fonction de l’espace disponible.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 4px;">.adaptive(minimum: CGFloat)</td>
+                        <td style="padding: 4px;">Crée autant de colonnes/lignes que possible, respectant une taille
+                            minimale.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>Exemples de GridItems</h4>
+            <p>
+                Grille avec trois colonnes de largeur fixe (100 points chacune) :
+            </p>
+            <pre><code class="swift">let gridItems = [
+    GridItem(.fixed(100)),
+    GridItem(.fixed(100)),
+    GridItem(.fixed(100))
+]</code></pre>
+
+            <p>
+                Grille avec trois colonnes flexibles (répartition équitable de l’espace disponible) :
+            </p>
+            <pre><code class="swift">let gridItems = [
+    GridItem(.flexible()),
+    GridItem(.flexible()),
+    GridItem(.flexible())
+]
+</code></pre>
+
+            <p>
+                Grille adaptative (autant de colonnes que possible, largeur min. de 50 points) :
+            </p>
+            <pre><code class="swift">let gridItems = [
+    GridItem(.adaptive(minimum: 50))
+]
+</code></pre>
+
+            <h3>Exemple d’implémentation d’une LazyVGrid</h3>
+            <p>
+                Créons une grille contenant 9 cellules colorées.
+            </p>
+            <pre><code class="swift">import SwiftUI
+
+struct ContentView: View {
+    private let colors: [Color] = [.blue, .yellow, .green]
+
+    // Définition des colonnes
+    private let gridItems = [
+        GridItem(.flexible()),
+        GridItem(.flexible()),
+        GridItem(.flexible())
+    ]
+
+    var body: some View {
+        LazyVGrid(columns: gridItems, spacing: 5) {
+            ForEach(0..<9, id: \.self) { index in
+                Text("\(index)")
+                    .frame(minWidth: 50, maxWidth: .infinity, minHeight: 100)
+                    .background(colors[index % colors.count])
+                    .cornerRadius(8)
+                    .font(.system(size: 24, weight: .bold))
+            }
+        }
+        .padding()
+    }
+}
+</code></pre>
+
+            <h4>Explication :</h4>
+            <ul>
+                <li> • On définit une grille avec trois colonnes flexibles (GridItem(.flexible())).</li>
+                <li> • La boucle ForEach génère 9 éléments numérotés de 0 à 8.</li>
+                <li> • Chaque élément a un fond coloré, une taille définie et un texte affichant son index.</li>
+            </ul>
+
+            <h3>Ajout du défilement avec ScrollView</h3>
+            <p>
+                Si le nombre d’éléments dépasse la taille de l’écran, il est nécessaire d’ajouter un
+                <strong>ScrollView</strong> pour permettre le défilement :
+            </p>
+            <pre><code class="swift">var body: some View {
+    ScrollView {
+        LazyVGrid(columns: gridItems, spacing: 5) {
+            ForEach(0..<99, id: \.self) { index in
+                Text("\(index)")
+                    .frame(minWidth: 50, maxWidth: .infinity, minHeight: 100)
+                    .background(colors[index % colors.count])
+                    .cornerRadius(8)
+                    .font(.system(size: 24, weight: .bold))
+            }
+        }
+        .padding()
+    }
+}
+</code></pre>
+
+            <h4>Pourquoi utiliser un ScrollView ?</h4>
+            <p>
+                Sans ScrollView, seuls les éléments visibles sur l’écran s’afficheraient et nous ne pourrions pas voir
+                les autres.
+            </p>
+
+            <h3>Exemple d’utilisation de LazyHGrid</h3>
+
+            <p>Voici un exemple de grille horizontale avec défilement :</p>
+            <pre><code class="swift">struct ContentView: View {
+    private let colors: [Color] = [.red, .orange, .purple]
+    private let gridItems = [GridItem(.adaptive(minimum: 50))]
+
+    var body: some View {
+        ScrollView(.horizontal) {
+            LazyHGrid(rows: gridItems, spacing: 5) {
+                ForEach(0..<20, id: \.self) { index in
+                    Text("\(index)")
+                        .frame(minWidth: 75, minHeight: 50, maxHeight: .infinity)
+                        .background(colors[index % colors.count])
+                        .cornerRadius(8)
+                        .font(.system(size: 24, weight: .bold))
+                }
+            }
+            .padding()
+        }
+    }
+}
+</code></pre>
+
+            <h4>Explication :</h4>
+            <ul>
+                <li> • On définit une grille horizontale (LazyHGrid).</li>
+                <li> • GridItem(.adaptive(minimum: 50)) permet d’avoir autant de lignes que nécessaire.</li>
+                <li> • ScrollView(.horizontal) permet de faire défiler la grille horizontalement.</li>
+            </ul>
+
+            <h2>Conclusion</h2>
+            <ul>
+                <li> • LazyVGrid et LazyHGrid sont des outils puissants pour afficher du contenu en grille.</li>
+                <li> • Les GridItems permettent de contrôler la disposition des cellules (fixe, flexible, adaptatif).
+                </li>
+                <li> • L’intégration d’un ScrollView permet d’afficher de nombreux éléments sans contrainte d’espace.
+                </li>
+            </ul>
+            </ul>
+        </section>
+
+        <section id="module-8-2" class="module-section">
+            <h1 id="grid">Grilles avancées avec Grid et GridRow</h1>
+
+            <p>Pour une démonstration en vidéo, regardez la vidéo suivante :</p>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/mWMKvB2s2IQ" frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+
+            <h2>Introduction</h2>
+            <p>
+                Dans SwiftUI, nous avons vu que LazyVGrid et LazyHGrid permettent de créer des grilles dynamiques et
+                performantes. Cependant, elles ne sont pas idéales lorsque l’on souhaite une mise en page plus flexible
+                avec un alignement plus précis des cellules.
+            </p>
+
+            <p>
+                Dans <strong>iOS 17</strong>, Apple a introduit Grid et GridRow, qui permettent :
+            </p>
+            <ul>
+                <li style="margin-left: 30px;"> • D’aligner les cellules avec plus de contrôle.</li>
+                <li style="margin-left: 30px;"> • D’avoir des cellules qui s’étendent sur plusieurs colonnes
+                    (col-spanning).</li>
+                <li style="margin-left: 30px;"> • D’ajouter des cellules vides pour organiser les grilles de manière
+                    irrégulière.</li>
+                <li style="margin-left: 30px;"> • De mieux gérer l’alignement vertical et horizontal des cellules.</li>
+            </ul>
+
+            <p>
+                Contrairement à LazyVGrid et LazyHGrid, les grilles Grid et GridRow ne sont pas optimisées pour le
+                défilement. Elles sont plus adaptées aux grilles statiques, comme :
+            </p>
+
+            <ul>
+                <li style="margin-left: 30px;"> • Un tableau de données</li>
+                <li style="margin-left: 30px;"> • Un calendrier</li>
+                <li style="margin-left: 30px;"> • Un tableau de scores</li>
+                <li style="margin-left: 30px;"> • Une interface de mise en page spécifique</li>
+            </ul>
+
+            <h2>Structure de base d’une grille avec Grid et GridRow</h2>
+            <h3>Syntaxe de base :</h3>
+            <p>
+                Une <strong>Grid</strong> est une vue conteneur qui organise ses éléments en lignes (GridRow).
+                Chaque <strong>GridRow</strong> contient plusieurs cellules, qui sont placées dans des colonnes.
+            </p>
+            <pre><code class="swift">Grid {
+    GridRow {
+        // Cellules de la première ligne
+    }
+    GridRow {
+        // Cellules de la deuxième ligne
+    }
+    GridRow {
+        // Cellules de la troisième ligne
+    }
+}
+</code></pre>
+            <p>
+                📝 Contrairement à LazyVGrid, on ne définit pas explicitement les colonnes. Elles sont créées
+                automatiquement en fonction du nombre d’éléments présents dans chaque ligne.
+            </p>
+
+            <h2>Exemple de grille simple</h2>
+            <p>
+                Voici une grille de 3 lignes et 5 colonnes qui affiche des nombres :
+            </p>
+            <pre><code class="swift">import SwiftUI
+
+struct ContentView: View {
+    var body: some View {
+        Grid {
+            GridRow {
+                ForEach(1...5, id: \.self) { index in
+                    CellContent(index: index, colour: .red)
+                }
+            }
+            GridRow {
+                ForEach(6...10, id: \.self) { index in
+                    CellContent(index: index, colour: .blue)
+                }
+            }
+            GridRow {
+                ForEach(11...15, id: \.self) { index in
+                    CellContent(index: index, colour: .green)
+                }
+            }
+        }
+        .padding()
+    }
+}
+
+// Vue réutilisable pour les cellules
+struct CellContent: View {
+    var index: Int
+    var colour: Color
+
+    var body: some View {
+        Text("\(index)")
+            .frame(minWidth: 50, maxWidth: .infinity, minHeight: 100)
+            .background(colour)
+            .cornerRadius(8)
+            .font(.system(.largeTitle))
+    }
+}
+</code></pre>
+
+            <h4>Explication :</h4>
+            <ul>
+                <li style="margin-left: 30px;">✔ Chaque GridRow définit une ligne contenant plusieurs cellules.</li>
+                <li style="margin-left: 30px;">✔ Grid est le conteneur principal.</li>
+                <li style="margin-left: 30px;">✔ Les cellules sont générées avec une boucle ForEach.</li>
+                <li style="margin-left: 30px;">✔ CellContent est une vue réutilisable qui affiche un chiffre et une
+                    couleur.</li>
+            </ul>
+
+            <h2>Ajouter une cellule occupant toute une ligne</h2>
+            <p>
+                Une cellule placée en dehors d’un GridRow s’étendra automatiquement sur toute la largeur de la grille.
+            </p>
+            <h4>Exemple : ajout d’une cellule occupant toute la ligne 4 :</h4>
+            <pre><code class="swift">struct ContentView: View {
+var body: some View {
+    Grid {
+        GridRow {
+            ForEach(1...5, id: \.self) { index in
+                CellContent(index: index, colour: .red)
+            }
+        }
+        GridRow {
+            ForEach(6...10, id: \.self) { index in
+                CellContent(index: index, colour: .blue)
+            }
+        }
+        GridRow {
+            ForEach(11...15, id: \.self) { index in
+                CellContent(index: index, colour: .green)
+            }
+        }
+        // Une cellule occupant toute la largeur
+        CellContent(index: 16, colour: .orange)
+    }
+    .padding()
+}
+}
+</code></pre>
+
+            <h4>Explication :</h4>
+            <ul>
+                <li style="margin-left: 30px;">• La dernière cellule n’est pas dans un GridRow, donc elle occupe toute
+                    la ligne.</li>
+            </ul>
+
+            <h2>Gestion automatique des cellules vides</h2>
+            <p>
+                Contrairement à LazyVGrid, où chaque ligne doit avoir le même nombre de colonnes, Grid ajoute
+                automatiquement des cellules vides si nécessaire.
+            </p>
+
+            <h4>Exemple : une ligne avec moins de colonnes :</h4>
+            <pre><code class="swift">Grid {
+    GridRow {
+        ForEach(1...5, id: \.self) { index in
+            CellContent(index: index, colour: .red)
+        }
+    }
+    GridRow {
+        ForEach(6...8, id: \.self) { index in
+            CellContent(index: index, colour: .blue)
+        }
+    }
+}
+</code></pre>
+            <p>
+                📝 Ici, la deuxième ligne a seulement 3 cellules.
+                SwiftUI ajoutera automatiquement 2 cellules vides pour respecter l’alignement.
+            </p>
+
+            <h2>Ajouter manuellement des cellules vides</h2>
+            <p>
+                On peut aussi insérer des cellules vides en utilisant Color.clear et .gridCellUnsizedAxes().
+            </p>
+            <h4>
+                Exemple : des colonnes vides aux positions paires :
+            </h4>
+            <pre><code class="swift">GridRow {
+    ForEach(1...5, id: \.self) { index in
+        if index % 2 == 1 {
+            CellContent(index: index, colour: .red)
+        } else {
+            Color.clear
+                .gridCellUnsizedAxes([.horizontal, .vertical])
+        }
+    }
+}
+</code></pre>
+
+            <h4>Explication :</h4>
+            <ul>
+                <li style="margin-left: 30px;"> • Les colonnes paires contiennent une cellule vide (Color.clear).</li>
+                <li style="margin-left: 30px;"> • .gridCellUnsizedAxes([.horizontal, .vertical]) permet d’éviter que la
+                    cellule affecte l’alignement.</li>
+            </ul>
+
+            <h2>Fusion de colonnes (Col-Spanning)</h2>
+            <p>
+                Une cellule peut s’étendre sur plusieurs colonnes grâce à .gridCellColumns().
+            </p>
+            <h4>
+                Exemple : deux cellules occupant plusieurs colonnes :
+            </h4>
+            <pre><code class="swift">GridRow {
+    CellContent(index: 17, colour: .orange)
+        .gridCellColumns(2) // Occupe 2 colonnes
+    CellContent(index: 18, colour: .indigo)
+        .gridCellColumns(3) // Occupe 3 colonnes
+}
+</code></pre>
+            <h4>Explication :</h4>
+            <ul>
+                <li style="margin-left: 30px;"> • La première cellule occupe 2 colonnes.</li>
+                <li style="margin-left: 30px;"> • La deuxième cellule occupe 3 colonnes.</li>
+            </ul>
+
+            <h2>Gestion de l’alignement</h2>
+            <p>SwiftUI permet d’aligner les cellules au sein de la grille.</p>
+
+            <h4>Alignement global de la grille :</h4>
+            <pre><code class="swift">Grid(alignment: .topLeading) {
+</code></pre>
+            <ul>
+                <li style="margin-left: 30px;"> • .topLeading : Aligne en haut à gauche.</li>
+                <li style="margin-left: 30px;"> • .bottomTrailing : Aligne en bas à droite.</li>
+            </ul>
+
+            <h4>Alignement d’une ligne spécifique :</h4>
+            <pre><code class="swift">GridRow(alignment: .bottom) {
+</code></pre>
+            <ul>
+                <li style="margin-left: 30px;"> • Permet d’aligner le contenu de cette ligne uniquement.</li>
+            </ul>
+
+            <h4>Alignement d’une seule colonne :</h4>
+            <pre><code class="swift">GridRow(alignment: .bottom) {
+</code></pre>
+            <ul>
+                <li style="margin-left: 30px;"> • Alignement trailing (droite) pour cette colonne.</li>
+            </ul>
+
+            <h2>Conclusion</h2>
+            <ul>
+                <li style="margin-left: 30px;">✅ Grid et GridRow sont parfaits pour les mises en page statiques et
+                    précises.</li>
+                <li style="margin-left: 30px;">✅ Ils offrent plus de flexibilité que LazyVGrid, notamment grâce au
+                    col-spanning et aux cellules vides.</li>
+                <li style="margin-left: 30px;">✅ Contrairement aux LazyVGrid, ils ne sont pas optimisés pour le
+                    défilement, donc à éviter pour afficher de grandes listes d’éléments.</li>
+            </ul>
+        </section>
+
+        <section id="module-8-3" class="module-section">
+            <h1 id="container">Création de Containers Personnalisés avec ViewBuilder en SwiftUI</h1>
+
+            <p>Pour une démonstration en vidéo, regardez la vidéo suivante :</p>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/EQe6gZzwzO8" frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+
+
+            <h2>Introduction : Pourquoi créer un container personnalisé 🤔</h2>
+
+            <p>
+                Dans SwiftUI, les containers comme VStack, HStack, LazyVGrid et Grid permettent d’organiser les vues
+                efficacement. Cependant, il arrive que l’on ait besoin de créer un container sur mesure qui :
+            </p>
+            <ul>
+                <li style="margin-left: 30px;">✔️ Regroupe plusieurs sous-vues de manière personnalisée.</li>
+                <li style="margin-left: 30px;">✔️ Offre une mise en page spécifique qui n’est pas disponible avec les
+                    stacks classiques.</li>
+                <li style="margin-left: 30px;">✔️ Accepte des sous-vues dynamiques sans que leur nombre soit défini à
+                    l’avance.</li>
+            </ul>
+
+            <p>
+                👉 Pour cela, SwiftUI propose le ViewBuilder, un outil puissant permettant de construire des containers
+                personnalisés flexibles et réutilisables.
+            </p>
+
+            <h2>Qu’est-ce qu’un ViewBuilder ?</h2>
+            <p>
+                Un ViewBuilder est un attribut SwiftUI qui permet à une fonction ou à une structure d’accepter plusieurs
+                sous-vues en paramètre sans nécessiter un return explicite.
+            </p>
+            <h4>💡 Exemple simple :</h4>
+            <pre><code class="swift">struct ExempleView: View {
+    var body: some View {
+        VStack {
+            Text("Bonjour")
+            Text("Bienvenue sur SwiftUI")
+        }
+    }
+}
+</code></pre>
+
+            <p>📝 Ici, SwiftUI interprète automatiquement que VStack contient plusieurs vues sans nécessiter de retour
+                explicite. </p>
+            <p>Le ViewBuilder permet d’appliquer cette même logique à nos propres containers.</p>
+
+            <h2>Définir un Container Personnalisé avec ViewBuilder</h2>
+            <p>
+                Un container personnalisé est une structure SwiftUI qui prend des sous-vues et les affiche dans une mise
+                en page spécifique.
+            </p>
+
+            <h4>Syntaxe de base d’un container personnalisé avec ViewBuilder</h4>
+
+            <pre><code class="swift">struct CustomContainer< Content: View >: View {
+    @ViewBuilder var content: Content // Le paramètre content peut contenir plusieurs vues
+
+    var body: some View {
+        VStack { // On affiche les vues passées en paramètre
+            content
+        }
+        .padding()
+        .background(Color.gray.opacity(0.2))
+        .cornerRadius(10)
+    }
+}
+</code></pre>
+            <ul>
+                <li style="margin-left: 30px;">🔹 <strong>@ViewBuilder var content: Content</strong> : Définit un
+                    paramètre capable de recevoir plusieurs sous-vues.</li>
+                <li style="margin-left: 30px;">🔹 <strong>Content: View</strong> : Indique que le contenu est une vue
+                    SwiftUI.</li>
+                <li style="margin-left: 30px;">🔹 <strong>VStack { content }</strong> : Affiche les vues à l’intérieur
+                    d’un VStack.</li>
+            </ul>
+
+            <h2>Utilisation d’un container personnalisé</h2>
+            <p>
+                Maintenant que nous avons notre CustomContainer, nous pouvons l’utiliser comme n’importe quelle vue :
+            </p>
+
+            <pre><code class="swift">struct ContentView: View {
+    var body: some View {
+        CustomContainer {
+            Text("Titre")
+                .font(.title)
+            Text("Ceci est un texte dans un container personnalisé.")
+                .font(.body)
+        }
+    }
+}
+</code></pre>
+
+            <p>
+                💡 Ici, CustomContainer agit comme un VStack personnalisé, ajoutant automatiquement du padding, un fond
+                gris et des bords arrondis à son contenu.
+            </p>
+
+            <h2>Ajout de paramètres pour plus de flexibilité</h2>
+            <p>
+                Nous pouvons améliorer notre container pour lui permettre de :
+            </p>
+            <ul>
+                <li style="margin-left: 30px;">✔️ Accepter une couleur de fond personnalisée.</li>
+                <li style="margin-left: 30px;">✔️ Définir l’alignement du texte.</li>
+                <li style="margin-left: 30px;">✔️ Changer la disposition des vues.</li>
+            </ul>
+
+            <h4>Amélioration du container personnalisé :</h4>
+
+            <pre><code class="swift">struct CustomContainer< Content: View >: View {
+    var backgroundColor: Color
+    var alignment: HorizontalAlignment
+
+    @ViewBuilder var content: Content
+
+    var body: some View {
+        VStack(alignment: alignment) {
+            content
+        }
+        .padding()
+        .background(backgroundColor)
+        .cornerRadius(10)
+    }
+}
+</code></pre>
+
+            <h4>Utilisation avec des paramètres :</h4>
+            <pre><code class="swift">struct ContentView: View {
+    var body: some View {
+        CustomContainer(backgroundColor: .blue, alignment: .leading) {
+            Text("Titre")
+                .font(.title)
+                .foregroundColor(.white)
+            Text("Texte aligné à gauche dans un container personnalisé.")
+                .font(.body)
+                .foregroundColor(.white)
+        }
+    }
+}
+</code></pre>
+
+            <p>📝 Ici, nous avons ajouté deux paramètres :</p>
+            <ul>
+                <li style="margin-left: 30px;">✔️ backgroundColor pour changer la couleur du fond.</li>
+                <li style="margin-left: 30px;">✔️ alignment pour modifier l’alignement du texte dans la VStack.</li>
+            </ul>
+
+            <h2>Création d’un container personnalisé avec des animations</h2>
+            <p>
+                Un container peut aussi contenir des animations pour modifier son apparence en fonction d’une
+                interaction.
+            </p>
+
+            <h4>Exemple : Un container qui change de couleur lorsqu’on clique dessus :</h4>
+
+            <pre><code class="swift">struct AnimatingContainer< Content: View >: View {
+    @State private var isTapped = false
+    @ViewBuilder var content: Content
+
+    var body: some View {
+        VStack {
+            content
+        }
+        .padding()
+        .background(isTapped ? Color.red : Color.blue)
+        .cornerRadius(10)
+        .onTapGesture {
+            withAnimation {
+                isTapped.toggle()
+            }
+        }
+    }
+}
+</code></pre>
+
+            <h4>Utilisation du container animé :</h4>
+
+            <pre><code class="swift">struct ContentView: View {
+    var body: some View {
+        AnimatingContainer {
+            Text("Cliquez-moi")
+                .font(.title)
+                .foregroundColor(.white)
+        }
+    }
+}
+</code></pre>
+
+            <p>✅ Résultat : Chaque fois que l’utilisateur clique sur le container, la couleur change avec une animation
+                fluide.</p>
+
+            <h2>Conclusion</h2>
+            <ul>
+                <li style="margin-left: 30px;">✅ Le ViewBuilder permet de créer des containers réutilisables et
+                    personnalisés.</li>
+                <li style="margin-left: 30px;">✅ On peut ajouter des paramètres pour contrôler l’affichage des
+                    sous-vues.</li>
+                <li style="margin-left: 30px;">✅ Il est possible d’ajouter des animations et des interactions.</li>
+                <li style="margin-left: 30px;">✅ Les containers personnalisés améliorent la modularité et la lisibilité
+                    du code.</li>
+            </ul>
+        </section>
+
+        <section id="module-8-4" class="module-section">
+            <h1 id="containeravancee">Création avancée de containers personnalisés en SwiftUI</h1>
+
+            <p>Pour une démonstration en vidéo, regardez la vidéo suivante :</p>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/hErDeaD2PT0" frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+
+            <h2>Rappel : Pourquoi créer un container personnalisé ?</h2>
+            <p>
+                Dans SwiftUI, nous avons des containers intégrés comme VStack, HStack, List et LazyVGrid. Mais parfois,
+                nous avons besoin de regrouper et positionner des vues avec une logique personnalisée, par exemple :
+            </p>
+            <ul>
+                <li style="margin-left: 30px;">✔️ Une liste de tâches avec des éléments sélectionnables.</li>
+                <li style="margin-left: 30px;">✔️ Une grille d’éléments interactifs avec animation.</li>
+                <li style="margin-left: 30px;">✔️ Une section d’interface avec un en-tête personnalisé.</li>
+            </ul>
+            <p>
+                💡 SwiftUI nous permet de créer nos propres containers en utilisant ViewBuilder.
+            </p>
+
+            <h2>Création d’un container personnalisé avec sections et en-têtes</h2>
+
+            <h4>Objectif :</h4>
+            <p>
+                Nous allons créer un container “CheckList” qui accepte plusieurs éléments et les regroupe en sections
+                avec en-têtes.
+            </p>
+            <h3>Étape 1 : Création d’une section d’en-tête</h3>
+            <p>Nous créons d’abord une vue ChecklistSectionHeader pour afficher un titre avant chaque section.</p>
+            <pre><code class="swift">struct ChecklistSectionHeader< Content: View >: View {
+    @ViewBuilder var content: Content
+
+    var body: some View {
+        HStack {
+            content
+                .font(.largeTitle)
+                .fontWeight(.bold)
+        }
+        .padding()
+        .frame(maxWidth: .infinity)
+        .background(Color.purple.opacity(0.2))
+        .cornerRadius(10)
+    }
+}
+</code></pre>
+
+            <ul>
+                <li style="margin-left: 30px;">✔️ ChecklistSectionHeader prend une vue en paramètre et l’affiche avec un
+                    fond coloré.</li>
+                <li style="margin-left: 30px;">✔️ Cela permet d’afficher des en-têtes pour différentes catégories
+                    d’éléments.</li>
+            </ul>
+
+            <h3>Étape 2 : Création du container principal CheckList</h3>
+            <p>
+                Nous allons maintenant créer le container CheckList, qui :
+            </p>
+            <ul>
+                <li style="margin-left: 30px;">✔️ Accepte plusieurs éléments en paramètre.</li>
+                <li style="margin-left: 30px;">✔️ Affiche chaque section avec son en-tête.</li>
+                <li style="margin-left: 30px;">✔️ Affiche les éléments sous forme de cases cochables.</li>
+            </ul>
+
+            <pre><code class="swift">struct CheckList< Content: View >: View {
+    @ViewBuilder var content: Content
+    
+    var body: some View {
+        ScrollView(.vertical) {
+            VStack(spacing: 20) {
+                ForEach(sections: content) { section in
+                    if !section.header.isEmpty {
+                        ChecklistSectionHeader { section.header }
+                    }
+                    ForEach(subviews: section.content) { subview in
+                        CheckItemView { subview }
+                    }
+                }
+            }
+            .padding()
+        }
+    }
+}
+</code></pre>
+
+            <ul>
+                <li style="margin-left: 30px;">✔️ ForEach(sections: content) : Permet d’itérer sur les sections passées
+                    en paramètre.</li>
+                <li style="margin-left: 30px;">✔️ Si la section a un en-tête, on l’affiche grâce à
+                    ChecklistSectionHeader.</li>
+                <li style="margin-left: 30px;">✔️ On affiche ensuite les éléments de la section avec CheckItemView.</li>
+            </ul>
+            <h3>Étape 3 : Création d’un élément de liste cochable CheckItemView</h3>
+
+            <p>Les éléments de la CheckList doivent être interactifs, avec une icône de validation qui change
+                lorsqu’on appuie.</p>
+
+            <pre><code class="swift">struct CheckItemView< Content: View >: View {
+    @ViewBuilder let content: Content
+    
+    @State private var isChecked: Bool = false
+    
+    var body: some View {
+        HStack {
+            content
+                .font(.title)
+                .fontWeight(.bold)
+            
+            Spacer()
+            
+            Image(systemName: isChecked ? "checkmark.circle.fill" : "circle")
+                .foregroundColor(isChecked ? .green : .gray)
+                .font(.largeTitle)
+                .onTapGesture {
+                    withAnimation {
+                        isChecked.toggle()
+                    }
+                }
+        }
+        .padding()
+        .background(Color.white)
+        .cornerRadius(10)
+        .shadow(radius: 3)
+    }
+}
+</code></pre>
+
+            <ul>
+                <li style="margin-left: 30px;">✔️ CheckItemView contient un texte + une icône de validation.</li>
+                <li style="margin-left: 30px;">✔️ Lorsque l’utilisateur clique sur l’icône, un @State est mis à jour
+                    et l’icône change avec une animation.</li>
+            </ul>
+
+            <h3>Étape 4 : Utilisation du container CheckList</h3>
+            <p>Nous pouvons maintenant utiliser CheckList pour afficher une liste d’éléments groupés en sections.
+            </p>
+            <pre><code class="swift">struct ContentView: View {
+    let washerTasks = ["Remplacer le joint", "Tester les suspensions", "Nettoyer le filtre"]
+    let dryerTasks = ["Nettoyer le filtre à charpie", "Vérifier l’évacuation", "Remplacer les rouleaux"]
+
+    var body: some View {
+        CheckList {
+            Section("\(Image(systemName: "washer.fill")) Lave-linge") {
+                ForEach(washerTasks, id: \.self) { task in
+                    Text(task)
+                }
+            }
+            Section("\(Image(systemName: "dryer.fill")) Sèche-linge") {
+                ForEach(dryerTasks, id: \.self) { task in
+                    Text(task)
+                }
+            }
+        }
+    }
+}
+</code></pre>
+            <ul>
+                <li style="margin-left: 30px;">✔️ Chaque section a un titre (avec une icône).</li>
+                <li style="margin-left: 30px;">✔️ Les tâches sont cochables grâce à CheckItemView.</li>
+                <li style="margin-left: 30px;">✔️ L’ensemble est organisé en VStack et défilable grâce à ScrollView.
+                </li>
+            </ul>
+
+            <h2>Résumé des concepts abordés</h2>
+            <ul>
+                <li style="margin-left: 30px;">✅ Création d’un container CheckList qui accepte plusieurs sous-vues.
+                </li>
+                <li style="margin-left: 30px;">✅ Gestion des sections avec en-têtes personnalisés
+                    (ChecklistSectionHeader).</li>
+                <li style="margin-left: 30px;">✅ Ajout d’interaction avec des éléments sélectionnables
+                    (CheckItemView).</li>
+                <li style="margin-left: 30px;">✅ Utilisation de @State pour modifier les éléments en fonction des
+                    actions utilisateur.</li>
+            </ul>
+        </section>
+    </div>
+</body>
+</section>
+</div>
+
+<footer class="footer">
+    <p>Développé par <a href="https://github.com/mathrob" style="color: white; text-decoration: underline;">Mathieu
+            Robson</a> &copy; <span id="current-year"></span></p>
+    <script>
+        document.getElementById("current-year").textContent =
+            new Date().getFullYear();
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script>
+        hljs.highlightAll();
+    </script>
+</footer>
+<div class="back-to-top" id="back-to-top">↑</div>
+<script>
+    const backToTopButton = document.getElementById("back-to-top");
+
+    window.addEventListener("scroll", () => {
+        if (window.scrollY > 300) {
+            backToTopButton.style.display = "block";
+        } else {
+            backToTopButton.style.display = "none";
+        }
+    });
+
+    backToTopButton.addEventListener("click", () => {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+        });
+    });
+</script>
+</body>
+
+</html>
