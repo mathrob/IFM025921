@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IFM025921</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" />
+  <link rel="stylesheet" href="../style.css" />
+</head>
+
+<body>
+  <header>
+    <h1 style="color: white">Module 9 - Exercice</h1>
+  </header>
+  <div class="container">
+    <a href="../index.html" class="back-link">← Retour au module principal</a>
+
+    <section id="module-9" class="module-section">
+      <h1>Gestes et interactions tactiles</h1>
+      <p>SwiftUI offre une approche déclarative pour détecter et réagir aux gestes utilisateurs. Grâce aux divers
+        reconnaisseurs de gestes fournis par le framework, vous pouvez rendre vos vues interactives en implémentant des
+        actions pour des taps, des appuis longs, des glissements, des pincements ou encore des rotations. Nous allons
+        voir comment ajouter et composer ces gestes.</p>
+
+      <h2>Création du projet GestureDemo</h2>
+      <p>vant de commencer, lancez Xcode et créez un nouveau projet IOS App nommé GestureDemo. Nous utiliserons ce
+        projet pour tester les exemples de code sur lesquels nous travaillerons.</p>
+
+      <h2>Les gestes de base</h2>
+      <h3>Tap Gesture (Simple Tap et Double Tap)</h3>
+      <p>Le tap est le geste le plus simple et le plus courant. Il se déclenche lorsqu’un utilisateur touche brièvement
+        une vue.</p>
+
+      <h4>Exemple d’un simple tap sur une Image :</h4>
+      <pre><code class="swift">struct ContentView: View {
+    var body: some View {
+        Image(systemName: "hand.point.right.fill")
+            .gesture(
+                TapGesture()
+                    .onEnded { _ in
+                        print("Tapped")
+                    }
+            )
+    }
+}
+</code></pre>
+      <h4>Explications :</h4>
+      <ul>
+        <li style="margin-left: 30px;"> • La méthode .gesture() ajoute un geste à la vue.</li>
+        <li style="margin-left: 30px;"> • Ici, on utilise TapGesture() et on définit un callback avec .onEnded { _ in
+          ... } qui s’exécute lorsque le geste est terminé.</li>
+        <li style="margin-left: 30px;"> • Dans la console, le message “Tapped” sera affiché lorsqu’un tap est détecté.
+        </li>
+        <li style="margin-left: 30px;"> • Détection d’un double tap :
+          <ul>
+            <li style="margin-left: 30px;">
+              <pre><code class="swift">let doubleTap = TapGesture(count: 2)
+          .onEnded { _ in
+              print("Double Tapped")
+          }
+</code></pre>
+              <p>En spécifiant count: 2, le geste ne sera reconnu que si l’utilisateur effectue deux taps successifs.
+              </p>
+            </li>
+          </ul>
+        </li>
+      </ul>
+
+      <h2>Long Press Gesture</h2>
+      <p>Un long press détecte lorsqu’une vue est touchée pendant une durée prolongée.</p>
+
+      <h4>Exemple simple d’un appui long sur une Image :</h4>
+      <pre><code class="swift">struct ContentView: View {
+    var body: some View {
+        let longPress = LongPressGesture()
+            .onEnded { _ in
+                print("Long Press")
+            }
+        
+        return Image(systemName: "hand.point.right.fill")
+            .gesture(longPress)
+    }
+}
+</code></pre>
+      <h4>Explications :</h4>
+      <ul>
+        <li style="margin-left: 30px;"> • LongPressGesture() détecte un appui long.</li>
+        <li style="margin-left: 30px;"> • Vous pouvez ajuster la durée minimale et la distance maximale pour l’appui
+          long :
+          <ul>
+            <pre><code class="swift">let longPress = LongPressGesture(minimumDuration: 10, maximumDistance: 25)
+              .onEnded { _ in
+                  print("Long Press")
+              }
+</code></pre>
+            <p>Cela signifie que l’appui doit durer au moins 10 secondes et ne pas dépasser 25 points de déplacement
+              hors de la vue pour être reconnu.</p>
+          </ul>
+        </li>
+      </ul>
+
+      <h2>Magnification Gesture (Pincement)</h2>
+      <p>Le pincement (magnification) est utilisé pour détecter le zoom, c’est-à-dire l’écartement ou le rapprochement
+        de deux doigts.</p>
+
+      <h4>Exemple simple avec détection après fin du geste :</h4>
+      <pre><code class="swift">struct ContentView: View {
+    var body: some View {
+        let magnificationGesture =
+            MagnificationGesture(minimumScaleDelta: 0)
+            .onEnded { _ in
+                print("Gesture Ended")
+            }
+        
+        return Image(systemName: "hand.point.right.fill")
+            .resizable()
+            .font(.largeTitle)
+            .gesture(magnificationGesture)
+            .frame(width: 100, height: 90)
+    }
+}
+</code></pre>
+
+      <h4>Exemple avec mise à jour continue (onChanged) pour animer la taille de l’image :</h4>
+      <pre><code class="swift">struct ContentView: View {
+  @State private var magnification: CGFloat = 1.0
+
+  var body: some View {
+      let magnificationGesture =
+          MagnificationGesture(minimumScaleDelta: 0)
+          .onChanged { value in
+              self.magnification = value
+          }
+          .onEnded { _ in
+              print("Gesture Ended")
+          }
+      
+      return Image(systemName: "hand.point.right.fill")
+          .resizable()
+          .font(.largeTitle)
+          .scaleEffect(magnification)
+          .gesture(magnificationGesture)
+          .frame(width: 100, height: 90)
+  }
+}
+</code></pre>
+
+      <h4>Explications :</h4>
+      <ul>
+        <li style="margin-left: 30px;"> • onChanged met à jour la variable d’état magnification à chaque changement, ce
+          qui permet de modifier la taille de l’image en temps réel.</li>
+        <li style="margin-left: 30px;"> • onEnded est appelé une fois que le geste se termine.</li>
+      </ul>
+
+      <h2>Drag Gesture (Glissement)</h2>
+      <p>Le drag (glissement) permet de déplacer une vue en suivant le mouvement du doigt.</p>
+
+      <h4>Exemple simple d’un glissement :</h4>
+      <pre><code class="swift">struct ContentView: View {
+  @GestureState private var offset: CGSize = .zero
+
+  var body: some View {
+      Image(systemName: "square.and.arrow.down")
+          .offset(offset)
+          .gesture(
+              DragGesture()
+                  .updating($offset) { dragValue, state, transaction in
+                      state = dragValue.translation
+                  }
+          )
+  }
+}
+</code></pre>
+      <h4>Explications :</h4>
+      <ul>
+        <li style="margin-left: 30px;"> • @GestureState est utilisé pour stocker temporairement la translation pendant
+          le geste.</li>
+        <li style="margin-left: 30px;"> • La méthode .updating() met à jour la variable offset avec la translation
+          actuelle.</li>
+        <li style="margin-left: 30px;"> • Lorsque le geste se termine, offset revient à sa valeur initiale, car la
+          propriété @GestureState se réinitialise automatiquement.</li>
+      </ul>
+
+      <h2>Composition de gestes</h2>
+      <p>SwiftUI permet également de composer plusieurs gestes sur une même vue pour obtenir des interactions plus
+        complexes.</p>
+
+
+      <h3>Gestes simultanés</h3>
+      <p>Pour reconnaître plusieurs gestes en même temps, utilisez le modificateur .simultaneously(with:).</p>
+
+      <h4>Exemple : Combiner un appui long et un drag</h4>
+      <pre><code class="swift">struct ContentView: View {
+  @GestureState private var offset: CGSize = .zero
+  @GestureState private var longPressActive: Bool = false
+
+  var body: some View {
+      let longPressAndDrag = LongPressGesture(minimumDuration: 1.0)
+          .updating($longPressActive) { value, state, transaction in
+              state = value
+          }
+          .simultaneously(with: DragGesture())
+          .updating($offset) { value, state, transaction in
+              state = value.second?.translation ?? .zero
+          }
+
+      return Image(systemName: "hand.point.right.fill")
+          .font(.largeTitle)
+          .offset(offset)
+          .gesture(longPressAndDrag)
+  }
+}
+</code></pre>
+      <h4>Explications :</h4>
+      <ul>
+        <li style="margin-left: 30px;"> • On compose un LongPressGesture et un DragGesture de manière simultanée.</li>
+        <li style="margin-left: 30px;"> • Le résultat est que la vue réagit à un appui long ET au glissement en même
+          temps.</li>
+      </ul>
+
+      <h3>Gestes séquentiels</h3>
+      <p>Pour que le second geste ne se déclenche qu’après le premier, utilisez le modificateur .sequenced(before:).</p>
+
+      <h4>Exemple : Un appui long suivi d’un drag</h4>
+      <pre><code class="swift">struct ContentView: View {
+  @GestureState var offset: CGSize = .zero
+  @State var dragEnabled = false
+
+  var body: some View {
+      let longPressBeforeDrag = LongPressGesture(minimumDuration: 2.0)
+          .onEnded { _ in self.dragEnabled = true }
+          .sequenced(before: DragGesture())
+          .updating($offset) { value, state, transaction in
+              switch value {
+              case .first(true):
+                  print("Long press in progress")
+              case .second(true, let drag?):
+                  state = drag.translation
+              default:
+                  break
+              }
+          }
+          .onEnded { _ in self.dragEnabled = false }
+
+      return Image(systemName: "hand.point.right.fill")
+          .foregroundColor(dragEnabled ? .green : .blue)
+          .font(.largeTitle)
+          .offset(offset)
+          .gesture(longPressBeforeDrag)
+  }
+}
+</code></pre>
+      <h4>Explications :</h4>
+      <ul>
+        <li style="margin-left: 30px;"> • On utilise .sequenced(before:) pour que le geste de glissement ne se déclenche
+          qu’après un appui long d’une durée minimale (ici 2 secondes).</li>
+        <li style="margin-left: 30px;"> • Le callback dans .updating utilise un switch pour traiter les différentes
+          phases du geste.</li>
+      </ul>
+
+      <h3>Gestes exclusifs</h3>
+      <p>Pour que la détection de l’un des gestes empêche la détection simultanée des autres, utilisez ExclusiveGesture.
+      </p>
+
+      <h4>Exemple : Gérer un tap et un appui long sur la même vue</h4>
+      <pre><code class="swift">struct ContentView: View {
+  @State private var message = "Tap ou Long Press"
+
+  var body: some View {
+      Text(message)
+          .padding()
+          .gesture(
+              ExclusiveGesture(
+                  TapGesture().onEnded { _ in
+                      message = "Tap détecté !"
+                  },
+                  LongPressGesture().onEnded { _ in
+                      message = "Appui long détecté !"
+                  }
+              )
+          )
+  }
+}
+</code></pre>
+      <h4>Explications :</h4>
+      <ul>
+        <li style="margin-left: 30px;"> • ExclusiveGesture garantit qu’une fois qu’un geste est reconnu, l’autre ne sera
+          pas déclenché.</li>
+        <li style="margin-left: 30px;"> • Ici, si l’utilisateur effectue un appui long, le tap sera ignoré, et
+          inversement.</li>
+      </ul>
+
+      <br />
+
+    </section>
+  </div>
+  <footer class="footer">
+    <p>Développé par <a href="https://github.com/mathrob" style="color: white; text-decoration: underline;">Mathieu
+        Robson</a> &copy; <span id="current-year"></span></p>
+    <script>
+      document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script>
+      hljs.highlightAll();
+    </script>
+  </footer>
+  <div class="back-to-top" id="back-to-top">↑</div>
+  <script>
+    const backToTopButton = document.getElementById('back-to-top');
+
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 300) {
+        backToTopButton.style.display = 'block';
+      } else {
+        backToTopButton.style.display = 'none';
+      }
+    });
+
+    backToTopButton.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+  </script>
+</body>
+
+</html>

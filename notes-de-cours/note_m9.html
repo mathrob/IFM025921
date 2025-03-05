@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IFM025921</title>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" />
+    <link rel="stylesheet" href="../style.css" />
+</head>
+
+<body>
+    <header>
+        <h1 style="color: white">Module 9 - Note de cours</h1>
+    </header>
+    <div class="container">
+        <a href="../index.html" class="back-link">← Retour au module principal</a>
+
+        <section id="module-9-1" class="module-section">
+            <h1 id="menus-contextuels">Menus contextuels en SwiftUI</h1>
+
+            <p>Pour une démonstration en vidéo, regardez la vidéo suivante :</p>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/FlpY3t8hLPk" frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+
+            <h2>Qu’est-ce qu’un menu contextuel en SwiftUI ?</h2>
+            <p>
+                Un menu contextuel est un menu d’options qui s’affiche lorsqu’un utilisateur effectue un appui long sur
+                une vue.
+            </p>
+
+            <h4>🎯 Exemple d’utilisation :</h4>
+            <ul>
+                <li style="margin-left: 30px;"> • Modifier les couleurs d’un texte.</li>
+                <li style="margin-left: 30px;"> • Offrir des actions comme copier, supprimer, partager.</li>
+                <li style="margin-left: 30px;"> • Afficher des options de personnalisation sur un élément de liste ou
+                    une image.</li>
+            </ul>
+
+            <p>👉 SwiftUI permet d’ajouter un menu contextuel à n’importe quelle vue en utilisant le modificateur
+                <strong>.contextMenu {}</strong>.
+            </p>
+
+            <h2>Création d’un menu contextuel simple</h2>
+
+            <h4>Exemple : Changer les couleurs d’un texte via un menu contextuel</h4>
+            <pre><code class="swift">import SwiftUI
+
+struct ContentView: View {
+    @State private var foregroundColor: Color = .black
+    @State private var backgroundColor: Color = .white
+
+    var body: some View {
+        Text("Hello, world!")
+            .font(.largeTitle)
+            .padding()
+            .foregroundColor(foregroundColor)
+            .background(backgroundColor)
+            .contextMenu {
+                Button(action: {
+                    self.foregroundColor = .black
+                    self.backgroundColor = .white
+                }) {
+                    Label("Couleurs normales", systemImage: "paintbrush")
+                }
+
+                Button(action: {
+                    self.foregroundColor = .white
+                    self.backgroundColor = .black
+                }) {
+                    Label("Couleurs inversées", systemImage: "paintbrush.fill")
+                }
+            }
+    }
+}
+</code></pre>
+
+            <p><strong>contextMenu {}</strong> : Ajoute un menu qui s’affiche au clic long sur le Text.</p>
+            <p><strong>Boutons du menu</strong> :</p>
+            <ul>
+                <li style="margin-left: 30px;"> • “Couleurs normales” : Noir sur fond blanc.</li>
+                <li style="margin-left: 30px;"> • “Couleurs inversées” : Blanc sur fond noir.</li>
+            </ul>
+            <p><strong>Utilisation de Label("Texte", systemImage: "icone")</strong> : Pour ajouter une icône au bouton.
+            </p>
+
+            <h4>🔎 Comment tester ?</h4>
+            <ol>
+                <li>Exécutez l’application.</li>
+                <li>Faites un appui long sur le texte “Hello, world!”.</li>
+                <li>Un menu s’affiche avec les options de changement de couleur.</li>
+            </ol>
+
+            <h2>Ajouter des options avancées au menu</h2>
+
+            <p>On peut ajouter plus d’options et organiser les actions en groupes distincts.</p>
+
+            <h4>Exemple : Ajouter des tailles de police et une option de réinitialisation</h4>
+            <pre><code class="swift">struct ContentView: View {
+    @State private var foregroundColor: Color = .black
+    @State private var backgroundColor: Color = .white
+    @State private var fontSize: CGFloat = 24
+
+    var body: some View {
+        Text("Hello, world!")
+            .font(.system(size: fontSize))
+            .padding()
+            .foregroundColor(foregroundColor)
+            .background(backgroundColor)
+            .contextMenu {
+                Section {
+                    Button(action: { fontSize = 16 }) {
+                        Label("Petite police", systemImage: "textformat.size")
+                    }
+                    Button(action: { fontSize = 32 }) {
+                        Label("Grande police", systemImage: "textformat.size")
+                    }
+                }
+                
+                Section {
+                    Button(action: {
+                        foregroundColor = .black
+                        backgroundColor = .white
+                        fontSize = 24
+                    }) {
+                        Label("Réinitialiser", systemImage: "arrow.counterclockwise")
+                    }
+                }
+            }
+    }
+}
+</code></pre>
+
+            <h4>Nouveautés dans cet exemple :</h4>
+            <ul>
+                <li style="margin-left: 30px;"> • Ajout d’une section pour changer la taille de la police.</li>
+                <li style="margin-left: 30px;"> • Ajout d’un bouton “Réinitialiser” pour remettre les valeurs par
+                    défaut.</li>
+            </ul>
+
+            <h4>🔎 Comment tester ?</h4>
+            <ul>
+                <li style="margin-left: 30px;"> • Appui long sur le texte → un menu contextuel avec deux sections
+                    apparaît.</li>
+                <li style="margin-left: 30px;"> • La première section permet de changer la taille du texte.</li>
+                <li style="margin-left: 30px;"> • La deuxième section propose une option de réinitialisation.</li>
+            </ul>
+
+            <h2>Ajouter un menu contextuel à une liste d’éléments</h2>
+            <p>On peut aussi ajouter un menu contextuel sur chaque élément d’une liste.</p>
+
+            <h4>Exemple : Menu contextuel sur une liste de contacts</h4>
+            <pre><code class="swift">struct ContentView: View {
+    let contacts = ["Alice", "Bob", "Charlie", "David"]
+
+    var body: some View {
+        List(contacts, id: \.self) { contact in
+            Text(contact)
+                .contextMenu {
+                    Button(action: {
+                        print("Envoyer un message à \(contact)")
+                    }) {
+                        Label("Envoyer un message", systemImage: "message")
+                    }
+                    
+                    Button(action: {
+                        print("Appeler \(contact)")
+                    }) {
+                        Label("Appeler", systemImage: "phone")
+                    }
+                }
+        }
+    }
+}
+</code></pre>
+            <h4>Nouveautés dans cet exemple :</h4>
+            <ul>
+                <li style="margin-left: 30px;">Chaque élément de la liste a son propre menu contextuel.</li>
+                <li style="margin-left: 30px;">
+                    Le menu propose deux actions :
+                    <ul>
+                        <li style="margin-left: 30px;"> • Envoyer un message</li>
+                        <li style="margin-left: 30px;"> • Passer un appel </li>
+                    </ul>
+                </li>
+                <li style="margin-left: 30px;">Lorsqu’une option est sélectionnée, elle affiche un message dans la
+                    console.</li>
+            </ul>
+
+            <h4>🔎 Comment tester ?</h4>
+            <ol>
+                <li>Lancez l’application et faites un appui long sur un contact.</li>
+                <li>Le menu affiche les options d’appel et de message.</li>
+            </ol>
+
+            <h2>Ajouter une image avec un menu contextuel</h2>
+            <p>On peut également ajouter un menu contextuel sur une image, ce qui est utile pour des applications de
+                galerie ou de réseaux sociaux.</p>
+
+            <h4>Exemple : Menu contextuel pour interagir avec une image</h4>
+            <pre><code class="swift">struct ContentView: View {
+    var body: some View {
+        Image(systemName: "photo")
+            .resizable()
+            .frame(width: 100, height: 100)
+            .foregroundColor(.blue)
+            .contextMenu {
+                Button(action: {
+                    print("Partager la photo")
+                }) {
+                    Label("Partager", systemImage: "square.and.arrow.up")
+                }
+                
+                Button(action: {
+                    print("Supprimer la photo")
+                }) {
+                    Label("Supprimer", systemImage: "trash")
+                }
+            }
+    }
+}
+</code></pre>
+
+            <h4>Explication :</h4>
+            <ul>
+                <li style="margin-left: 30px;">L’image est interactive : un appui long ouvre un menu.</li>
+                <li style="margin-left: 30px;">Le menu offre deux actions :
+                    <ul>
+                        <li style="margin-left: 30px;"> • Partager la photo 📤.</li>
+                        <li style="margin-left: 30px;"> • Supprimer la photo 🗑️.</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h2>Résumé des concepts abordés</h2>
+            <ul>
+                <li>✅ Un menu contextuel (contextMenu {}) s’affiche lors d’un appui long.</li>
+                <li>✅ On peut l’ajouter à n’importe quelle vue (Text, Image, List).</li>
+                <li>✅ Chaque menu peut contenir des boutons, du texte et des icônes.</li>
+                <li>✅ On peut organiser les actions en plusieurs Section pour plus de clarté.</li>
+            </ul>
+        </section>
+
+        <section id="module-9-2" class="module-section">
+            <h1 id="dessin">Dessin en 2D avec SwiftUI 🎨</h1>
+
+            <p>Pour une démonstration en vidéo, regardez la vidéo suivante :</p>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/R7OjaTKrUbw" frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+
+            <p>
+                SwiftUI propose des outils puissants pour dessiner des formes, personnaliser leur apparence et créer des
+                tracés sur mesure.
+            </p>
+
+            <h4>🛠 Pourquoi apprendre le dessin 2D en SwiftUI ?</h4>
+            <ul>
+                <li style="margin-left: 30px;"> • Ajouter des éléments graphiques interactifs (boutons stylisés,
+                    indicateurs de progression).</li>
+                <li style="margin-left: 30px;"> • Personnaliser l’interface avec des formes uniques.</li>
+                <li style="margin-left: 30px;"> • Créer des animations et des transitions fluides.</li>
+            </ul>
+
+            <h2>Dessiner des formes de base</h2>
+            <p>SwiftUI propose cinq formes prédéfinies que l’on peut directement utiliser :</p>
+            <ul>
+                <li style="margin-left: 30px;"> • Rectangle()</li>
+                <li style="margin-left: 30px;"> • Circle()</li>
+                <li style="margin-left: 30px;"> • Capsule()</li>
+                <li style="margin-left: 30px;"> • Ellipse()</li>
+                <li style="margin-left: 30px;"> • RoundedRectangle(cornerRadius:)</li>
+            </ul>
+
+            <h4>Exemple : Afficher un cercle rouge de 200 x 200 pixels</h4>
+            <pre><code class="swift">Circle()
+    .fill(.red)
+    .frame(width: 200, height: 200)
+</code></pre>
+            <p><strong>.fill(.red)</strong> : Remplit le cercle en rouge.</p>
+            <p><strong>.frame(width: 200, height: 200)</strong> : Définit la taille du cercle.</p>
+
+            <br />
+
+            <h4>Exemple : Ajouter une bordure bleue à une capsule</h4>
+            <pre><code class="swift">Capsule()
+    .stroke(lineWidth: 10)
+    .foregroundColor(.blue)
+    .frame(width: 200, height: 100)
+</code></pre>
+            <p><strong>.stroke(lineWidth: 10)</strong> : Dessine uniquement les contours de la forme.</p>
+            <p><strong>.foregroundColor(.blue)</strong> : Définit la couleur de la bordure.</p>
+
+            <br />
+
+            <h4>Exemple : Créer un rectangle arrondi avec un contour en pointillés</h4>
+            <pre><code class="swift">RoundedRectangle(cornerRadius: 20)
+    .stroke(style: StrokeStyle(lineWidth: 8, dash: [10]))
+    .foregroundColor(.blue)
+    .frame(width: 200, height: 100)
+</code></pre>
+            <p><strong>.stroke(style: StrokeStyle(lineWidth: 8, dash: [10]))</strong> : dash: [10] crée un effet de
+                pointillés (10 points de trait, 10 points d’espace).</p>
+
+
+            <h2>Ajouter une superposition (overlay)</h2>
+            <p>Si l’on souhaite combiner un fond et une bordure, on peut superposer (overlay) une forme sur elle-même.
+            </p>
+
+            <h4>Exemple : Un ovale rouge avec un contour bleu</h4>
+            <pre><code class="swift">Ellipse()
+    .fill(.red)
+    .overlay(
+        Ellipse()
+            .stroke(.blue, lineWidth: 10)
+    )
+    .frame(width: 250, height: 150)
+</code></pre>
+            <p><strong>.overlay()</strong> superpose une deuxième ellipse au-dessus de la première.</p>
+
+            <h2>Dessiner un tracé</h2>
+            <p>Un Path permet de créer des formes personnalisées en définissant des points et en reliant ces points avec
+                des lignes ou des courbes.</p>
+
+            <h4>Exemple : Dessiner un triangle</h4>
+            <pre><code class="swift">struct ContentView: View {
+    var body: some View {
+        Path { path in
+            path.move(to: CGPoint(x: 10, y: 0))
+            path.addLine(to: CGPoint(x: 10, y: 350))
+            path.addLine(to: CGPoint(x: 300, y: 300))
+            path.closeSubpath()
+        }
+        .stroke(Color.blue, lineWidth: 5)
+    }
+}
+</code></pre>
+            <p><strong>move(to:)</strong> : Place le point de départ.</p>
+            <p><strong>addLine(to:)</strong> : Ajoute une ligne reliant deux points.</p>
+            <p><strong>closeSubpath()</strong> : Ferme la forme pour créer un triangle.</p>
+
+            <h2>Créer une forme personnalisée</h2>
+            <p>Les formes prédéfinies sont utiles, mais parfois nous avons besoin de formes plus complexes.</p>
+            <p>Pour cela, nous créons une structure qui respecte le protocole Shape.</p>
+
+            <h4>Exemple : Créer une forme personnalisée avec une courbe</h4>
+            <pre><code class="swift">struct MyShape: Shape {
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+
+        path.move(to: CGPoint(x: rect.minX, y: rect.minY))
+        path.addQuadCurve(
+            to: CGPoint(x: rect.minX, y: rect.maxY),
+            control: CGPoint(x: rect.midX, y: rect.midY)
+        )
+        path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
+        path.closeSubpath()
+
+        return path
+    }
+}
+</code></pre>
+
+            <h4>Utilisation de la forme :</h4>
+            <pre><code class="swift">MyShape()
+    .fill(.red)
+    .frame(width: 360, height: 350)
+</code></pre>
+            <p>Les formes personnalisées sont réutilisables et supportent les modificateurs comme .fill(), .stroke(),
+                etc.</p>
+
+            <h2>Ajouter des dégradés de couleur</h2>
+            <h4>SwiftUI propose trois types de dégradés :</h4>
+            <ul>
+                <li style="margin-left: 30px;"> • Linéal (LinearGradient)</li>
+                <li style="margin-left: 30px;"> • Radial (RadialGradient)</li>
+                <li style="margin-left: 30px;"> • Angulaire (AngularGradient)</li>
+            </ul>
+
+            <h4>Exemple : Un cercle avec un dégradé radial</h4>
+            <pre><code class="swift">struct ContentView: View {
+    let colors = Gradient(colors: [.red, .yellow, .green, .blue, .purple])
+    
+    var body: some View {
+        Circle()
+            .fill(RadialGradient(gradient: colors, center: .center, startRadius: 0, endRadius: 300))
+            .frame(width: 200, height: 200)
+    }
+}
+</code></pre>
+            <p>Le centre du cercle est rouge et devient violet sur les bords.</p>
+        </section>
+
+        <section id="module-9-3" class="module-section">
+            <h1 id="animations">Animations et transitions en SwiftUI 🎬✨</h1>
+
+            <p>Pour une démonstration en vidéo, regardez la vidéo suivante :</p>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/guk9GNDavFY" frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+
+            <p>SwiftUI facilite l’animation des vues grâce à un système de gestion fluide et performant des animations.
+            </p>
+
+            <h4>🛠 Pourquoi utiliser des animations ?</h4>
+            <ul>
+                <li style="margin-left: 30px;"> • Améliorer l’expérience utilisateur avec des transitions fluides.</li>
+                <li style="margin-left: 30px;"> • Attirer l’attention sur des éléments interactifs.</li>
+                <li style="margin-left: 30px;"> • Rendre une interface plus engageante (ex. boutons animés, transitions
+                    visuelles).</li>
+            </ul>
+
+            <h2>Animation implicite (.animation())</h2>
+            <p>Les animations implicites permettent d’animer les modifications d’un état en ajoutant .animation() à un
+                modificateur.</p>
+
+            <h2>Exemple : Rotation animée d’un bouton</h2>
+            <pre><code class="swift">import SwiftUI
+
+struct ContentView: View {
+    @State private var rotation: Double = 0
+
+    var body: some View {
+        Button(action: {
+            self.rotation = (self.rotation < 360 ? self.rotation + 60 : 0)
+        }) {
+            Text("Cliquez pour tourner")
+                .rotationEffect(.degrees(rotation))
+                .animation(.linear(duration: 1), value: rotation)
+        }
+    }
+}
+</code></pre>
+            <p>À chaque clic, le texte tourne de 60 degrés.</p>
+            <p>.animation(.linear(duration: 1), value: rotation) ajoute une transition fluide sur 1 seconde.</p>
+
+            <h2>Animation avec plusieurs propriétés</h2>
+            <p>On peut animer plusieurs propriétés en même temps, comme la rotation et l’échelle.</p>
+
+            <h2>Exemple : Un bouton qui tourne et grandit progressivement</h2>
+            <pre><code class="swift">struct ContentView: View {
+    @State private var rotation: Double = 0
+    @State private var scale: CGFloat = 1
+
+    var body: some View {
+        Button(action: {
+            self.rotation = (self.rotation < 360 ? self.rotation + 60 : 0)
+            self.scale = (self.scale < 2.8 ? self.scale + 0.3 : 1)
+        }) {
+            Text("Cliquez pour animer")
+                .scaleEffect(scale)
+                .rotationEffect(.degrees(rotation))
+                .animation(.linear(duration: 1), value: rotation)
+        }
+    }
+}
+</code></pre>
+            <p>Le bouton tourne ET grandit à chaque clic.</p>
+
+            <h2>Utiliser une animation avec effet de rebond (spring())</h2>
+            <p>L’animation spring() ajoute un effet de rebond naturel.</p>
+
+            <h2>Exemple : Un bouton qui rebondit légèrement</h2>
+            <pre><code class="swift">Text("Cliquez pour animer")
+    .scaleEffect(scale)
+    .rotationEffect(.degrees(rotation))
+    .animation(.spring(response: 1, dampingFraction: 0.2, blendDuration: 0), value: rotation)
+</code></pre>
+            <p>spring(response: 1, dampingFraction: 0.2) exagère le mouvement et rebondit légèrement avant de s’arrêter.
+            </p>
+
+            <h2>Répéter une animation</h2>
+            <p>L’animation peut se répéter plusieurs fois avec .repeatCount() ou à l’infini avec .repeatForever().</p>
+
+            <h4>Exemple : Répéter une animation 10 fois</h4>
+            <pre><code class="swift">.animation(.linear(duration: 1).repeatCount(10), value: rotation)
+</code></pre>
+
+            <h4>Exemple : Répéter une animation en boucle infinie</h4>
+            <pre><code class="swift">.animation(.linear(duration: 1).repeatForever(autoreverses: true), value: rotation)
+</code></pre>
+            <p>autoreverses: true alterne entre les états (va-retour fluide).</p>
+
+            <h2>Animation explicite (withAnimation {})</h2>
+            <p>L’animation explicite permet de contrôler précisément quelles propriétés doivent être animées.</p>
+
+            <h4>Exemple : Animer une rotation mais pas le changement de taille</h4>
+            <pre><code class="swift">Button(action: { 
+    withAnimation(.linear(duration: 2)) {
+        self.rotation = (self.rotation < 360 ? self.rotation + 60 : 0)
+    }
+    self.scale = (self.scale < 2.8 ? self.scale + 0.3 : 1)
+}) {
+    Text("Cliquez pour animer")
+        .rotationEffect(.degrees(rotation))
+        .scaleEffect(scale)
+}
+</code></pre>
+            <p>Seule la rotation est animée, le changement d’échelle est instantané.</p>
+
+            <h2>Animation au chargement d’une vue (onAppear())</h2>
+            <p>On peut animer une vue dès son apparition avec onAppear().</p>
+
+            <h4>Exemple : Faire tourner une icône dès l’affichage</h4>
+            <pre><code class="swift">struct ContentView: View {
+    @State private var rotation: Double = 0
+
+    var body: some View {
+        Image(systemName: "forward.fill")
+            .rotationEffect(.degrees(rotation))
+            .onAppear {
+                withAnimation(Animation.linear(duration: 5).repeatForever(autoreverses: false)) {
+                    rotation = 360
+                }
+            }
+    }
+}
+</code></pre>
+            <p>L’icône tourne indéfiniment dès que la vue est affichée.</p>
+
+            <h2>Ajout de transitions animées (.transition())</h2>
+            <p>Les transitions animent l’apparition et la disparition des vues.</p>
+
+            <h4>Exemple : Faire apparaître un texte avec un effet de fondu</h4>
+            <pre><code class="swift">struct ContentView: View {
+    @State private var isVisible: Bool = false
+
+    var body: some View {
+        VStack {
+            Toggle("Afficher le texte", isOn: $isVisible.animation(.easeInOut(duration: 1)))
+                .padding()
+
+            if isVisible {
+                Text("Hello, world!")
+                    .font(.largeTitle)
+                    .transition(.opacity)
+            }
+        }
+    }
+}
+</code></pre>
+            <p>Le texte apparaît et disparaît en fondu lorsqu’on active/désactive le toggle.</p>
+
+            <h2>Types de transitions disponibles</h2>
+            <table border="1" style="border-collapse: collapse;">
+                <thead>
+                    <tr>
+                        <th>Transition</th>
+                        <th>Effet</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="padding: 4px;">.opacity</td>
+                        <td style="padding: 4px;">Fondu en entrée/sortie.</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 4px;">.scale</td>
+                        <td style="padding: 4px;">Agrandissement/réduction.</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 4px;">.slide</td>
+                        <td style="padding: 4px;">Déplacement vers l’intérieur/l’extérieur.</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 4px;">.move(edge: .leading)</td>
+                        <td style="padding: 4px;">Arrivée par la gauche.</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 4px;">.asymmetric(insertion: .scale, removal: .slide)</td>
+                        <td style="padding: 4px;">Effet différent à l’apparition et à la disparition.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>Exemple : Une transition qui combine opacity et slide</h4>
+            <pre><code class="swift">.transition(AnyTransition.opacity.combined(with: .slide))
+</code></pre>
+            <p>Le texte glisse tout en apparaissant progressivement.</p>
+        </section>
+
+        <section id="module-9-4" class="module-section">
+            <h1 id="interactions">Gestes et interactions tactiles (Gesture Recognizers) en SwiftUI 👆📱</h1>
+
+            <p>Pour une démonstration en vidéo, regardez la vidéo suivante :</p>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/4KDPQ8cHnrs" frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+
+            <p>SwiftUI permet de gérer facilement les interactions tactiles grâce aux gestures (reconnaisseurs de
+                gestes). Ces gestes permettent aux utilisateurs d’interagir avec l’interface via :</p>
+            <ul>
+                <li style="margin-left: 30px;">Taps (toucher simple, double tap, long press)</li>
+                <li style="margin-left: 30px;">Drags (glissement d’un élément)</li>
+                <li style="margin-left: 30px;">Pinch (zoom avec deux doigts)</li>
+                <li style="margin-left: 30px;">Rotation (rotation avec deux doigts)</li>
+                <li style="margin-left: 30px;">Combinaison de gestes</li>
+            </ul>
+
+            <h2>Ajout d’un simple tap (.onTapGesture)</h2>
+            <p>Le geste le plus basique en SwiftUI est l’appui simple (TapGesture). Il est utile pour déclencher une
+                action en touchant un élément.</p>
+
+            <h4>Exemple : Changer la couleur d’un cercle avec un tap</h4>
+            <pre><code class="swift">struct ContentView: View {
+    @State private var isRed = false
+
+    var body: some View {
+        Circle()
+            .fill(isRed ? .red : .blue)
+            .frame(width: 150, height: 150)
+            .onTapGesture {
+                isRed.toggle()
+            }
+    }
+}
+</code></pre>
+            <p>À chaque tap, la couleur alterne entre rouge et bleu.</p>
+
+            <h2>Gérer un double tap (.onTapGesture(count:))</h2>
+            <p>On peut différencier un tap simple et un double tap en précisant count:.</p>
+
+            <h4>Exemple : Changer la taille d’un cercle avec un double tap</h4>
+            <pre><code class="swift">struct ContentView: View {
+    @State private var size: CGFloat = 100
+
+    var body: some View {
+        Circle()
+            .frame(width: size, height: size)
+            .onTapGesture(count: 2) {
+                size = (size == 100 ? 200 : 100)
+            }
+    }
+}
+</code></pre>
+            <p>Un double tap agrandit ou réduit le cercle.</p>
+
+            <h2>Gérer un appui long (.onLongPressGesture)</h2>
+            <pre><code class="swift">struct ContentView: View {
+    @State private var isLiked = false
+
+    var body: some View {
+        Image(systemName: isLiked ? "heart.fill" : "heart")
+            .resizable()
+            .frame(width: 100, height: 100)
+            .foregroundColor(.red)
+            .onLongPressGesture {
+                isLiked.toggle()
+            }
+    }
+}
+</code></pre>
+            <p>Un appui long active ou désactive l’icône de “like”.</p>
+
+            <h2>Détecter un glissement (DragGesture)</h2>
+            <p>Un glissement (DragGesture) est souvent utilisé pour déplacer un élément à l’écran.</p>
+
+            <h4>Exemple : Faire glisser un carré</h4>
+            <pre><code class="swift">struct ContentView: View {
+    @State private var offset = CGSize.zero
+
+    var body: some View {
+        Rectangle()
+            .fill(.blue)
+            .frame(width: 100, height: 100)
+            .offset(offset)
+            .gesture(
+                DragGesture()
+                    .onChanged { gesture in
+                        offset = gesture.translation
+                    }
+                    .onEnded { _ in
+                        offset = .zero
+                    }
+            )
+    }
+}
+</code></pre>
+            <p>Le carré suit le doigt lors du drag et revient à sa position initiale après le relâchement.</p>
+
+            <h2>Détecter une rotation (RotationGesture)</h2>
+            <p>Le geste de rotation est souvent utilisé pour faire pivoter un élément.</p>
+
+            <h4>Exemple : Faire tourner une image avec deux doigts</h4>
+            <pre><code class="swift">struct ContentView: View {
+    @State private var rotation: Angle = .zero
+
+    var body: some View {
+        Image(systemName: "arrow.triangle.2.circlepath")
+            .resizable()
+            .frame(width: 150, height: 150)
+            .rotationEffect(rotation)
+            .gesture(
+                RotationGesture()
+                    .onChanged { angle in
+                        rotation = angle
+                    }
+            )
+    }
+}
+</code></pre>
+            <p>L’image tourne en fonction du mouvement des doigts.</p>
+
+            <h2>Zoom avec un pincement (MagnificationGesture)</h2>
+            <p>Le geste de pincement (pinch) permet de zoomer ou dézoomer un élément.</p>
+
+            <h4>Exemple : Agrandir une image avec deux doigts</h4>
+            <pre><code class="swift">struct ContentView: View {
+    @State private var scale: CGFloat = 1.0
+
+    var body: some View {
+        Image(systemName: "photo")
+            .resizable()
+            .frame(width: 150, height: 150)
+            .scaleEffect(scale)
+            .gesture(
+                MagnificationGesture()
+                    .onChanged { value in
+                        scale = value
+                    }
+            )
+    }
+}
+</code></pre>
+            <p>L’image grandit lorsqu’on l’écarte avec deux doigts et se réduit lorsqu’on pince.</p>
+
+            <h2>Combiner plusieurs gestes (SimultaneousGesture)</h2>
+            <p>On peut combiner plusieurs gestes, par exemple un glissement + une rotation.</p>
+
+            <h4>Exemple : Glisser ET tourner un carré</h4>
+            <pre><code class="swift">struct ContentView: View {
+    @State private var offset = CGSize.zero
+    @State private var rotation: Angle = .zero
+
+    var body: some View {
+        Rectangle()
+            .fill(.green)
+            .frame(width: 100, height: 100)
+            .offset(offset)
+            .rotationEffect(rotation)
+            .gesture(
+                SimultaneousGesture(
+                    DragGesture()
+                        .onChanged { gesture in
+                            offset = gesture.translation
+                        },
+                    RotationGesture()
+                        .onChanged { angle in
+                            rotation = angle
+                        }
+                )
+            )
+    }
+}
+</code></pre>
+            <p>Le carré peut être déplacé ET tourné en même temps.</p>
+
+            <h2>Différencier plusieurs gestes (ExclusiveGesture)</h2>
+            <p>ExclusiveGesture permet de choisir quel geste a priorité si plusieurs sont détectés.</p>
+
+            <h4>Exemple : Un simple tap et un appui long sur le même élément</h4>
+            <pre><code class="swift">struct ContentView: View {
+    @State private var message = "Tap ou Long Press"
+
+    var body: some View {
+        Text(message)
+            .padding()
+            .gesture(
+                ExclusiveGesture(
+                    TapGesture()
+                        .onEnded { _ in message = "Tap détecté !" },
+                    LongPressGesture()
+                        .onEnded { _ in message = "Appui long détecté !" }
+                )
+            )
+    }
+}
+</code></pre>
+            <p>Si l’utilisateur appuie longtemps, le tap est ignoré.</p>
+
+            <h2>Résumé des gestes en SwiftUI</h2>
+            <table border="1" style="border-collapse: collapse;">
+                <thead>
+                    <tr>
+                        <th>Geste</th>
+                        <th>Fonction</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="padding: 4px;">.onTapGesture()</td>
+                        <td style="padding: 4px;">Détecte un tap.</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 4px;">.onTapGesture(count: 2)</td>
+                        <td style="padding: 4px;">Détecte un double tap.</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 4px;">.onLongPressGesture()</td>
+                        <td style="padding: 4px;">Détecte un appui long.</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 4px;">DragGesture()</td>
+                        <td style="padding: 4px;">Détecte un glissement.</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 4px;">RotationGesture()</td>
+                        <td style="padding: 4px;">Détecte une rotation avec deux doigts.</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 4px;">MagnificationGesture()</td>
+                        <td style="padding: 4px;">Détecte un pincement pour zoomer.</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 4px;">SimultaneousGesture()</td>
+                        <td style="padding: 4px;">Permet d’effectuer deux gestes en même temps.</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 4px;">ExclusiveGesture()</td>
+                        <td style="padding: 4px;">Donne la priorité à un seul geste parmi plusieurs.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </div> style="margin-left: 30px;"
+</body>
+</section>
+</div>
+
+<footer class="footer">
+    <p>Développé par <a href="https://github.com/mathrob" style="color: white; text-decoration: underline;">Mathieu
+            Robson</a> &copy; <span id="current-year"></span></p>
+    <script>
+        document.getElementById("current-year").textContent =
+            new Date().getFullYear();
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script>
+        hljs.highlightAll();
+    </script>
+</footer>
+<div class="back-to-top" id="back-to-top">↑</div>
+<script>
+    const backToTopButton = document.getElementById("back-to-top");
+
+    window.addEventListener("scroll", () => {
+        if (window.scrollY > 300) {
+            backToTopButton.style.display = "block";
+        } else {
+            backToTopButton.style.display = "none";
+        }
+    });
+
+    backToTopButton.addEventListener("click", () => {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+        });
+    });
+</script>
+</body>
+
+</html>
