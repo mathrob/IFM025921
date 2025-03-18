@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IFM025921</title>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" />
+    <link rel="stylesheet" href="../style.css" />
+</head>
+
+<body>
+    <header>
+        <h1 style="color: white">Module 10 - Note de cours</h1>
+    </header>
+    <div class="container">
+        <a href="../index.html" class="back-link">← Retour au module principal</a>
+
+        <section id="module-10-1" class="module-section">
+            <h1 id="coredata">Core Data et SwiftUI</h1>
+
+            <h2>Introduction</h2>
+
+            <p>Dans le développement iOS, il est courant de stocker des données structurées (par exemple, listes de
+                contacts, tâches, produits, etc.).</p>
+
+            <h4>Problème avec les bases de données traditionnelles :</h4>
+            <p>Utiliser directement des bases de données embarquées comme SQLite nécessite des connaissances en SQL et
+                engendre une complexité dans le code (nature non orientée objet).</p>
+
+            <h4>Solution proposée par Apple :</h4>
+            <p>Core Data est un framework qui permet de travailler avec les données sous forme d’objets Swift. Il
+                encapsule les interactions avec la base de données (par défaut SQLite) et simplifie le traitement des
+                données en éliminant la nécessité de maîtriser le SQL.</p>
+
+            <h2>Les Principaux Composants de Core Data (Core Data Stack)</h2>
+            <p>La Stack Core Data se compose de plusieurs objets qui travaillent ensemble pour gérer le stockage
+                persistant :</p>
+
+            <img src="/imgs/coredatastack.png" alt="Diagramme de la Stack Core Data"
+                style="width: 100%; max-width: 800px; margin: 20px auto; display: block;">
+            <p style="text-align: center; font-style: italic;">Référence : Neil Smyth. iOS 18 App Development
+                Essentials. Payload Media, Inc.</p>
+
+            <h3>Persistent Container</h3>
+            <h4>Rôle :</h4>
+            <p><strong>Persistent Container</strong> gère la création de la pile Core Data et est conçu pour être
+                facilement
+                sous-classé afin d'ajouter des méthodes spécifiques à l'application à la fonctionnalité de base de Core
+                Data. Une fois initialisé, l'instance de conteneur persistant fournit l'accès au contexte de l'objet
+                géré.</p>
+            <h4>Fonctions clés :</h4>
+            <ul>
+                <li style="margin-left: 30px;">• Créer le modèle de données (via un fichier .xcdatamodeld).</li>
+                <li style="margin-left: 30px;">• Charger les persistent stores (SQLite, XML, binaire ou mémoire).</li>
+                <li style="margin-left: 30px;">• Fournir le Managed Object Context via la propriété viewContext pour
+                    interagir avec les objets gérés.</li>
+            </ul>
+
+            <h3>Managed Object Context (MOC)</h3>
+            <h4>Rôle :</h4>
+            <p>Le MOC agit comme une zone tampon qui contient les objets gérés (instances de NSManagedObject ou de ses
+                sous-classes) avec lesquels l’application interagit.</p>
+            <h4>Fonctions clés :</h4>
+            <ul>
+                <li style="margin-left: 30px;">• Gérer les objets et leurs états (nouveaux, modifiés, supprimés).</li>
+                <li style="margin-left: 30px;">• Conserver temporairement les changements avant de les sauvegarder dans
+                    le persistent store.</li>
+                <li style="margin-left: 30px;">• Effectuer des fetch requests pour récupérer des données selon des
+                    critères donnés.</li>
+            </ul>
+
+            <h3>Managed Object Model</h3>
+            <h4>Rôle :</h4>
+            <p>Il définit la structure des données sous forme d’entités (semblables aux tables dans une base de données
+                relationnelle).</p>
+            <h4>Contenu :</h4>
+            <ul>
+                <li style="margin-left: 30px;">• <strong>Entités (Entities)</strong> : Par exemple, une entité
+                    “Contacts” avec des attributs comme “name”, “address” et “phone”.</li>
+                <li style="margin-left: 30px;">• <strong>Attributs (Attributes)</strong> : Définit le type de données à
+                    stocker pour chaque entité.</li>
+                <li style="margin-left: 30px;">• <strong>Relations (Relationships)</strong> : Permettent de définir des
+                    liens entre différentes entités (one-to-one, one-to-many, many-to-many).</li>
+            </ul>
+
+            <h3>Persistent Store Coordinator</h3>
+            <h4>Rôle :</h4>
+            <p>Il gère les persistent stores (fichiers de stockage) et coordonne les interactions entre le MOC et le
+                store.</p>
+            <h4>Fonctions clés :</h4>
+            <ul>
+                <li style="margin-left: 30px;">• Charger et sauvegarder les données dans le store.</li>
+                <li style="margin-left: 30px;">• Effectuer des migrations de données lors de changements de modèle.</li>
+                <li style="margin-left: 30px;">• Permettre l’utilisation de plusieurs stores pour une même application.
+                </li>
+            </ul>
+
+            <h3>Persistent Store</h3>
+            <h4>Rôle :</h4>
+            <p>C’est le support de stockage réel. Par défaut une database SQLite.</p>
+            <h4>Fonctions clés :</h4>
+            <ul>
+                <li style="margin-left: 30px;">• Le choix du type de store (SQLite, XML, binaire ou mémoire) est
+                    généralement transparent pour le développeur.</li>
+            </ul>
+
+            <h2>Création et édition du modèle de données</h2>
+
+            <h3>Définition du modèle d’entités dans Xcode</h3>
+            <p>Lors de la création d’un projet avec Core Data, Xcode génère un fichier <strong>.xcdatamodeld</strong>.
+                Ce fichier sert de modèle pour structurer les données que l’application va gérer. Il définit les
+                entités, leurs attributs, et les relations entre elles, permettant ainsi à Core Data d'interpréter et
+                manipuler ces objets.</p>
+            <img src="/imgs/coredataoption.png" alt="Diagramme de la Stack Core Data"
+                style="width: 100%; max-width: 800px; margin: 20px auto; display: block;">
+
+            <img src="/imgs/xcdatamodeld.png" alt="Modèle d'entités dans Xcode"
+                style="width: 100%; max-width: 800px; margin: 20px auto; display: block;">
+            <p style="text-align: center; font-style: italic;">Exemple de modèle d'entités dans Xcode.</p>
+
+            <h4>Pourquoi utiliser un modèle d’entités ?</h4>
+            <ul>
+                <li style="margin-left: 30px;">• Il simplifie la gestion des données en représentant les objets sous
+                    forme de modèles Swift.</li>
+                <li style="margin-left: 30px;">• Il permet d'automatiser les opérations CRUD (Create, Read, Update,
+                    Delete) sans écrire du SQL.</li>
+                <li style="margin-left: 30px;">• Il assure l'intégrité et la cohérence des données en définissant des
+                    contraintes et des relations.</li>
+            </ul>
+
+            <h4>Ce fichier vous permet de :</h4>
+            <ul>
+                <li style="margin-left: 30px;">• Ajouter des entités (cliquez sur “Add Entity”).</li>
+                <li style="margin-left: 30px;">• Définir des attributs pour chaque entité (nom, type, contraintes,
+                    etc.).</li>
+                <li style="margin-left: 30px;">• Établir des relations entre entités (ex. : un produit appartient à une
+                    catégorie).</li>
+            </ul>
+
+            <h4>Étapes pour définir une entité :</h4>
+            <ol>
+                <li>Ouvrez le fichier <strong>.xcdatamodeld</strong> dans Xcode.</li>
+                <li>Cliquez sur “Add Entity” en bas du panneau de gauche.</li>
+                <li>Renommez l’entité par un nom significatif (ex. : “Product” pour stocker des informations sur les
+                    produits).</li>
+                <li>Ajoutez des attributs en cliquant sur le bouton “+” sous la section Attributes.</li>
+                <li>Définissez le type de chaque attribut :
+                    <ul>
+                        <li>• <strong>String</strong> : Pour stocker du texte (ex. : nom du produit).</li>
+                        <li>• <strong>Integer</strong> : Pour stocker des nombres entiers (ex. : stock disponible).</li>
+                        <li>• <strong>Double</strong> : Pour stocker des nombres décimaux (ex. : prix).</li>
+                        <li>• <strong>Date</strong> : Pour enregistrer une date (ex. : date d’ajout).</li>
+                        <li>• <strong>Boolean</strong> : Pour des valeurs vraies ou fausses (ex. : disponible en stock
+                            ?).</li>
+                    </ul>
+                </li>
+                <li>Si nécessaire, établissez des relations avec d'autres entités en utilisant l’onglet “Relationships”.
+                    Par exemple, une entité “Product” peut être liée à une entité “Category” avec une relation
+                    one-to-many (un produit appartient à une seule catégorie, mais une catégorie contient plusieurs
+                    produits).</li>
+            </ol>
+
+            <h3>Conclusion</h3>
+            <p>Core Data simplifie la gestion des données en encapsulant les opérations de base de données. En
+                définissant un modèle clair, en utilisant les fonctionnalités de persistance et en effectuant des
+                requêtes optimisées, il est possible de créer des applications performantes et évolutives.</p>
+
+        </section>
+
+        <section id="module-10-2" class="module-section">
+            <h1 id="projet-coredata">Créer un projet SwiftUI avec Core Data</h1>
+
+            <h2>Créer le projet « CoreDataDemo »</h2>
+            <ol>
+                <li>Lancez Xcode et cliquez sur «Create a new Xcode project».</li>
+                <li>Sélectionnez «IOS» et «App».</li>
+                <li>Donnez un nom à votre projet, par exemple «CoreDataDemo».</li>
+                <li>Ne cochez pas l’option «Core Data» dans la partie Storage. Laissez-la sur «None».</li>
+                <li>Sélectionnez l’emplacement de sauvegarde, puis cliquez sur «Finish».</li>
+            </ol>
+
+            <p>
+                <strong>Objectif</strong> : Nous allons ajouter manuellement tous les éléments nécessaires à
+                l’utilisation de Core Data.
+            </p>
+
+            <h2>Ajouter le modèle de données (.xcdatamodeld)</h2>
+            <p>Comme nous n’avons pas coché l’option Core Data, Xcode n’a pas créé de fichier .xcdatamodeld par défaut.
+                Nous allons le créer nous-mêmes.</p>
+
+            <ol>
+                <li>Appuyez sur Cmd+N pour créer un nouveau fichier.</li>
+                <li>Dans la section iOS, cherchez la rubrique Core Data.</li>
+                <li>Sélectionnez « Data Model » puis cliquez sur « Next ».</li>
+                <li>Donnez un nom au fichier, par exemple « Products ».</li>
+                <li>Cliquez sur « Create ».</li>
+                <li>Vous verrez apparaître un fichier Products.xcdatamodeld dans votre arborescence.</li>
+            </ol>
+
+            <h3>Définir une entité (Entity)</h3>
+            <ol>
+                <li>Ouvrez Products.xcdatamodeld.</li>
+                <li>Dans la fenêtre principale, cliquez sur « Add Entity » en bas.</li>
+                <li>Renommez l’entité « Product » (double-clic sur le nom par défaut).</li>
+                <li>Dans la section Attributes, cliquez sur + pour ajouter un attribut :
+                    <ul>
+                        <li>name (String) : pour le nom du produit.</li>
+                        <li>quantity (String) : pour stocker la quantité du produit (vous pourriez utiliser un entier,
+                            mais on reste simple).</li>
+                    </ul>
+                </li>
+            </ol>
+
+            <p>Votre modèle de données contient désormais une entité Product avec deux attributs : name et quantity.
+            </p>
+
+            <h2>Créer la structure PersistenceController</h2>
+            <p>Maintenant, nous allons créer un fichier Swift pour configurer la stack Core Data </p>
+
+            <ol>
+                <li>Appuyez sur Cmd+N pour créer un nouveau fichier Swift.</li>
+                <li>Nommez ce fichier Persistence.swift et enregistrez-le à la racine de votre projet.</li>
+                <li>Ajoutez le code suivant :
+                    <pre><code class="language-swift">import CoreData
+
+struct PersistenceController {
+    static let shared = PersistenceController()
+    let container: NSPersistentContainer
+
+    init() {
+        // « Products » correspond au nom du fichier .xcdatamodeld (sans l’extension)
+        container = NSPersistentContainer(name: "Products")
+
+        container.loadPersistentStores { (storeDescription, error) in
+            if let error = error as NSError? {
+                // En cas d’erreur, on arrête l’application (fatalError)
+                // Pour une app de production, on gérerait l’erreur différemment
+                fatalError("Échec du chargement du store: \(error)")
+            }
+        }
+    }
+}
+</code></pre>
+                </li>
+            </ol>
+            <h3>Explications :</h3>
+            <ul>
+                <li style="margin-left: 30px;"> • NSPersistentContainer : représente l’ensemble de la pile Core Data.
+                </li>
+                <li style="margin-left: 30px;">• container.loadPersistentStores : initialise la base de données (SQLite
+                    par défaut) et gère les
+                    erreurs éventuelles.</li>
+            </ul>
+
+            <h2>Injecter le Managed Object Context dans SwiftUI</h2>
+            <p>Dans votre fichier CoreDataDemoApp.swift, on va utiliser le PersistenceController pour fournir le
+                viewContext aux vues SwiftUI.</p>
+            <pre><code class="language-swift">import SwiftUI
+
+@main
+struct CoreDataDemoApp: App {
+    let persistenceController = PersistenceController.shared
+
+    var body: some Scene {
+        WindowGroup {
+            ContentView()
+                // On injecte le viewContext dans l’environnement
+                .environment(\.managedObjectContext, persistenceController.container.viewContext)
+        }
+    }
+}
+</code></pre>
+            <p><strong>Avantage</strong> : Toutes les vues pourront accéder à @Environment(\.managedObjectContext) pour
+                créer, lire ou supprimer des objets.</p>
+
+            <h2>Mettre en place l’interface (ContentView.swift)</h2>
+            <pre><code class="language-swift">import SwiftUI
+import CoreData
+
+struct ContentView: View {
+    // Champs de saisie pour le nom et la quantité
+    @State private var name = ""
+    @State private var quantity = ""
+
+    // Récupération du contexte Core Data via l’environnement
+    @Environment(\.managedObjectContext) private var viewContext
+
+    // FetchRequest pour récupérer tous les Product
+    @FetchRequest(
+        entity: Product.entity(),
+        sortDescriptors: [] // On pourra ajouter un tri plus tard
+    )
+    private var products: FetchedResults< Product >
+
+    var body: some View {
+        NavigationStack {
+            VStack {
+                TextField("Nom du produit", text: $name)
+                TextField("Quantité", text: $quantity)
+                    .keyboardType(.numberPad)
+
+                HStack {
+                    Spacer()
+                    Button("Add") {
+                        addProduct()
+                    }
+                    Spacer()
+                    Button("Clear") {
+                        name = ""
+                        quantity = ""
+                    }
+                    Spacer()
+                }
+                .padding()
+
+                // Affichage de la liste des produits
+                List {
+                    ForEach(products) { product in
+                        HStack {
+                            Text(product.name ?? "Inconnu")
+                            Spacer()
+                            Text(product.quantity ?? "0")
+                        }
+                    }
+                    .onDelete(perform: deleteProducts)
+                }
+                .listStyle(.plain)
+            }
+            .padding()
+            .textFieldStyle(RoundedBorderTextFieldStyle())
+            .navigationTitle("Inventaire")
+        }
+    }
+}
+</code></pre>
+            <h3>Explications :</h3>
+            <ul>
+                <li style="margin-left: 30px;">• @FetchRequest : récupère tous les objets Product de la base, mis à jour
+                    en temps réel.</li>
+                <li style="margin-left: 30px;">• Liste : affiche chaque Product.</li>
+                <li style="margin-left: 30px;">• onDelete : permet de supprimer un produit en glissant vers la gauche.
+                </li>
+            </ul>
+
+            <h3>Ajouter les fonctions Core Data (ajout/suppression)</h3>
+            <p>Toujours dans ContentView :</p>
+            <pre><code class="language-swift">extension ContentView {
+    private func addProduct() {
+        withAnimation {
+            let newProduct = Product(context: viewContext)
+            newProduct.name = name
+            newProduct.quantity = quantity
+
+            saveContext()
+        }
+    }
+
+    private func deleteProducts(offsets: IndexSet) {
+        withAnimation {
+            offsets.map { products[$0] }.forEach(viewContext.delete)
+            saveContext()
+        }
+    }
+
+    private func saveContext() {
+        do {
+            try viewContext.save()
+        } catch {
+            // Arrêt brutal si erreur (fatalError)
+            // En production, on afficherait un message d’erreur plus propre
+            fatalError("Erreur lors de la sauvegarde : \(error)")
+        }
+    }
+}
+</code></pre>
+            <h3>Explications :</h3>
+            <ul>
+                <li style="margin-left: 30px;"> • addProduct() : crée un objet Product, assigne name et quantity, puis
+                    appelle saveContext().</li>
+                <li style="margin-left: 30px;"> • deleteProducts(offsets:) : supprime les produits sélectionnés dans la
+                    liste, puis sauvegarde.</li>
+                <li style="margin-left: 30px;">• saveContext() : tente de sauvegarder les changements. En cas d’erreur,
+                    on arrête l’application (vous pourriez faire autrement).</li>
+            </ul>
+
+            <h2>Améliorations possibles</h2>
+            <h3>Trier les produits</h3>
+            <p>Pour trier par ordre alphabétique, on peut ajouter un NSSortDescriptor :</p>
+            <pre><code class="language-swift">@FetchRequest(
+    entity: Product.entity(),
+    sortDescriptors: [NSSortDescriptor(key: "name", ascending: true)]
+)
+private var products: FetchedResults< Product >
+</code></pre>
+
+            <h3>Rechercher un produit</h3>
+            <p>On peut créer une vue de recherche (ResultsView) qui utilise un NSPredicate :</p>
+            <pre><code class="language-swift">struct ResultsView: View {
+    var name: String
+    var viewContext: NSManagedObjectContext
+    
+    @State var matches: [Product]?
+    
+    var body: some View {
+        VStack {
+            List {
+                ForEach(matches ?? []) { match in
+                    HStack {
+                        Text(match.name ?? "Not found")
+                        Spacer()
+                        Text(match.quantity ?? "Not found")
+                    }
+                }
+            }
+            .navigationTitle("Results")
+        }
+        .task {
+            let fetchRequest: NSFetchRequest<Product> = Product.fetchRequest()
+            
+            fetchRequest.entity = Product.entity()
+            // CONTAINS[cd] = insensible à la casse et aux accents
+            fetchRequest.predicate = NSPredicate(format: "name CONTAINS[cd] %@", name)
+            matches = try? viewContext.fetch(fetchRequest)
+        }
+    }
+}
+</code></pre>
+            <p>Cela permet d’afficher uniquement les produits selon le nom.</p>
+
+            <h3>ContentView</h3>
+            <p>On peut ajouter des boutons pour accéder à la vue de recherche :</p>
+            <pre><code class="language-swift">...
+
+HStack {
+    Spacer()
+    
+    Button("Add") {
+        addProduct()
+    }
+    
+    Spacer()
+    
+    NavigationLink(destination: ResultsView(name: name, viewContext: viewContext)) {
+        Text("Find")
+    }
+    
+    Spacer()
+
+    Button("Clear") {
+        name = ""
+        quantity = ""
+    }
+    Spacer()
+}
+
+...
+</code></pre>
+
+            <h3>Gérer les erreurs plus finement</h3>
+            <p>Au lieu d’utiliser fatalError, on peut afficher une alerte, ou logger l’erreur dans la console, etc.</p>
+        </section>
+    </div>
+</body>
+</section>
+</div>
+
+<footer class="footer">
+    <p>Développé par <a href="https://github.com/mathrob" style="color: white; text-decoration: underline;">Mathieu
+            Robson</a> &copy; <span id="current-year"></span></p>
+    <script>
+        document.getElementById("current-year").textContent =
+            new Date().getFullYear();
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script>
+        hljs.highlightAll();
+    </script>
+</footer>
+<div class="back-to-top" id="back-to-top">↑</div>
+<script>
+    const backToTopButton = document.getElementById("back-to-top");
+
+    window.addEventListener("scroll", () => {
+        if (window.scrollY > 300) {
+            backToTopButton.style.display = "block";
+        } else {
+            backToTopButton.style.display = "none";
+        }
+    });
+
+    backToTopButton.addEventListener("click", () => {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+        });
+    });
+</script>
+</body>
+
+</html>
