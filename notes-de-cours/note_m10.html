@@ -458,6 +458,116 @@ HStack {
 ...
 </code></pre>
 
+            <h3>Création de la vue de modification (EditProductView)</h3>
+            <p>Lorsqu’un utilisateur sélectionne un produit dans la liste, il doit pouvoir modifier ses informations
+                (nom et quantité) et sauvegarder ces modifications. Nous allons créer une vue EditProductView qui
+                affichera un formulaire pré-rempli avec les données existantes du produit.</p>
+
+            <pre><code class="language-swift">struct EditProductView: View {
+    @ObservedObject var product: Product
+    var viewContext: NSManagedObjectContext
+    
+    @State private var name: String = ""
+    @State private var quantity: String = ""
+    @State private var showConfirmation = false
+
+    var body: some View {
+        Form {
+            Section(header: Text("Informations du produit")) {
+                TextField("Nom du produit", text: $name)
+                TextField("Quantité", text: $quantity)
+                    .keyboardType(.numberPad)
+            }
+
+            Section {
+                Button("Enregistrer") {
+                    saveChanges()
+                }
+                .buttonStyle(.borderedProminent)
+                .disabled(name.isEmpty || quantity.isEmpty) // Empêche l'enregistrement si les champs sont vides
+            }
+        }
+        .navigationTitle("Modifier Produit")
+        .onAppear {
+            loadData()
+        }
+        .alert("Modification enregistrée", isPresented: $showConfirmation) {
+            Button("OK", role: .cancel) { }
+        }
+    }
+
+    /// Charge les données actuelles du produit dans les champs de saisie.
+    private func loadData() {
+        name = product.name ?? ""
+        quantity = product.quantity ?? ""
+    }
+
+    /// Sauvegarde les modifications dans Core Data.
+    private func saveChanges() {
+        product.name = name
+        product.quantity = quantity
+
+        do {
+            try viewContext.save()
+            showConfirmation = true
+        } catch {
+            print("Erreur lors de la sauvegarde : \(error.localizedDescription)")
+        }
+    }
+}
+</code></pre>
+            <h4>Explication :</h4>
+            <ul>
+                <li style="margin-left: 30px;">• @ObservedObject var product : Permet d’observer les modifications sur
+                    l’objet Product provenant de Core Data.</li>
+                <li style="margin-left: 30px;">• var viewContext: NSManagedObjectContext : Nécessaire pour sauvegarder
+                    les modifications dans Core Data.</li>
+                <li style="margin-left: 30px;">• @State private var name et quantity : Variables locales pour stocker
+                    temporairement les valeurs du produit.</li>
+                <li style="margin-left: 30px;">• Form : Structure SwiftUI permettant d’afficher un formulaire.</li>
+                <li style="margin-left: 30px;">• TextField : Champs de saisie permettant de modifier le nom et la
+                    quantité du produit.</li>
+                <li style="margin-left: 30px;">• Button(“Enregistrer”) : Sauvegarde les modifications en mettant à jour
+                    l’objet product puis en enregistrant dans Core Data.</li>
+                <li style="margin-left: 30px;">• .onAppear : Remplit les champs de texte avec les données actuelles du
+                    produit lors de l’affichage de la vue.</li>
+                <li style="margin-left: 30px;">• .alert : Affiche un message de confirmation après l’enregistrement des
+                    modifications.</li>
+            </ul>
+
+            <h2>Navigation vers la vue de modification</h2>
+            <p>Nous devons maintenant permettre à l’utilisateur d’accéder à EditProductView depuis la liste des produits affichée dans ContentView. Pour cela, nous allons utiliser NavigationLink.</p>
+            <pre><code class="language-swift">...
+
+NavigationView {
+    List {
+        ForEach(products) { product in
+            NavigationLink(destination: EditProductView(product: product, viewContext: viewContext)) {
+                HStack {
+                    Text(product.name ?? "Inconnu")
+                        .font(.headline)
+
+                    Spacer()
+
+                    Text(product.quantity ?? "0")
+                        .foregroundColor(.secondary)
+                }
+            }
+        }
+        .onDelete(perform: deleteProducts)
+    }
+    .navigationTitle("Produits")
+}
+
+...
+</code></pre>
+<h4>Explication :</h4>
+<ul>
+    <li style="margin-left: 30px;">• List : Affiche une liste des produits enregistrés.</li>
+    <li style="margin-left: 30px;">• ForEach(products) : Itère sur chaque produit stocké dans Core Data.</li>
+    <li style="margin-left: 30px;">• NavigationLink(destination: EditProductView(…)) : Permet d’ouvrir EditProductView en passant le produit sélectionné et le contexte Core Data.</li>
+</ul>
+
             <h3>Gérer les erreurs plus finement</h3>
             <p>Au lieu d’utiliser fatalError, on peut afficher une alerte, ou logger l’erreur dans la console, etc.</p>
         </section>
