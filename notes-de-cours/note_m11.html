@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IFM025921</title>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" />
+    <link rel="stylesheet" href="../style.css" />
+</head>
+
+<body>
+    <header>
+        <h1 style="color: white">Module 11 - Note de cours</h1>
+    </header>
+    <div class="container">
+        <a href="../index.html" class="back-link">← Retour au module principal</a>
+
+        <section id="module-11" class="module-section">
+            <h1>MapKit</h1>
+            <p>MapKit est un framework d'Apple qui permet d'intégrer des cartes dans une application iOS. Il est basé
+                sur
+                le service de cartographie d'Apple, qui est similaire à Google Maps. MapKit fournit des classes pour
+                afficher des cartes, des annotations, des itinéraires, etc. Il est très facile à utiliser et offre de
+                nombreuses fonctionnalités pour personnaliser l'apparence des cartes.</p>
+
+            <h2>Affichage de cartes</h2>
+            <p>Pour travailler avec des cartes dans SwiftUI, il faut importer le framework MapKit, qui fournit toutes
+                les classes et vues nécessaires :</p>
+            <pre><code class="swift">import MapKit</code></pre>
+
+            <h3>Utilisation de la vue Map</h3>
+            <p>La vue Map de SwiftUI permet d’afficher une carte interactive dans votre interface :</p>
+            <pre><code class="swift">struct ContentView: View {
+    var body: some View {
+        Map()
+    }
+}</code></pre>
+            <h4>Explication :</h4>
+            <p> • Map() : Crée une carte interactive.</p>
+
+            <h2>Personnalisation de cartes</h2>
+            <p>MapKit offre de nombreuses options pour personnaliser l’apparence des cartes, y compris le style, les
+                contrôles, les marqueurs, les annotations, etc.</p>
+
+            <h3>Position de la camera</h3>
+            <p>La position de la caméra permet de définir la région affichée sur la carte :</p>
+            <pre><code class="swift">struct ContentView: View {
+    let cameraPosition: MapCameraPosition = .region(.init(center: .init(latitude: 45.439857, longitude: -75.627043), latitudinalMeters: 400, longitudinalMeters: 400))
+    
+    var body: some View {
+        Map(initialPosition: cameraPosition)
+    }
+}</code></pre>
+            <h4>Explication :</h4>
+            <ul>
+                <li style="margin-left: 30px;">• MapCameraPosition : Structure pour définir la position de la caméra.</li>
+                <li style="margin-left: 30px;">• .region() : Définit la région affichée sur la carte.</li>
+                <li style="margin-left: 30px;">• .init() : Initialise un objet CLLocationCoordinate2D avec des
+                    coordonnées.</li>
+                <li style="margin-left: 30px;">• latitudinalMeters : Distance en mètres de la région affichée.</li>
+                <li style="margin-left: 30px;">• longitudinalMeters : Distance en mètres de la région affichée.</li>
+            </ul>
+
+            <h3>MapStyle</h3>
+            <p>Le modificateur <strong>.mapStyle(_:)</strong> permet de choisir le style de la carte :</p>
+            <ul>
+                <li style="margin-left: 30px;"><strong>.standard</strong> : Carte classique (par défaut).</li>
+                <li style="margin-left: 30px;"><strong>.satellite</strong> : Vue satellite.</li>
+                <li style="margin-left: 30px;"><strong>.hybrid</strong> : Mélange d’images satellites et de noms de
+                    rues.</li>
+                <li style="margin-left: 30px;"><strong>.hybrid(elevation: .realistic)</strong> : Vue 3D avec relief
+                    réaliste (iOS 16+).</li>
+            </ul>
+            <pre><code class="swift">struct ContentView: View {
+var body: some View {
+    Map()
+        .mapStyle(.satellite)
+}</code></pre>
+
+            <h3>MapControl</h3>
+            <p>Les contrôles de carte permettent d’ajouter des boutons et des vues interactives à la carte :</p>
+            <ul>
+                <li style="margin-left: 30px;"><strong>MapUserLocationButton</strong> : Bouton pour afficher la position
+                    de l’utilisateur.</li>
+                <li style="margin-left: 30px;"><strong>MapCompass</strong> : Boussole pour orienter la carte.</li>
+                <li style="margin-left: 30px;"><strong>MapPitchToggle</strong> : Bouton pour basculer entre la vue 2D et
+                    3D.</li>
+                <li style="margin-left: 30px;"><strong>MapScaleView</strong> : Échelle pour mesurer les distances sur la
+                    carte.</li>
+            </ul>
+            <pre><code class="swift">struct ContentView: View {
+    var body: some View {
+        Map()
+            .mapStyle(.hybrid)
+            .mapControls {
+                MapUserLocationButton()
+                MapCompass()
+                MapPitchToggle()
+                MapScaleView()
+            }
+    }
+}</code></pre>
+
+            <h3>Marqueur (Marker)</h3>
+            <p>Les marqueurs sont des points d’intérêt qui peuvent être affichés sur la carte :</p>
+            <pre><code class="swift">struct ContentView: View {
+    var body: some View {
+        Map {
+            Marker("La Cite", coordinate: CLLocationCoordinate2D(latitude: 45.439857, longitude: -75.627043))
+        }
+    }
+}</code></pre>
+            <h4>Explication :</h4>
+            <ul>
+                <li style="margin-left: 30px;">• Marker() : Crée un marqueur avec un titre et des coordonnées.</li>
+                <li style="margin-left: 30px;">• CLLocationCoordinate2D : Structure qui représente les coordonnées
+                    géographiques d’un point.</li>
+            </ul>
+
+            <h3>Annotation</h3>
+            <p>Les annotations sont des vues personnalisées qui peuvent être affichées sur la carte :</p>
+            <pre><code class="swift">struct ContentView: View {
+    var body: some View {
+        Map {
+            Annotation("La Cite", coordinate: CLLocationCoordinate2D(latitude: 45.439857, longitude: -75.627043), anchor: .center) {
+                Image(systemName: "graduationcap.fill")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .foregroundStyle(.white)
+                    .frame(width: 20, height: 20)
+                    .padding(7)
+                    .background(.pink.gradient, in: .circle)
+                
+            }
+        }
+    }
+}</code></pre>
+            <h4>Explication :</h4>
+            <ul>
+                <li style="margin-left: 30px;">• Annotation() : Crée une annotation avec un titre, des coordonnées, un
+                    point d’ancrage et une vue personnalisée.</li>
+            </ul>
+
+            <h2>Géolocalisation de l’appareil</h2>
+            <p>MapKit permet d’accéder à la position de l’utilisateur en utilisant le gestionnaire de localisation
+                (CLLocationManager) :</p>
+
+            <h3>Authorisation d'utiliser la location</h3>
+            <p>Il faut ajouter une clé NSLocationWhenInUseUsageDescription dans le fichier Info.plist pour demander
+                l’autorisation d’utiliser la localisation :</p>
+            <img src="../imgs/info_plist_map.png" alt="Diagramme de la Stack Core Data"
+                style="width: 100%; max-width: 800px; margin: 20px auto; display: block;">
+
+            <h3>CLLocationManager</h3>
+            <p>Le gestionnaire de localisation permet de suivre la position de l’utilisateur :</p>
+            <pre><code class="swift">struct ContentView: View {
+    let locationManager = CLLocationManager()
+    
+    var body: some View {
+        Map {
+            UserAnnotation()
+        }
+        .onAppear {
+            locationManager.requestWhenInUseAuthorization()
+        }
+    }
+}</code></pre>
+            <h4>Explication :</h4>
+            <ul>
+                <li style="margin-left: 30px;">• CLLocationManager : Classe pour gérer la localisation.</li>
+                <li style="margin-left: 30px;">• requestWhenInUseAuthorization() : Demande l’autorisation d’utiliser la
+                    localisation.</li>
+                <li style="margin-left: 30px;">• UserAnnotation() : Permet d’afficher la position de l’utilisateur sur
+                    la carte.</li>
+            </ul>
+
+            <p>Lorsque l'utilisateur utilisera l'application pour la première fois un message lui sera afficher lui
+                demandant d'autoriser la localisation</p>
+            <img src="../imgs/allow_location.png" alt="Diagramme de la Stack Core Data"
+                style="width: 100%; max-width: 300px; margin: 20px auto; display: block;">
+
+            <h2>Tester l'application avec geolocalisation</h2>
+            <p>A la base l'emulateur n'a pas de gps d'integrer mais il est tout de meme posible de simuler une position. Pour
+                cela, il faut sélectionner une position dans le menu <strong>Features > Location</strong> :</p>
+
+                <img src="../imgs/simulation-position.png" alt="Diagramme de la Stack Core Data"
+                style="width: 100%; max-width: 300px; margin: 20px auto; display: block;">
+             
+        </section>
+    </div>
+</body>
+</section>
+</div>
+
+<footer class="footer">
+    <p>Développé par <a href="https://github.com/mathrob" style="color: white; text-decoration: underline;">Mathieu
+            Robson</a> &copy; <span id="current-year"></span></p>
+    <script>
+        document.getElementById("current-year").textContent =
+            new Date().getFullYear();
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script>
+        hljs.highlightAll();
+    </script>
+</footer>
+<div class="back-to-top" id="back-to-top">↑</div>
+<script>
+    const backToTopButton = document.getElementById("back-to-top");
+
+    window.addEventListener("scroll", () => {
+        if (window.scrollY > 300) {
+            backToTopButton.style.display = "block";
+        } else {
+            backToTopButton.style.display = "none";
+        }
+    });
+
+    backToTopButton.addEventListener("click", () => {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+        });
+    });
+</script>
+</body>
+
+</html>
