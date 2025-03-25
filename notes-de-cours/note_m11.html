@@ -19,15 +19,15 @@
 
         <section id="module-11" class="module-section">
             <h1>MapKit</h1>
-            <p>MapKit est un framework d'Apple qui permet d'intégrer des cartes dans une application iOS. Il est basé
-                sur
-                le service de cartographie d'Apple, qui est similaire à Google Maps. MapKit fournit des classes pour
-                afficher des cartes, des annotations, des itinéraires, etc. Il est très facile à utiliser et offre de
-                nombreuses fonctionnalités pour personnaliser l'apparence des cartes.</p>
+            <p>MapKit est un framework développé par Apple qui permet d’intégrer des cartes interactives dans les
+                applications iOS. Il repose sur le service de cartographie d’Apple, offrant des fonctionnalités
+                similaires à celles de Google Maps. MapKit fournit des classes pour afficher des cartes, ajouter des
+                annotations, tracer des itinéraires, et bien plus. Il est facile à utiliser et offre de nombreuses
+                options pour personnaliser l’apparence et le comportement des cartes.</p>
 
             <h2>Affichage de cartes</h2>
-            <p>Pour travailler avec des cartes dans SwiftUI, il faut importer le framework MapKit, qui fournit toutes
-                les classes et vues nécessaires :</p>
+            <p>Pour intégrer une carte interactive dans votre application SwiftUI, commencez par importer le framework
+                MapKit, qui fournit les classes nécessaires pour travailler avec des cartes.</p>
             <pre><code class="swift">import MapKit</code></pre>
 
             <h3>Utilisation de la vue Map</h3>
@@ -41,10 +41,10 @@
             <p> • Map() : Crée une carte interactive.</p>
 
             <h2>Personnalisation de cartes</h2>
-            <p>MapKit offre de nombreuses options pour personnaliser l’apparence des cartes, y compris le style, les
+            <p>MapKit offre de nombreuses options pour personnaliser l’apparence des cartes, notamment le style, les
                 contrôles, les marqueurs, les annotations, etc.</p>
 
-            <h3>Position de la camera</h3>
+            <h3>Position de la caméra</h3>
             <p>La position de la caméra permet de définir la région affichée sur la carte :</p>
             <pre><code class="swift">struct ContentView: View {
     let cameraPosition: MapCameraPosition = .region(.init(center: .init(latitude: 45.439857, longitude: -75.627043), latitudinalMeters: 400, longitudinalMeters: 400))
@@ -55,20 +55,21 @@
 }</code></pre>
             <h4>Explication :</h4>
             <ul>
-                <li style="margin-left: 30px;">• MapCameraPosition : Structure pour définir la position de la caméra.</li>
-                <li style="margin-left: 30px;">• .region() : Définit la région affichée sur la carte.</li>
-                <li style="margin-left: 30px;">• .init() : Initialise un objet CLLocationCoordinate2D avec des
-                    coordonnées.</li>
-                <li style="margin-left: 30px;">• latitudinalMeters : Distance en mètres de la région affichée.</li>
-                <li style="margin-left: 30px;">• longitudinalMeters : Distance en mètres de la région affichée.</li>
+                <li style="margin-left: 30px;">• MapCameraPosition: Structure utilisée pour définir la position de la
+                    caméra.</li>
+                <li style="margin-left: 30px;">• .region(): Définit la région affichée sur la carte.</li>
+                <li style="margin-left: 30px;"> • .init(): Initialise un objet CLLocationCoordinate2D avec des
+                    coordonnées spécifiques.</li>
+                <li style="margin-left: 30px;"> • latitudinalMeters et longitudinalMeters: Distances en mètres
+                    définissant l’étendue de la région affichée.</li>
             </ul>
 
-            <h3>MapStyle</h3>
+            <h3>Styles de carte</h3>
             <p>Le modificateur <strong>.mapStyle(_:)</strong> permet de choisir le style de la carte :</p>
             <ul>
                 <li style="margin-left: 30px;"><strong>.standard</strong> : Carte classique (par défaut).</li>
                 <li style="margin-left: 30px;"><strong>.satellite</strong> : Vue satellite.</li>
-                <li style="margin-left: 30px;"><strong>.hybrid</strong> : Mélange d’images satellites et de noms de
+                <li style="margin-left: 30px;"><strong>.hybrid</strong> : Combinaison d’images satellites et de noms de
                     rues.</li>
                 <li style="margin-left: 30px;"><strong>.hybrid(elevation: .realistic)</strong> : Vue 3D avec relief
                     réaliste (iOS 16+).</li>
@@ -79,8 +80,8 @@ var body: some View {
         .mapStyle(.satellite)
 }</code></pre>
 
-            <h3>MapControl</h3>
-            <p>Les contrôles de carte permettent d’ajouter des boutons et des vues interactives à la carte :</p>
+            <h3>Contrôles de la carte</h3>
+            <p>Les contrôles de carte permettent d’ajouter des éléments interactifs à la carte :</p>
             <ul>
                 <li style="margin-left: 30px;"><strong>MapUserLocationButton</strong> : Bouton pour afficher la position
                     de l’utilisateur.</li>
@@ -103,8 +104,8 @@ var body: some View {
     }
 }</code></pre>
 
-            <h3>Marqueur (Marker)</h3>
-            <p>Les marqueurs sont des points d’intérêt qui peuvent être affichés sur la carte :</p>
+            <h3>Marqueurs (Markers)</h3>
+            <p>Les marqueurs sont des points d’intérêt affichés sur la carte :</p>
             <pre><code class="swift">struct ContentView: View {
     var body: some View {
         Map {
@@ -114,13 +115,14 @@ var body: some View {
 }</code></pre>
             <h4>Explication :</h4>
             <ul>
-                <li style="margin-left: 30px;">• Marker() : Crée un marqueur avec un titre et des coordonnées.</li>
-                <li style="margin-left: 30px;">• CLLocationCoordinate2D : Structure qui représente les coordonnées
+                <li style="margin-left: 30px;">• Marker() : Crée un marqueur avec un titre et des coordonnées
+                    spécifiques.</li>
+                <li style="margin-left: 30px;">• CLLocationCoordinate2D : Structure représentant les coordonnées
                     géographiques d’un point.</li>
             </ul>
 
-            <h3>Annotation</h3>
-            <p>Les annotations sont des vues personnalisées qui peuvent être affichées sur la carte :</p>
+            <h3>Annotations</h3>
+            <p>Les annotations sont des vues personnalisées que l’on peut afficher sur la carte :</p>
             <pre><code class="swift">struct ContentView: View {
     var body: some View {
         Map {
@@ -145,35 +147,70 @@ var body: some View {
 
             <h2>Géolocalisation de l’appareil</h2>
             <p>MapKit permet d’accéder à la position de l’utilisateur en utilisant le gestionnaire de localisation
-                (CLLocationManager) :</p>
+                (CLLocationManager).</p>
 
-            <h3>Authorisation d'utiliser la location</h3>
-            <p>Il faut ajouter une clé NSLocationWhenInUseUsageDescription dans le fichier Info.plist pour demander
-                l’autorisation d’utiliser la localisation :</p>
+            <h3>Autorisation d’utiliser la localisation</h3>
+            <p>Il est nécessaire d’ajouter la clé <strong>NSLocationWhenInUseUsageDescription</strong> dans le fichier
+                <strong>Info.plist</strong> pour demander l’autorisation d’utiliser la localisation :</p>
             <img src="../imgs/info_plist_map.png" alt="Diagramme de la Stack Core Data"
                 style="width: 100%; max-width: 800px; margin: 20px auto; display: block;">
 
             <h3>CLLocationManager</h3>
             <p>Le gestionnaire de localisation permet de suivre la position de l’utilisateur :</p>
-            <pre><code class="swift">struct ContentView: View {
-    let locationManager = CLLocationManager()
+            <pre><code class="swift">import MapKit
+
+class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
+    private let locationManager = CLLocationManager()
     
+    @Published var currentLocation: CLLocationCoordinate2D? // Localisation actuelle
+
+    override init() {
+        super.init()
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.startUpdatingLocation()
+    }
+
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        currentLocation = locations.last?.coordinate
+    }
+}</code></pre>
+            <h4>Explication :</h4>
+            <ul>
+                <li style="margin-left: 30px;">• <strong>CLLocationManager</strong> : Classe pour gérer la localisation de
+                    l’appareil.</li>
+                <li style="margin-left: 30px;">• <strong>CLLocationManagerDelegate</strong> : Protocole pour recevoir les
+                    mises à jour de localisation.</li>
+                <li style="margin-left: 30px;">• <strong>currentLocation</strong> : Coordonnées géographiques de la
+                    localisation actuelle.</li>
+                <li style="margin-left: 30px;">• <strong>init()</strong> : Initialise le gestionnaire de localisation et
+                    demande l’autorisation d’utiliser la localisation.</li>
+                <li style="margin-left: 30px;">• <strong>locationManager(_:didUpdateLocations:)</strong> : Méthode
+                    appelée lorsqu’une nouvelle localisation est disponible.</li>
+            </ul>
+
+            <h4>ContentView</h4>
+            <pre><code class="swift">struct ContentView: View {
+    @StateObject private var locationManager = LocationManager()
+    @State private var position: MapCameraPosition = .userLocation(fallback: .automatic)
+
     var body: some View {
-        Map {
+        Map(position: $position) {
             UserAnnotation()
-        }
-        .onAppear {
-            locationManager.requestWhenInUseAuthorization()
         }
     }
 }</code></pre>
             <h4>Explication :</h4>
             <ul>
-                <li style="margin-left: 30px;">• CLLocationManager : Classe pour gérer la localisation.</li>
-                <li style="margin-left: 30px;">• requestWhenInUseAuthorization() : Demande l’autorisation d’utiliser la
-                    localisation.</li>
-                <li style="margin-left: 30px;">• UserAnnotation() : Permet d’afficher la position de l’utilisateur sur
-                    la carte.</li>
+                <li style="margin-left: 30px;">• <strong>@StateObject private var locationManager</strong> : Gestionnaire
+                    de localisation partagé.</li>
+                <li style="margin-left: 30px;">• <strong>@State private var position</strong> : Position de la caméra
+                    (initialisée à la localisation de l’utilisateur).</li>
+                <li style="margin-left: 30px;">• <strong>Map(position:)</strong> : Crée une carte centrée sur la
+                    localisation de l’utilisateur.</li>
+                <li style="margin-left: 30px;">• <strong>UserAnnotation()</strong> : Annotation pour afficher la
+                    position de l’utilisateur.</li>
             </ul>
 
             <p>Lorsque l'utilisateur utilisera l'application pour la première fois un message lui sera afficher lui
@@ -181,13 +218,411 @@ var body: some View {
             <img src="../imgs/allow_location.png" alt="Diagramme de la Stack Core Data"
                 style="width: 100%; max-width: 300px; margin: 20px auto; display: block;">
 
+            <h2>Recherche de services avec MapKit</h2>
+            <p>MapKit propose des services de recherche pour trouver
+                des lieux, des adresses, des points d’intérêt, etc. Ces services sont fournis par le framework
+                MapKit, qui offre des classes pour effectuer des recherches et afficher les résultats sur une carte.</p>
+
+            <h3>MKLocalSearch</h3>
+            <p>La classe <strong>MKLocalSearch</strong> permet d’effectuer des recherches locales :</p>
+            <pre><code class="swift">private func search() async {
+    guard !query.isEmpty, let region = visibleRegion else {
+        isSearching = false
+        return
+    }
+    
+    do {
+        let results = try await performSearch(searchTerm: query, visibleRegion: region)
+        DispatchQueue.main.async {
+            self.mapItems = results
+            self.isSearching = false
+        }
+    } catch {
+        DispatchQueue.main.async {
+            self.mapItems = []
+            self.isSearching = false
+        }
+        print("Erreur de recherche : \(error.localizedDescription)")
+    }
+}
+
+private func performSearch(searchTerm: String, visibleRegion: MKCoordinateRegion) async throws -> [MKMapItem] {
+    let request = MKLocalSearch.Request()
+    request.naturalLanguageQuery = searchTerm
+    request.resultTypes = .pointOfInterest
+    request.region = visibleRegion
+    
+    let search = MKLocalSearch(request: request)
+    let response = try await search.start()
+    
+    return response.mapItems
+}</code></pre>
+            <h4>Explication :</h4>
+            <ul>
+                <li style="margin-left: 30px;">• <strong>search()</strong> : Méthode asynchrone pour effectuer une
+                    recherche locale.</li>
+                <li style="margin-left: 30px;">• <strong>performSearch(searchTerm:visibleRegion:)</strong> : Méthode
+                    asynchrone pour exécuter la recherche.</li>
+                <li style="margin-left: 30px;">• <strong>MKLocalSearch.Request</strong> : Objet pour définir les
+                    paramètres de recherche.</li>
+                <li style="margin-left: 30px;">• <strong>request.naturalLanguageQuery</strong> : Terme de recherche
+                    (ex. : “restaurants”).</li>
+                <li style="margin-left: 30px;">• <strong>request.resultTypes</strong> : Type de résultats (ex. :
+                    pointOfInterest).</li>
+                <li style="margin-left: 30px;">• <strong>request.region</strong> : Région visible sur la carte.</li>
+                <li style="margin-left: 30px;">• <strong>MKLocalSearch</strong> : Objet pour exécuter la recherche.</li>
+                <li style="margin-left: 30px;">• <strong>search.start()</strong> : Lance la recherche et renvoie les
+                    résultats.</li>
+            </ul>
+
+            <h3>ContentView</h3>
+            <pre><code class="swift">struct ContentView: View {
+    @State private var query: String = ""
+    @State private var isSearching: Bool = false
+    @State private var mapItems: [MKMapItem] = []
+    @State private var visibleRegion: MKCoordinateRegion?
+    
+    var body: some View {
+        HStack(spacing: 10) {
+            TextField("Rechercher un service", text: $query)
+                .textFieldStyle(.roundedBorder)
+            
+            Button("Search") {
+                isSearching = true
+            }
+            .buttonStyle(.bordered)
+        }
+        .padding(.horizontal)
+        
+        Map {
+            ForEach(mapItems, id: \.self) { mapItem in
+                Marker(item: mapItem)
+            }
+        }
+        .onMapCameraChange { context in
+            visibleRegion = context.region
+        }
+        .task(id: isSearching) {
+            if isSearching {
+                await search()
+            }
+        }
+        
+        List(mapItems, id: \.self) { mapItem in
+            VStack(alignment: .leading) {
+                Text(mapItem.name ?? "")
+                    .font(.title3)
+                Text(mapItem.phoneNumber ?? "")
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                Text("\(mapItem.placemark.thoroughfare ?? "") \(mapItem.placemark.subThoroughfare ?? ""), \(mapItem.placemark.locality ?? ""), \(mapItem.placemark.administrativeArea ?? ""), \(mapItem.placemark.postalCode ?? ""), \(mapItem.placemark.country ?? "")")
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+        }
+    }
+
+    private func search() async {
+        ...
+    }
+
+    private func performSearch(searchTerm: String, visibleRegion: MKCoordinateRegion) async throws -> [MKMapItem] {
+        ...
+    }
+}</code></pre>
+            <h4>Explication :</h4>
+            <ul>
+                <li style="margin-left: 30px;">• <strong>query</strong> : Terme de recherche saisi par l’utilisateur.</li>
+                <li style="margin-left: 30px;">• <strong>isSearching</strong> : Indique si une recherche est en cours.</li>
+                <li style="margin-left: 30px;">• <strong>mapItems</strong> : Résultats de la recherche.</li>
+                <li style="margin-left: 30px;">• <strong>visibleRegion</strong> : Région visible sur la carte.</li>
+                <li style="margin-left: 30px;">• <strong>TextField</strong> : Champ de texte pour saisir le terme de
+                    recherche.</li>
+                <li style="margin-left: 30px;">• <strong>Button</strong> : Bouton pour lancer la recherche.</li>
+                <li style="margin-left: 30px;">• <strong>Map</strong> : Carte pour afficher les résultats.</li>
+                <li style="margin-left: 30px;">• <strong>Marker(item:)</strong> : Marqueur pour chaque résultat.</li>
+                <li style="margin-left: 30px;">• <strong>onMapCameraChange</strong> : Déclenché lors d’un changement de
+                    position sur la carte.</li>
+                <li style="margin-left: 30px;">• <strong>task(id:)</strong> : Exécute la recherche lorsqu’isSearching est
+                    vrai.</li>
+                <li style="margin-left: 30px;">• <strong>List</strong> : Liste pour afficher les résultats sous forme de
+                    texte.</li>
+            </ul>
+
+            <h2>Itinéraires avec MapKit</h2>
+            <p>MapKit permet de tracer des itinéraires entre deux points en utilisant le service de directions
+                (MKDirections).</p>
+
+            <pre><code class="swift">struct ContentView: View {
+    ...
+    
+    @State private var position: MapCameraPosition = .userLocation(fallback: .automatic)
+    @State private var route: MKRoute?
+    @StateObject private var locationManager = LocationManager()
+    @State private var selectedMapItem: MKMapItem?
+    
+    private func calculateDirections(from: MKMapItem, to: MKMapItem) async -> MKRoute {
+        let directionsRequest = MKDirections.Request()
+        directionsRequest.transportType = .automobile
+        directionsRequest.source = from
+        directionsRequest.destination = to
+        
+        let directions = MKDirections(request: directionsRequest)
+        let response = try! await directions.calculate()
+        
+        return response.routes.first!
+    }
+    
+    private func requestCalculateDirections() async {
+        route = nil
+        
+        if let selectedMapItem {
+            guard let currentUserLocation = locationManager.currentLocation else {
+                return
+            }
+            
+            let startingMapItem = MKMapItem(placemark: MKPlacemark(coordinate: 
+                CLLocationCoordinate2D(
+                    latitude: currentUserLocation.latitude, 
+                    longitude: currentUserLocation.longitude
+                )
+            ))
+            
+            self.route = await calculateDirections(from: startingMapItem, to: selectedMapItem)
+        }
+    }
+    
+    var body: some View {
+        ...
+        
+        Map(position: $position, selection: $selectedMapItem) {
+            ForEach(mapItems, id: \.self) { mapItem in
+                Marker(item: mapItem)
+            }
+            
+            if let route {
+                MapPolyline(route)
+                    .stroke(.blue, lineWidth: 5)
+            }
+            
+            UserAnnotation()
+        }
+        .onMapCameraChange { ... }
+        .task(id: isSearching) { ... }
+        .task(id: selectedMapItem) {
+            if let selectedMapItem {
+                await requestCalculateDirections()
+            }
+        }
+    }
+    
+    private func search() async { ... }
+    
+    private func performSearch(searchTerm: String, visibleRegion: MKCoordinateRegion) async throws -> [MKMapItem] { ... }
+}</code></pre>
+            <h4>Explication :</h4>
+            <ul>
+                <li style="margin-left: 30px;">• <strong>route</strong> : Itinéraire entre le point de départ et le point
+                    d’arrivée.</li>
+                <li style="margin-left: 30px;">• <strong>selectedMapItem</strong> : Point d’arrivée sélectionné par
+                    l’utilisateur.</li>
+                <li style="margin-left: 30px;">• <strong>calculateDirections(from:to:)</strong> : Méthode asynchrone pour
+                    calculer un itinéraire.</li>
+                <li style="margin-left: 30px;">• <strong>requestCalculateDirections()</strong> : Méthode asynchrone pour
+                    demander le calcul d’un itinéraire.</li>
+                <li style="margin-left: 30px;">• <strong>MapPolyline</strong> : Ligne pour afficher l’itinéraire sur la
+                    carte.</li>
+                <li style="margin-left: 30px;">• <strong>selection</strong> : Point d’arrivée sélectionné par
+                    l’utilisateur.</li>
+                <li style="margin-left: 30px;">• <strong>task(id:)</strong> : Exécute requestCalculateDirections() lorsque
+                    selectedMapItem est défini.</li>
+            </ul>
+
             <h2>Tester l'application avec geolocalisation</h2>
-            <p>A la base l'emulateur n'a pas de gps d'integrer mais il est tout de meme posible de simuler une position. Pour
+            <p>A la base l'emulateur n'a pas de gps d'integrer mais il est tout de meme posible de simuler une position.
+                Pour
                 cela, il faut sélectionner une position dans le menu <strong>Features > Location</strong> :</p>
 
-                <img src="../imgs/simulation-position.png" alt="Diagramme de la Stack Core Data"
+            <img src="../imgs/simulation-position.png" alt="Diagramme de la Stack Core Data"
                 style="width: 100%; max-width: 300px; margin: 20px auto; display: block;">
-             
+
+            <h2>Géocodage et Géocodage Inverse</h2>
+            <p>Le géocodage est le processus de conversion d’une adresse (ex. : « 10 rue de Rivoli, Paris ») en
+                coordonnées géographiques (latitude et longitude). Inversement, le géocodage inverse transforme des
+                coordonnées (ex. : 48.8566, 2.3522) en adresse ou nom de lieu.</p>
+            <h3>Pourquoi est-ce utile ?</h3>
+            <ul>
+                <li style="margin-left: 30px;"> • <strong>Géocodage</strong> : Permet à l’utilisateur de saisir une
+                    adresse (ou un nom de lieu) et d’obtenir la position exacte sur une carte.</li>
+                <li style="margin-left: 30px;"> • <strong>Géocodage inverse</strong> : Affiche une adresse lisible à
+                    partir de la position GPS, par exemple pour donner plus de sens à des coordonnées.</li>
+            </ul>
+
+            <h3>CoreLocation</h3>
+            <p>Pour effectuer ces opérations, nous utilisons la classe <strong>CLGeocoder</strong> fournie par le
+                framework <strong>CoreLocation</strong>. Elle propose deux méthodes principales :</p>
+            <ol>
+                <li><strong>geocodeAddressString(_:)</strong> : Convertit une adresse en coordonnées.</li>
+                <li><strong>reverseGeocodeLocation(_:)</strong> : Convertit des coordonnées en adresse.</li>
+            </ol>
+            <pre><code class="swift">import CoreLocation</code></pre>
+
+            <h3>Vue d’exemple : Géocodage et Géocodage Inverse</h3>
+            <p>Ci-dessous, une vue SwiftUI nommée GeocodingView qui illustre pas à pas comment :</p>
+            <ol>
+                <li><strong>Demander une adresse</strong> pour obtenir ses coordonnées (géocodage).</li>
+                <li><strong>Saisir des coordonnées</strong> pour récupérer une adresse (géocodage inverse).</li>
+            </ol>
+            <pre><code class="swift">import SwiftUI
+import CoreLocation
+
+struct GeocodingView: View {
+    // État pour stocker l'adresse saisie
+    @State private var address: String = ""
+    
+    // État pour stocker les champs latitude et longitude
+    @State private var latitude: String = ""
+    @State private var longitude: String = ""
+    
+    // Résultats à afficher
+    @State private var geocodedCoordinates: String = "Coordonnées : -"
+    @State private var reverseGeocodedAddress: String = "Adresse : -"
+    
+    // Géocodeur de CoreLocation
+    let geocoder = CLGeocoder()
+    
+    var body: some View {
+        NavigationView {
+            VStack(spacing: 20) {
+                
+                // Section 1 : Géocodage (Adresse -> Coordonnées)
+                VStack {
+                    TextField("Entrez une adresse", text: $address)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .padding()
+                    
+                    Button("Obtenir les coordonnées") {
+                        geocodeAddress()
+                    }
+                    .buttonStyle(.borderedProminent)
+                    
+                    Text(geocodedCoordinates)
+                        .foregroundColor(.blue)
+                }
+                .padding()
+                .background(Color(.systemGray6))
+                .cornerRadius(10)
+                
+                // Section 2 : Géocodage inverse (Coordonnées -> Adresse)
+                VStack {
+                    TextField("Latitude", text: $latitude)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .keyboardType(.decimalPad)
+                    TextField("Longitude", text: $longitude)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .keyboardType(.decimalPad)
+                    
+                    Button("Obtenir l'adresse") {
+                        reverseGeocodeCoordinates()
+                    }
+                    .buttonStyle(.borderedProminent)
+                    
+                    Text(reverseGeocodedAddress)
+                        .foregroundColor(.blue)
+                }
+                .padding()
+                .background(Color(.systemGray6))
+                .cornerRadius(10)
+                
+                Spacer()
+            }
+            .padding()
+            .navigationTitle("Géocodage")
+        }
+    }
+    
+    // MARK: - Étape 1 : Géocodage (Adresse -> Coordonnées)
+    func geocodeAddress() {
+        // Vérifie que le champ 'address' n'est pas vide
+        guard !address.isEmpty else {
+            geocodedCoordinates = "Veuillez saisir une adresse"
+            return
+        }
+        
+        geocoder.geocodeAddressString(address) { (placemarks, error) in
+            if let error = error {
+                geocodedCoordinates = "Erreur : \(error.localizedDescription)"
+            } else if let location = placemarks?.first?.location {
+                let lat = location.coordinate.latitude
+                let lon = location.coordinate.longitude
+                geocodedCoordinates = "Coordonnées : \(lat), \(lon)"
+            } else {
+                geocodedCoordinates = "Aucune correspondance trouvée"
+            }
+        }
+    }
+    
+    // MARK: - Étape 2 : Géocodage inverse (Coordonnées -> Adresse)
+    func reverseGeocodeCoordinates() {
+        // Convertit les champs latitude et longitude en Double
+        guard let lat = Double(latitude), let lon = Double(longitude) else {
+            reverseGeocodedAddress = "Coordonnées invalides"
+            return
+        }
+        
+        let location = CLLocation(latitude: lat, longitude: lon)
+        geocoder.reverseGeocodeLocation(location) { (placemarks, error) in
+            if let error = error {
+                reverseGeocodedAddress = "Erreur : \(error.localizedDescription)"
+            } else if let placemark = placemarks?.first {
+                // Compose une adresse lisible
+                let name = placemark.name ?? ""
+                let locality = placemark.locality ?? ""
+                let country = placemark.country ?? ""
+                
+                reverseGeocodedAddress = "Adresse : \(name), \(locality), \(country)"
+            } else {
+                reverseGeocodedAddress = "Aucune adresse trouvée"
+            }
+        }
+    }
+}</code></pre>
+            <h4>Explication :</h4>
+            <ol>
+                <li><strong>@State private var address: String</strong> : Stocke l’adresse saisie par l’utilisateur pour
+                    le géocodage.</li>
+                <li><strong>@State private var latitude, longitude</strong> : Champs pour saisir des coordonnées lors du
+                    géocodage inverse.</li>
+                <li><strong>geocodedCoordinates, reverseGeocodedAddress</strong> : Variables pour afficher le résultat
+                    des opérations.</li>
+                <li><strong>CLGeocoder</strong> : Objet qui exécute les requêtes de géocodage et de géocodage inverse.
+                </li>
+                <li><strong>geocodeAddress()</strong> : <ul>
+                        <li style="margin-left: 30px;">• Vérifie que l’adresse n’est pas vide.</li>
+                        <li style="margin-left: 30px;">• Appelle geocodeAddressString pour convertir l’adresse en
+                            coordonnées.</li>
+                        <li style="margin-left: 30px;">• Met à jour geocodedCoordinates avec le résultat (ou un message
+                            d’erreur).</li>
+                    </ul>
+                </li>
+                <li><strong>reverseGeocodeCoordinates()</strong> : <ul>
+                        <li style="margin-left: 30px;">• Convertit les champs latitude/longitude en Double.</li>
+                        <li style="margin-left: 30px;">• Crée un CLLocation à partir de ces coordonnées.</li>
+                        <li style="margin-left: 30px;">• Appelle reverseGeocodeLocation pour obtenir l’adresse.</li>
+                        <li style="margin-left: 30px;">• Met à jour reverseGeocodedAddress avec l’adresse lisible.</li>
+                    </ul>
+                </li>
+            </ol>
+
+            <h2>Points Importants à Retenir</h2>
+            <ul>
+                <li style="margin-left: 30px;"> • <strong>Asynchrone</strong> : Les opérations de géocodage sont
+                    asynchrones, elles s’exécutent dans un bloc de rappel (closure).</li>
+                <li style="margin-left: 30px;"> • <strong>Limites</strong> : Le géocodage dépend d’une connexion réseau
+                    et peut échouer si l’adresse n’est pas reconnue.</li>
+                <li style="margin-left: 30px;"> • <strong>Internationalisation</strong> : Les noms de rues, villes,
+                    etc., varient selon la langue et le pays.</li>
+                <li style="margin-left: 30px;"> • <strong>Confidentialité</strong> : Si vous utilisez la localisation,
+                    assurez-vous de respecter les règles de confidentialité (Info.plist, autorisations).</li>
+            </ul>
         </section>
     </div>
 </body>
