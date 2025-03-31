@@ -146,15 +146,44 @@ var body: some View {
             </ul>
 
             <h2>Géolocalisation de l’appareil</h2>
-            <p>MapKit permet d’accéder à la position de l’utilisateur en utilisant le gestionnaire de localisation
-                (CLLocationManager).</p>
+            <p>MapKit permet d’accéder à la position de l’utilisateur en utilisant le gestionnaire de localisation (CLLocationManager).</p>
 
             <h3>Autorisation d’utiliser la localisation</h3>
             <p>Il est nécessaire d’ajouter la clé <strong>NSLocationWhenInUseUsageDescription</strong> dans le fichier
                 <strong>Info.plist</strong> pour demander l’autorisation d’utiliser la localisation :</p>
             <img src="../imgs/info_plist_map.png" alt="Diagramme de la Stack Core Data"
                 style="width: 100%; max-width: 800px; margin: 20px auto; display: block;">
+                <h4>Étapes à suivre</h4>
+                <ol>
+                    <li>Sélectionnez le premier fichier de l’arborescence de votre projet. Ce fichier porte le nom de votre projet.</li>
+                    <li>Ensuite, sélectionnez <strong>Info</strong>.</li>
+                    <li>Dans la liste, placez votre souris sur l’un des éléments afin de faire apparaître les symboles “+” et “-”. Cliquez sur <strong>“+”</strong>.</li>
+                </ol>
 
+                <hr style="border: 1px solid gray; margin: 20px 0;">
+
+                <img src="../imgs/info_plist_map2.png" alt="Diagramme de la Stack Core Data"
+                style="width: 100%; max-width: 800px; margin: 20px auto; display: block;">
+                <p>4. Une liste d’éléments s’affichera. Sélectionnez <strong>Privacy - Location When In Use Usage Description</strong>.</p>
+
+                <hr style="border: 1px solid gray; margin: 20px 0;">
+
+                <img src="../imgs/info_plist_map_privacy.png" alt="Diagramme de la Stack Core Data"
+                style="width: 100%; max-width: 800px; margin: 20px auto; display: block;">
+                <p>5. Vous devriez maintenant voir cette clé ajoutée à la liste.</p>
+
+                <hr style="border: 1px solid gray; margin: 20px 0;">
+
+                <img src="../imgs/info_plist_map_message.png" alt="Diagramme de la Stack Core Data"
+                style="width: 100%; max-width: 800px; margin: 20px auto; display: block;">
+                <p>6. Sélectionnez l’espace vide à droite dans la colonne <strong>Value</strong>, puis inscrivez un message expliquant à l’utilisateur pourquoi l’application a besoin d’accéder à sa localisation.</p>
+
+                <hr style="border: 1px solid gray; margin: 20px 0;">
+
+                <img src="../imgs/info_plist_map_list.png" alt="Diagramme de la Stack Core Data"
+                style="width: 100%; max-width: 800px; margin: 20px auto; display: block;">
+                <p>7. Vous devriez maintenant voir cette clé ajoutée à la liste.</p>
+                
             <h3>CLLocationManager</h3>
             <p>Le gestionnaire de localisation permet de suivre la position de l’utilisateur :</p>
             <pre><code class="swift">import MapKit
