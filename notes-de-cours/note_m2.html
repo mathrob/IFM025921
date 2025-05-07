@@ -516,6 +516,10 @@
   print(personne.0) // Affiche : Alice
   print(personne.1) // Affiche : 25
   print(personne.2) // Affiche : true
+
+  // Modifier une valeur
+  personne.1 = 40
+  print(personne.1) // Affiche : 40
           </code></pre>
       <ul>
         <li><strong>Caractéristiques :</strong>
@@ -530,6 +534,9 @@
   let personne = (nom: "Alice", age: 25, estEtudiante: true)
   print(personne.nom) // Affiche : Alice
             </code></pre>
+
+❌ Mais tu ne peux pas ajouter un nouvel élément comme personne.ville = "Paris" — cela provoquera une erreur de compilation.
+❌ Tu ne peux pas non plus retirer un élément du tuple.
 
       <h2 id="struct">Structures personnalisées (struct)</h2>
       <p>
