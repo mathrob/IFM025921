@@ -468,6 +468,8 @@
   capitales["Italie"] = "Venise" // Modifier une valeur
   capitales.removeValue(forKey: "France") // Supprimer une clé
   print(capitales) // Affiche : ["Italie": "Venise", "Espagne": "Madrid"]
+  print(capitales["Espagne"]) // Affiche : Optional("Madrid")
+  print(capitales["Espagne"]!) // Affiche : Madrid
       </code></pre>
 
       <ul>
