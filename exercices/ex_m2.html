@@ -402,6 +402,56 @@
           Code</strong>. Cependant, pour pouvoir l’exécuter, vous devez installer le <a
           style="text-decoration: underline;" href="https://www.swift.org/install/">compilateur</a>.</p>
     </section>
+
+    <section id="module-2-exercice4" class="module-section">
+      <h2 id="protocole">Protocoles et Héritage de protocole</h2>
+
+      <p><strong>Objectif :</strong> Pratiquer la déclaration et l'héritage de protocoles en Swift.</p>
+
+      <h2>Contexte</h2>
+      <p>Tu dois modéliser des animaux dans un zoo à l’aide de protocoles.</p>
+
+      <h2>Instructions</h2>
+      <ol>
+        <li>Crée un protocole <code>Identifiable</code> avec une propriété <code>nom: String</code>.</li>
+        <li>Crée un protocole <code>Animal</code> qui hérite de <code>Identifiable</code> et ajoute une méthode
+          <code>faireDuBruit()</code>.</li>
+        <li>Crée un protocole <code>Volant</code> qui hérite de <code>Animal</code> et ajoute une méthode
+          <code>voler()</code>.</li>
+        <li>Crée trois structures :
+          <ul>
+            <li><code>Chien</code> et <code>Chat</code> qui adoptent <code>Animal</code></li>
+            <li><code>Oiseau</code> qui adopte <code>Volant</code></li>
+          </ul>
+        </li>
+        <li>Crée un tableau <code>[Animal]</code> contenant des animaux et appelle la méthode
+          <code>faireDuBruit()</code> pour chacun.</li>
+        <li>Crée un second tableau <code>[Volant]</code> contenant seulement des oiseaux et appelle <code>voler()</code>
+          pour chacun.</li>
+      </ol>
+
+      <p><strong>Bonus :</strong> Ajoute une méthode <code>description()</code> dans le protocole <code>Animal</code>
+        qui retourne une chaîne de caractères présentant l’animal.</p>
+
+
+      <br />
+
+      <a href="./download/module2/Module2_Exercice4.playground.zip" class="download-link"
+        style="font-size: x-large; text-decoration: underline;" download>
+        Télécharger la solution (Xcode playground)
+      </a>
+
+      <a href="./download/module2/Module2_Exercice4.swift" class="download-link"
+        style="font-size: x-large; text-decoration: underline; margin-left: 60px;" download>
+        Télécharger la solution (fichier .swift)
+      </a>
+
+      <br />
+
+      <p>⚠️ Le fichier <strong>.swift</strong> peut être ouvert dans un éditeur de code comme <strong>Visual Studio
+          Code</strong>. Cependant, pour pouvoir l’exécuter, vous devez installer le <a
+          style="text-decoration: underline;" href="https://www.swift.org/install/">compilateur</a>.</p>
+    </section>
   </div>
   <footer class="footer">
     <p>Développé par <a href="https://github.com/mathrob" style="color: white; text-decoration: underline;">Mathieu
