@@ -397,25 +397,40 @@
 
       <h3>Autres moyens de gérer les erreurs</h3>
       <p>
-        Swift propose également des moyens alternatifs pour gérer les erreurs :
+        Quand une fonction peut provoquer une erreur (comme lire un fichier), on peut utiliser try de plusieurs manières
+        :
       </p>
 
-      <p><strong>try?</strong> : Convertit le résultat en une valeur optionnelle. Si une erreur est lancée, la valeur
-        est nil :</p>
-      <pre><code class="language-swift">
-  if let contenu = try? lireFichier(chemin: "chemin/vers/fichier.txt") {
-    print(contenu)
-  } else {
-    print("Erreur lors de la lecture du fichier.")
-  }
-      </code></pre>
+      <h3>try?</h3>
+      <ul>
+        <li>Utilise try? quand tu veux essayer une fonction, mais sans bloquer le programme si une erreur se produit.
+        </li>
+        <li>En cas d’erreur, le résultat sera nil.</li>
+      </ul>
 
-      <p><strong>try!</strong> : Affirme que l’appel ne générera pas d’erreur. Si une erreur survient, le programme
-        plantera :</p>
       <pre><code class="language-swift">
-  let contenu = try! lireFichier(chemin: "chemin/vers/fichier.txt")
-  print(contenu)
-      </code></pre>
+if let contenu = try? lireFichier(chemin: "chemin/vers/fichier.txt") {
+    print(contenu)
+} else {
+    print("Erreur lors de la lecture du fichier.")
+}
+</code></pre>
+
+      <p>Ici, si le fichier est trouvé, on affiche son contenu. Sinon, on affiche un message d’erreur.
+C’est simple et sécurisé, parfait quand tu n’as pas besoin de savoir quelle est l’erreur exactement.</p>
+
+<h3>try!</h3>
+<ul>
+  <li>Utilise try! uniquement quand tu es absolument sûr que la fonction ne va pas échouer.</li>
+  <li>Si une erreur arrive quand même, l’application plantera (fermeture brutale).</li>
+</ul>
+<pre><code class="language-swift">
+let contenu = try! lireFichier(chemin: "chemin/vers/fichier.txt")
+print(contenu)
+</code></pre>
+
+<p>Ici, si le fichier n’existe pas ou ne peut pas être lu, l’app crashe immédiatement.
+Ce n’est pas recommandé, sauf dans des cas très précis (comme pour des fichiers intégrés dans l’app et sûrs à 100 %).</p>
 
       <h3>Résumé</h3>
 
@@ -615,4 +630,5 @@
     });
   </script>
 </body>
+
 </html>
