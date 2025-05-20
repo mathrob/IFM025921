@@ -34,58 +34,40 @@
       <h3>Instructions</h3>
       <ol>
         <li>
-          <strong>Définir la classe</strong>
+          <strong>Créer la classe ToDoList</strong>
           <ul>
-            <li>
-              - Créez une classe ToDoList avec les propriétés suivantes :
-              <ul>
-                <li style="margin-left: 20px;">
-                  <strong>tasks</strong>: un tableau de dictionnaires contenant les informations suivantes pour chaque
-                  tâche :
-                  <ol>
-                    <li><strong>description (String)</strong> : la description de la tâche.</li>
-                    <li><strong>isCompleted (Bool)</strong> : le statut de la tâche (terminée ou non).</li>
-                  </ol>
-                </li>
-              </ul>
-            </li>
-            <li>
-              - Ajoutez un initialiseur pour initialiser une liste de tâches vide.
-            </li>
+            <li> • Déclarez une propriété privée nommée tasks.</li>
+            <li> • Cette propriété sera un tableau contenant des tuples (description: String, isCompleted: Bool).</li>
+            <li> • Ajoutez un initialiseur qui crée un tableau vide.</li>
           </ul>
         </li>
         <li>
-          <strong>Ajouter des méthodes</strong>
+          <strong>Ajouter des méthodes de base</strong>
           <ul>
-            <li>- Méthode <strong>addTask</strong> : prend une chaîne de caractères en paramètre et ajoute une tâche non
-              terminée à la liste.</li>
-            <li>- Méthode <strong>completeTask</strong> : prend l’index d’une tâche en paramètre, vérifie si l’index est
-              valide, et marque la tâche comme terminée.</li>
-            <li>- Méthode <strong>removeTask</strong> : prend l’index d’une tâche en paramètre, vérifie si l’index est
-              valide, et supprime la tâche de la liste.</li>
-            <li>- Méthode <strong>showTasks</strong> : affiche toutes les tâches avec leur description et leur statut
-              (“✅” pour terminé, “⏳” pour en cours). Numérotez chaque tâche pour plus de clarté.</li>
+            <li> • <strong>addTask(description: String)</strong> : ajoute une nouvelle tâche avec le statut “non terminée”.</li>
+            <li> • <strong>completeTask(index: Int)</strong> : marque une tâche comme terminée si l’index est valide.</li>
+            <li> • <strong>removeTask(index: Int)</strong> : supprime une tâche si l’index est valide.</li>
+            <li> • <strong>showTasks()</strong> : affiche chaque tâche avec son numéro, sa description et un emoji : ✅ si elle est terminée, ⏳ sinon.</li>
           </ul>
         </li>
         <li>
-          <strong>Améliorer l’expérience utilisateur</strong>
+          <strong>Ajouter des méthodes avancées</strong>
           <ul>
-            <li>- Ajoutez une méthode <strong>clearCompletedTasks</strong> pour supprimer toutes les tâches marquées
-              comme terminées.</li>
-            <li>- Implémentez une méthode <strong>searchTask</strong> qui permet de rechercher une tâche par mot-clé et
-              affiche les résultats correspondants.</li>
+            <li> • <strong>clearCompletedTasks()</strong> : supprime toutes les tâches terminées.</li>
+            <li> • <strong>searchTask(keyword: String)</strong> : affiche toutes les tâches dont la description contient un mot-clé.</li>
           </ul>
         </li>
         <li>
           <strong>Tester la classe</strong>
           <ul>
             <li>- Créez une instance de ToDoList.</li>
-            <li>- Ajoutez au moins 5 tâches avec des descriptions variées.</li>
+            <li>- Ajoutez au moins 5 tâches.</li>
             <li>- Marquez certaines tâches comme terminées.</li>
-            <li>- Affichez la liste des tâches.</li>
-            <li>- Supprimez une tâche par son index.</li>
+            <li>- Affichez la liste complète.</li>
+            <li>- Supprimez une tâche.</li>
             <li>- Recherchez une tâche spécifique par mot-clé.</li>
-            <li>- Affichez la liste mise à jour après avoir supprimé les tâches terminées.</li>
+            <li>- Supprimez toutes les tâches terminées.</li>
+            <li>- Affichez la liste finale.</li>
           </ul>
         </li>
       </ol>
@@ -415,9 +397,11 @@
       <ol>
         <li>Crée un protocole <code>Identifiable</code> avec une propriété <code>nom: String</code>.</li>
         <li>Crée un protocole <code>Animal</code> qui hérite de <code>Identifiable</code> et ajoute une méthode
-          <code>faireDuBruit()</code>.</li>
+          <code>faireDuBruit()</code>.
+        </li>
         <li>Crée un protocole <code>Volant</code> qui hérite de <code>Animal</code> et ajoute une méthode
-          <code>voler()</code>.</li>
+          <code>voler()</code>.
+        </li>
         <li>Crée trois structures :
           <ul>
             <li><code>Chien</code> et <code>Chat</code> qui adoptent <code>Animal</code></li>
@@ -425,7 +409,8 @@
           </ul>
         </li>
         <li>Crée un tableau <code>[Animal]</code> contenant des animaux et appelle la méthode
-          <code>faireDuBruit()</code> pour chacun.</li>
+          <code>faireDuBruit()</code> pour chacun.
+        </li>
         <li>Crée un second tableau <code>[Volant]</code> contenant seulement des oiseaux et appelle <code>voler()</code>
           pour chacun.</li>
       </ol>
