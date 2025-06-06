@@ -44,6 +44,11 @@
             <p>Nous allons commencer par modifier le fichier ContentView.swift pour y intégrer une barre d’onglets
                 contenant deux vues.</p>
 
+            <p>Pour une démonstration en vidéo, regardez la vidéo suivante :</p>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/BziQWfInCPc" frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+
             <p><strong>Étape 1 :</strong> Ouvrir <code>ContentView.swift</code></p>
             <p>Dans votre projet Xcode, ouvrez <code>ContentView.swift</code>, puis remplacez son contenu par le code
                 suivant :</p>
@@ -249,6 +254,11 @@ struct FirstTabView: View {
                 <code>onChange</code> lorsqu’un utilisateur tape dans un champ de texte.
             </p>
 
+            <p>Pour une démonstration en vidéo, regardez la vidéo suivante :</p>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/V7X04_gQer0" frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+
             <div class="step">
                 <p><strong>Étape 1 :</strong> Modifier <code>SecondTabView.swift</code></p>
                 <p>Remplacez le contenu du fichier par le code suivant :</p>
@@ -330,6 +340,12 @@ struct SecondTabView: View {
 
         <section id="module-6-1" class="module-section">
             <h1 id="observable">Observable et Environment Objects</h1>
+
+            <p>Pour une démonstration en vidéo, regardez la vidéo suivante :</p>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/cNqMShcSK5g" frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+
             <p>
                 Dans ce chapitre, nous allons apprendre à utiliser des objets observables et des objets d’environnement
                 dans SwiftUI. Ces objets sont très utiles pour gérer des données qui changent au cours du temps, comme
@@ -355,15 +371,14 @@ struct SecondTabView: View {
             <pre><code class="swift">
 import Foundation
 
-@Observable class TimerData {
-
+@Observable 
+class TimerData {
     var timeCount = 0
-    var timer : Timer?
 
     init() {
         // Créer un timer qui se déclenche toutes les secondes
-        timer = Timer.scheduledTimer(
-                    withTimeInterval: 1.0, repeats: true) {_ in
+        Timer.scheduledTimer(
+                    withTimeInterval: 1.0, repeats: true) { _ in
             self.update() // Appel de la fonction update chaque seconde
         }
     }
@@ -404,7 +419,7 @@ struct ContentView: View {
 
     var body: some View {
     
-        NavigationView {
+        NavigationStack {
             VStack {
                 Text("Compte à rebours = \(timerData.timeCount)")
                     .font(.largeTitle)
@@ -476,7 +491,7 @@ struct SecondView: View {
             </p>
             <pre><code class="swift">
 var body: some View {
-    NavigationView {
+    NavigationStack {
         VStack {
             Text("Compteur de timer = \(timerData.timeCount)")
                 .font(.largeTitle)
@@ -516,7 +531,7 @@ struct ContentView: View {
     var timerData: TimerData = TimerData()
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack {
                 NavigationLink(destination: SecondView()) {
                     Text("Écran Suivant")
@@ -524,7 +539,7 @@ struct ContentView: View {
                 .padding()
             }
         }
-        .environment(\.timerData, timerData) // Ajout de l'objet TimerData à l'environnement
+        .environment(timerData) // Ajout de l'objet TimerData à l'environnement
     }
 }
 
@@ -539,7 +554,7 @@ struct ContentView: View {
 import SwiftUI
 
 struct SecondView: View {
-    @Environment(\.timerData) var timerData: TimerData // Accès à l'objet TimerData via l'environnement
+    @Environment(TimerData.self) var timerData // Accès à l'objet TimerData via l'environnement
 
     var body: some View {
         VStack {
