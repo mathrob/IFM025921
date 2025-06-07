@@ -44,11 +44,6 @@
             <p>Nous allons commencer par modifier le fichier ContentView.swift pour y intégrer une barre d’onglets
                 contenant deux vues.</p>
 
-            <p>Pour une démonstration en vidéo, regardez la vidéo suivante :</p>
-            <iframe width="560" height="315" src="https://www.youtube.com/embed/BziQWfInCPc" frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen></iframe>
-
             <p><strong>Étape 1 :</strong> Ouvrir <code>ContentView.swift</code></p>
             <p>Dans votre projet Xcode, ouvrez <code>ContentView.swift</code>, puis remplacez son contenu par le code
                 suivant :</p>
@@ -148,6 +143,11 @@ struct SecondTabView: View {
             <br />
 
             <h2 id="onappear">🎯 Comprendre les modificateurs onAppear et onDisappear</h2>
+
+            <p>Pour une démonstration en vidéo, regardez la vidéo suivante :</p>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/BziQWfInCPc" frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
 
             <p>SwiftUI nous permet de réagir aux changements d’affichage des vues grâce aux modificateurs
                 <code>onAppear()</code> et <code>onDisappear()</code>.
@@ -443,16 +443,19 @@ struct ContentView: View {
 }
             </code></pre>
             <p>
-                Quand vous exécutez cette vue, vous verrez le compteur s’incrémenter chaque seconde, et vous pourrez le réinitialiser en appuyant sur le bouton.
+                Quand vous exécutez cette vue, vous verrez le compteur s’incrémenter chaque seconde, et vous pourrez le
+                réinitialiser en appuyant sur le bouton.
             </p>
 
             <h3>🎯 Ajout de la Deuxième Vue</h3>
             <p>
-                Maintenant, nous allons ajouter une deuxième vue (SecondView) qui affichera également le même compteur. Nous voulons nous assurer que la valeur du compteur est partagée entre les vues.
+                Maintenant, nous allons ajouter une deuxième vue (SecondView) qui affichera également le même compteur.
+                Nous voulons nous assurer que la valeur du compteur est partagée entre les vues.
             </p>
             <ol>
                 <li>Créez un nouveau fichier SwiftUI pour <code>SecondView.swift</code>.</li>
-                <li>Cette vue affichera également le compteur, mais elle aura besoin d’accéder au même objet <strong>TimerData</strong>.</li>
+                <li>Cette vue affichera également le compteur, mais elle aura besoin d’accéder au même objet
+                    <strong>TimerData</strong>.</li>
             </ol>
 
             <p>
@@ -484,10 +487,12 @@ struct SecondView: View {
 
             <h3>🎯 Navigation entre les vues</h3>
             <p>
-                Pour naviguer de la <strong>ContentView</strong> à la <strong>SecondView</strong>, nous devons ajouter un bouton de navigation.
+                Pour naviguer de la <strong>ContentView</strong> à la <strong>SecondView</strong>, nous devons ajouter
+                un bouton de navigation.
             </p>
             <p>
-                Voici comment vous pouvez ajouter un <strong>NavigationLink</strong> dans ContentView pour naviguer vers SecondView :
+                Voici comment vous pouvez ajouter un <strong>NavigationLink</strong> dans ContentView pour naviguer vers
+                SecondView :
             </p>
             <pre><code class="swift">
 var body: some View {
@@ -512,17 +517,21 @@ var body: some View {
 }
             </code></pre>
             <p>
-                Quand vous appuyez sur le bouton “Écran Suivant”, l’application va naviguer vers la deuxième vue et afficher le même compteur.
+                Quand vous appuyez sur le bouton “Écran Suivant”, l’application va naviguer vers la deuxième vue et
+                afficher le même compteur.
             </p>
 
             <h3>🎯 Utilisation d’un Objet d’Environnement</h3>
             <p>
-                Au lieu de passer l’objet TimerData manuellement entre les vues, nous allons utiliser un objet d’environnement. Cela permet de partager facilement des données entre différentes vues sans avoir à les transmettre explicitement.
+                Au lieu de passer l’objet TimerData manuellement entre les vues, nous allons utiliser un objet
+                d’environnement. Cela permet de partager facilement des données entre différentes vues sans avoir à les
+                transmettre explicitement.
             </p>
-            
+
             <ol>
                 <li>
-                    Modifiez <code>ContentView.swift</code> pour inclure l’objet <strong>TimerData</strong> dans l’environnement :
+                    Modifiez <code>ContentView.swift</code> pour inclure l’objet <strong>TimerData</strong> dans
+                    l’environnement :
 
                     <pre><code class="swift">
 import SwiftUI
@@ -549,7 +558,8 @@ struct ContentView: View {
                         </code></pre>
                 </li>
                 <li>
-                    Ensuite, dans SecondView.swift, utilisez le modificateur @Environment pour accéder à l’objet TimerData :
+                    Ensuite, dans SecondView.swift, utilisez le modificateur @Environment pour accéder à l’objet
+                    TimerData :
                     <pre><code class="swift">
 import SwiftUI
 
@@ -571,7 +581,8 @@ struct SecondView: View {
     SecondView()
 }
                         </code></pre>
-                        <p>Maintenant, les deux vues utilisent le même objet TimerData grâce à l’environnement. Il n’est plus nécessaire de le passer manuellement d’une vue à l’autre.</p>
+                    <p>Maintenant, les deux vues utilisent le même objet TimerData grâce à l’environnement. Il n’est
+                        plus nécessaire de le passer manuellement d’une vue à l’autre.</p>
                 </li>
             </ol>
             <h3>Résumé</h3>
@@ -580,11 +591,15 @@ struct SecondView: View {
             </p>
             <ol>
                 <li>✅ Créer un objet observable pour suivre des données qui changent, comme un compteur.</li>
-                <li>✅ Utiliser un objet d’environnement pour partager des données entre plusieurs vues sans avoir à les passer manuellement.</li>
-                <li>✅ Créer des vues interactives qui utilisent ces objets pour afficher et mettre à jour les données dynamiques.</li>
+                <li>✅ Utiliser un objet d’environnement pour partager des données entre plusieurs vues sans avoir à les
+                    passer manuellement.</li>
+                <li>✅ Créer des vues interactives qui utilisent ces objets pour afficher et mettre à jour les données
+                    dynamiques.</li>
             </ol>
             <p>
-                Cela vous permet de créer des applications plus flexibles et plus simples à maintenir, car vous pouvez partager des données entre différentes parties de l’application sans avoir à vous soucier de leur transmission manuelle.
+                Cela vous permet de créer des applications plus flexibles et plus simples à maintenir, car vous pouvez
+                partager des données entre différentes parties de l’application sans avoir à vous soucier de leur
+                transmission manuelle.
             </p>
         </section>
     </div>
