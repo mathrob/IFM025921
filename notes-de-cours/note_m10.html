@@ -15,7 +15,7 @@
   <header class="top-bar">
     <a href="../index.html" class="back-btn">← Accueil</a>
     <span class="page-badge">IFM025921 · Module 10 · Notes de cours</span>
-    <button class="toc-toggle" aria-label="Menu" aria-expanded="false">☰</button>
+    <button class="toc-toggle" aria-label="Menu" aria-expanded="false"></button>
   </header>
 
   <!-- ── Sidebar TOC ──────────────────────────────────────── -->
@@ -69,7 +69,7 @@
     objet et qui ajoute de la complexité.</p>
 
     <div class="callout analogy">
-      <span class="callout-icon">🏗️</span>
+      <span class="callout-icon"></span>
       <div><strong>Analogie :</strong> SQLite, c'est comme construire une maison en manipulant directement
       les briques et le ciment. Core Data, c'est comme utiliser des panneaux préfabriqués — le résultat
       final (la maison / la base de données SQLite) est le même, mais le travail est beaucoup plus simple.</div>
@@ -97,29 +97,29 @@
     <div class="stack-diagram">
       <p class="sd-title">Diagramme de la Core Data Stack</p>
       <div class="stack-row">
-        <div class="stack-box app">📱 Application SwiftUI<sub>Votre code</sub></div>
+        <div class="stack-box app"> Application SwiftUI<sub>Votre code</sub></div>
       </div>
       <div class="stack-arrow">↕</div>
       <div class="stack-row">
-        <div class="stack-box pc">📦 Persistent Container<sub>Point d'entrée unique</sub></div>
+        <div class="stack-box pc"> Persistent Container<sub>Point d'entrée unique</sub></div>
       </div>
       <div class="stack-arrow">↕</div>
       <div class="stack-row" style="gap:24px;">
-        <div class="stack-box moc">🗂 Managed Object Context<sub>Zone de travail (brouillon)</sub></div>
+        <div class="stack-box moc"> Managed Object Context<sub>Zone de travail (brouillon)</sub></div>
         <span class="stack-arrow-h">⟷</span>
-        <div class="stack-box mom">📐 Managed Object Model<sub>Schéma / structure</sub></div>
+        <div class="stack-box mom"> Managed Object Model<sub>Schéma / structure</sub></div>
       </div>
       <div class="stack-arrow">↕</div>
       <div class="stack-row">
-        <div class="stack-box psc">🔀 Persistent Store Coordinator<sub>Coordinateur (invisible)</sub></div>
+        <div class="stack-box psc"> Persistent Store Coordinator<sub>Coordinateur (invisible)</sub></div>
       </div>
       <div class="stack-arrow">↕</div>
       <div class="stack-row">
-        <div class="stack-box pso">💾 Persistent Store Object<sub>Couche de stockage</sub></div>
+        <div class="stack-box pso"> Persistent Store Object<sub>Couche de stockage</sub></div>
       </div>
       <div class="stack-arrow">↕</div>
       <div class="stack-row">
-        <div class="stack-box db">🗄 Base de données SQLite<sub>Fichier sur disque</sub></div>
+        <div class="stack-box db"> Base de données SQLite<sub>Fichier sur disque</sub></div>
       </div>
       <p class="stack-note">Votre code n'interagit qu'avec le Persistent Container et le Managed Object Context — les couches inférieures sont transparentes.</p>
     </div>
@@ -128,7 +128,7 @@
     <div class="comp-grid">
 
       <div class="comp-card orange" id="persistent-container">
-        <div class="role">📦 Couche d'entrée</div>
+        <div class="role"> Couche d'entrée</div>
         <h4>Persistent Container</h4>
         <p>C'est la porte d'entrée de Core Data. Il crée et configure toute la Stack
         en une seule opération.</p>
@@ -138,13 +138,13 @@
           <li>Expose le <code>viewContext</code> pour travailler avec les données</li>
         </ul>
         <div class="callout analogy" style="margin-top:12px; font-size:13px;">
-          <span class="callout-icon" style="font-size:14px;">🏪</span>
+          <span class="callout-icon" style="font-size:14px;"></span>
           <div>C'est comme le gérant d'un entrepôt — il ne stocke rien lui-même, mais il organise tout et vous donne accès à ce dont vous avez besoin.</div>
         </div>
       </div>
 
       <div class="comp-card blue" id="moc">
-        <div class="role">🗂 Zone de travail</div>
+        <div class="role"> Zone de travail</div>
         <h4>Managed Object Context (MOC)</h4>
         <p>C'est votre espace de travail. Toutes vos opérations sur les données
         (créer, lire, modifier, supprimer) passent par ici.</p>
@@ -154,13 +154,13 @@
           <li>Appel à <code>.save()</code> = écriture vers le store</li>
         </ul>
         <div class="callout analogy" style="margin-top:12px; font-size:13px;">
-          <span class="callout-icon" style="font-size:14px;">📝</span>
+          <span class="callout-icon" style="font-size:14px;"></span>
           <div>C'est comme un brouillon dans Word — vous pouvez modifier le texte librement, mais rien n'est enregistré tant que vous n'appuyez pas sur <strong>Sauvegarder</strong>.</div>
         </div>
       </div>
 
       <div class="comp-card green" id="mom">
-        <div class="role">📐 Schéma des données</div>
+        <div class="role"> Schéma des données</div>
         <h4>Managed Object Model</h4>
         <p>Définit la <strong>structure</strong> de vos données — les entités, leurs
         attributs et les relations entre elles.</p>
@@ -171,13 +171,13 @@
           <li>Une relation ≈ une clé étrangère SQL</li>
         </ul>
         <div class="callout analogy" style="margin-top:12px; font-size:13px;">
-          <span class="callout-icon" style="font-size:14px;">🗺️</span>
+          <span class="callout-icon" style="font-size:14px;"></span>
           <div>C'est le plan d'architecte — il décrit comment les données doivent être organisées, sans contenir de données lui-même.</div>
         </div>
       </div>
 
       <div class="comp-card purple" id="psc">
-        <div class="role">🔀 Coordinateur invisible</div>
+        <div class="role"> Coordinateur invisible</div>
         <h4>Persistent Store Coordinator</h4>
         <p>Fait le lien entre le MOC et le fichier de stockage. En tant que développeur,
         vous <strong>n'interagissez presque jamais</strong> directement avec lui.</p>
@@ -191,7 +191,7 @@
     </div>
 
     <div class="comp-card" style="margin-top:0;" id="pso">
-      <div class="role">💾 Stockage réel</div>
+      <div class="role"> Stockage réel</div>
       <h4>Persistent Store Object</h4>
       <p>C'est le support de stockage physique. Par défaut sur iOS, c'est un fichier <strong>SQLite</strong>.
       Core Data supporte aussi XML, binaire et mémoire vive (en RAM, non persistant).</p>
@@ -207,22 +207,22 @@
     <div class="lifecycle">
       <div class="lifecycle-steps">
         <div class="lc-step">
-          <div class="lc-icon">🆕</div>
+          <div class="lc-icon"></div>
           <div class="lc-label">1. Créer</div>
           <div class="lc-sub">On instancie un objet Swift dans le MOC</div>
         </div>
         <div class="lc-step">
-          <div class="lc-icon">✏️</div>
+          <div class="lc-icon"></div>
           <div class="lc-label">2. Modifier</div>
           <div class="lc-sub">On assigne les valeurs des attributs</div>
         </div>
         <div class="lc-step">
-          <div class="lc-icon">💾</div>
+          <div class="lc-icon"></div>
           <div class="lc-label">3. Sauvegarder</div>
           <div class="lc-sub">On appelle <code>.save()</code> sur le MOC</div>
         </div>
         <div class="lc-step">
-          <div class="lc-icon">🗄</div>
+          <div class="lc-icon"></div>
           <div class="lc-label">4. Persister</div>
           <div class="lc-sub">Les données sont écrites dans SQLite sur disque</div>
         </div>
@@ -230,7 +230,7 @@
     </div>
 
     <div class="callout warn">
-      <span class="callout-icon">⚠️</span>
+      <span class="callout-icon"></span>
       <div><strong>Attention :</strong> Tant que <code>viewContext.save()</code> n'est pas appelé,
       les changements n'existent qu'en mémoire RAM. Si l'app se ferme avant la sauvegarde, les données
       sont perdues.</div>
@@ -244,7 +244,7 @@
     mais on peut aussi le créer manuellement (ce qu'on fait dans le laboratoire).</p>
 
     <div class="callout info">
-      <span class="callout-icon">📁</span>
+      <span class="callout-icon"></span>
       <div><strong>Comment le créer manuellement :</strong> ⌘N → Core Data → <em>Data Model</em>.
       Donnez-lui le même nom que vous utiliserez dans <code>NSPersistentContainer(name:)</code>.</div>
     </div>
@@ -317,7 +317,7 @@
     </table>
 
     <div class="callout tip">
-      <span class="callout-icon">✅</span>
+      <span class="callout-icon"></span>
       <div><strong>Bonne pratique :</strong> Pour une quantité, préférez <code>Integer 16</code> ou
       <code>Integer 32</code> plutôt que <code>String</code>. Ça évite les conversions manuelles et
       empêche l'utilisateur d'entrer du texte à la place d'un nombre.</div>
@@ -338,7 +338,7 @@
     </div>
 
     <div class="callout info">
-      <span class="callout-icon">🔗</span>
+      <span class="callout-icon"></span>
       <div><strong>Relation inverse :</strong> Core Data recommande toujours de définir la relation
       dans les deux sens (ex. : <code>Category → products</code> et <code>Product → category</code>).
       Ça permet à Core Data de maintenir la cohérence des données automatiquement.</div>
@@ -395,7 +395,7 @@
     Pas besoin de recharger manuellement.</p>
 
     <div class="callout analogy">
-      <span class="callout-icon">📡</span>
+      <span class="callout-icon"></span>
       <div><strong>Analogie :</strong> C'est comme un abonnement en direct — au lieu de demander les
       données une seule fois, <code>@FetchRequest</code> vous <em>notifie</em> chaque fois que les
       données changent. La vue se re-dessine automatiquement.</div>
@@ -411,7 +411,7 @@
 <span class="kw">private var</span> products: <span class="ty">FetchedResults</span>&lt;<span class="ty">Product</span>&gt;
 
 <span class="cm">// Récupère tous les produits, triés alphabétiquement par nom</span>
-<span class="cm">// ✅ SortDescriptor(\.name) est vérifié à la compilation (plus sûr que "name" en String)</span>
+<span class="cm">//  SortDescriptor(\.name) est vérifié à la compilation (plus sûr que "name" en String)</span>
 <span class="an">@FetchRequest</span>(sortDescriptors: [<span class="ty">SortDescriptor</span>(\.name)])
 <span class="kw">private var</span> products: <span class="ty">FetchedResults</span>&lt;<span class="ty">Product</span>&gt;
 
@@ -469,7 +469,7 @@
     </div>
 
     <div class="callout tip">
-      <span class="callout-icon">💡</span>
+      <span class="callout-icon"></span>
       <div><strong>Requête ponctuelle (one-time fetch) :</strong> Si vous n'avez pas besoin de la mise
       à jour automatique de <code>@FetchRequest</code>, vous pouvez faire une requête unique dans
       un <code>.task</code> ou une fonction, en construisant un <code>NSFetchRequest</code> et en
@@ -498,7 +498,7 @@
     <!-- ══════════════════════════════════════════════════════ -->
     <a href="../exercices/ex_m10.html" class="lab-cta" id="lab">
       <div class="lab-text">
-        <h3>🧪 Passer au laboratoire</h3>
+        <h3> Passer au laboratoire</h3>
         <p>Module 10 — Créer un projet SwiftUI avec Core Data de A à Z</p>
       </div>
       <span class="lab-arrow">→</span>
@@ -520,13 +520,13 @@
     const toc = document.querySelector('.toc');
     const open = toc.classList.toggle('open');
     this.setAttribute('aria-expanded', open);
-    this.textContent = open ? '✕' : '☰';
+    this.textContent = open ? '' : '';
   });
   document.querySelectorAll('.toc a').forEach(a => {
     a.addEventListener('click', () => {
       document.querySelector('.toc')?.classList.remove('open');
       const btn = document.querySelector('.toc-toggle');
-      if (btn) { btn.setAttribute('aria-expanded', 'false'); btn.textContent = '☰'; }
+      if (btn) { btn.setAttribute('aria-expanded', 'false'); btn.textContent = ''; }
     });
   });
 </script>

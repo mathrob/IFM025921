@@ -16,7 +16,7 @@
   <header class="top-bar">
     <a href="../index.html" class="back-btn">← Accueil</a>
     <span class="page-badge">IFM025921 · Module 10 · Laboratoire</span>
-    <button class="toc-toggle" aria-label="Menu" aria-expanded="false">☰</button>
+    <button class="toc-toggle" aria-label="Menu" aria-expanded="false"></button>
   </header>
 
   <!-- ── Sidebar TOC ──────────────────────────────────────── -->
@@ -50,7 +50,7 @@
     <p class="subtitle">Module 10 — Laboratoire pratique · Inventaire de produits</p>
 
     <div class="callout info">
-      <span class="callout-icon">🎯</span>
+      <span class="callout-icon"></span>
       <div><strong>Objectif :</strong> Construire une application d'inventaire en ajoutant manuellement
       tous les composants Core Data — sans cocher l'option automatique d'Xcode — afin de bien comprendre
       chaque pièce du puzzle.</div>
@@ -68,7 +68,7 @@
     </ol>
 
     <div class="callout tip">
-      <span class="callout-icon">💡</span>
+      <span class="callout-icon"></span>
       <div>En n'utilisant pas l'option automatique, on crée chaque fichier Core Data
       <strong>nous-mêmes</strong>. C'est la meilleure façon de comprendre ce que fait Xcode en coulisse.</div>
     </div>
@@ -147,7 +147,7 @@
             }
         }
 
-        <span class="cm new">// ✅ Synchronise automatiquement le contexte principal</span>
+        <span class="cm new">//  Synchronise automatiquement le contexte principal</span>
         <span class="kw new">container.viewContext.automaticallyMergesChangesFromParent = <span class="kw">true</span></span>
     }
 }</pre>
@@ -199,7 +199,7 @@
     </div>
 
     <div class="callout info">
-      <span class="callout-icon">🌐</span>
+      <span class="callout-icon"></span>
       <div><strong>Pattern environnement SwiftUI :</strong> En injectant le contexte ici,
       <em>n'importe quelle vue</em> dans l'arbre peut le récupérer avec
       <code>@Environment(\.managedObjectContext)</code> — sans qu'on ait à le passer manuellement de vue en vue.</div>
@@ -226,7 +226,7 @@
     <span class="cm">// Contexte Core Data injecté depuis l'environnement</span>
     <span class="an">@Environment</span>(\.managedObjectContext) <span class="kw">private var</span> viewContext
 
-    <span class="cm">// ✅ Syntaxe moderne (iOS 15+) — plus concise et type-safe</span>
+    <span class="cm">//  Syntaxe moderne (iOS 15+) — plus concise et type-safe</span>
     <span class="an">@FetchRequest</span>(sortDescriptors: [])
     <span class="kw">private var</span> products: <span class="ty">FetchedResults</span>&lt;<span class="ty">Product</span>&gt;
 
@@ -242,7 +242,7 @@
                     <span class="ty">Button</span>(<span class="st">"Ajouter"</span>) {
                         <span class="fn">addProduct</span>()
                     }
-                    <span class="cm">// ✅ Désactivé tant que les champs sont vides</span>
+                    <span class="cm">//  Désactivé tant que les champs sont vides</span>
                     .<span class="fn">disabled</span>(name.<span class="fn">isEmpty</span> || quantity.<span class="fn">isEmpty</span>)
                     <span class="ty">Spacer</span>()
                     <span class="ty">Button</span>(<span class="st">"Effacer"</span>) {
@@ -311,7 +311,7 @@
             newProduct.name     = name
             newProduct.quantity = quantity
             <span class="fn">saveContext</span>()
-            <span class="cm new">// ✅ On vide les champs après l'ajout pour éviter les doublons accidentels</span>
+            <span class="cm new">//  On vide les champs après l'ajout pour éviter les doublons accidentels</span>
             name     = <span class="st new">""</span>
             quantity = <span class="st new">""</span>
         }
@@ -351,7 +351,7 @@
     </div>
 
     <div class="callout warn">
-      <span class="callout-icon">⚠️</span>
+      <span class="callout-icon"></span>
       <div><strong>fatalError en production ?</strong> Dans une vraie application, on remplacerait
       <code>fatalError</code> par une alerte SwiftUI qui informe l'utilisateur. <code>fatalError</code>
       fait planter l'app — c'est acceptable en développement/démo, jamais en production.</div>
@@ -368,7 +368,7 @@
     <code>@FetchRequest</code> par une version avec tri.</p>
 
     <div class="callout fix">
-      <span class="callout-icon">✅</span>
+      <span class="callout-icon"></span>
       <div><strong>Bonne pratique :</strong> <code>SortDescriptor(\.name)</code> est
       <em>vérifié à la compilation</em> — si le nom de l'attribut change, Xcode le signale
       immédiatement. C'est plus sûr que l'ancien <code>NSSortDescriptor(key: "name", ...)</code>
@@ -380,7 +380,7 @@
         <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
         <span class="filename">ContentView.swift</span>
       </div>
-      <pre><span class="cm">// ✅ SortDescriptor moderne — vérifié à la compilation (iOS 15+)</span>
+      <pre><span class="cm">//  SortDescriptor moderne — vérifié à la compilation (iOS 15+)</span>
 <span class="an">@FetchRequest</span>(sortDescriptors: [<span class="ty">SortDescriptor</span>(\.name)])
 <span class="kw">private var</span> products: <span class="ty">FetchedResults</span>&lt;<span class="ty">Product</span>&gt;</pre>
     </div>
@@ -400,7 +400,7 @@
 
     <span class="kw">var</span> name: <span class="ty">String</span>
 
-    <span class="cm">// ✅ Contexte récupéré depuis l'environnement — plus besoin de le passer en paramètre</span>
+    <span class="cm">//  Contexte récupéré depuis l'environnement — plus besoin de le passer en paramètre</span>
     <span class="an">@Environment</span>(\.managedObjectContext) <span class="kw">private var</span> viewContext
 
     <span class="an">@State</span> <span class="kw">private var</span> matches: [<span class="ty">Product</span>]?
@@ -439,7 +439,7 @@
     <span class="ty">Button</span>(<span class="st">"Ajouter"</span>) { <span class="fn">addProduct</span>() }
         .<span class="fn">disabled</span>(name.<span class="fn">isEmpty</span> || quantity.<span class="fn">isEmpty</span>)
     <span class="ty">Spacer</span>()
-    <span class="cm">// ✅ On ne passe plus viewContext en paramètre</span>
+    <span class="cm">//  On ne passe plus viewContext en paramètre</span>
     <span class="ty">NavigationLink</span>(destination: <span class="ty">ResultsView</span>(name: name)) {
         <span class="ty">Text</span>(<span class="st">"Chercher"</span>)
     }
@@ -466,9 +466,9 @@
     <span class="cm">// L'objet Product à modifier (observé pour réagir à ses changements)</span>
     <span class="an">@ObservedObject</span> <span class="kw">var</span> product: <span class="ty">Product</span>
 
-    <span class="cm">// ✅ Contexte récupéré depuis l'environnement</span>
+    <span class="cm">//  Contexte récupéré depuis l'environnement</span>
     <span class="an">@Environment</span>(\.managedObjectContext) <span class="kw">private var</span> viewContext
-    <span class="cm">// ✅ Permet de fermer la vue automatiquement après la sauvegarde</span>
+    <span class="cm">//  Permet de fermer la vue automatiquement après la sauvegarde</span>
     <span class="an">@Environment</span>(\.dismiss)             <span class="kw">private var</span> dismiss
 
     <span class="kw">@State private var</span> name:     <span class="ty">String</span> = <span class="st">""</span>
@@ -490,7 +490,7 @@
                 .<span class="fn">disabled</span>(name.<span class="fn">isEmpty</span> || quantity.<span class="fn">isEmpty</span>)
             }
         }
-        <span class="cm">// ✅ Le titre affiche dynamiquement le nom du produit en cours de modification</span>
+        <span class="cm">//  Le titre affiche dynamiquement le nom du produit en cours de modification</span>
         .<span class="fn">navigationTitle</span>(product.name ?? <span class="st">"Modifier"</span>)
         .<span class="fn">onAppear</span> { <span class="fn">loadData</span>() }
     }
@@ -505,7 +505,7 @@
         product.quantity = quantity
         <span class="kw">do</span> {
             <span class="kw">try</span> viewContext.<span class="fn">save</span>()
-            <span class="fn">dismiss</span>() <span class="cm">// ✅ Retour automatique à la liste après sauvegarde</span>
+            <span class="fn">dismiss</span>() <span class="cm">//  Retour automatique à la liste après sauvegarde</span>
         } <span class="kw">catch</span> {
             <span class="fn">print</span>(<span class="st">"Erreur : \(error.localizedDescription)"</span>)
         }
@@ -540,11 +540,11 @@
         <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
         <span class="filename">ContentView.swift — liste cliquable</span>
       </div>
-      <pre><span class="cm">// ✅ NavigationStack — remplace NavigationView (déprécié depuis iOS 16)</span>
+      <pre><span class="cm">//  NavigationStack — remplace NavigationView (déprécié depuis iOS 16)</span>
 <span class="ty">NavigationStack</span> {
     <span class="ty">List</span> {
         <span class="ty">ForEach</span>(products) { product <span class="kw">in</span>
-            <span class="cm">// ✅ On ne passe plus viewContext, il vient de l'environnement</span>
+            <span class="cm">//  On ne passe plus viewContext, il vient de l'environnement</span>
             <span class="ty">NavigationLink</span>(destination: <span class="ty">EditProductView</span>(product: product)) {
                 <span class="ty">HStack</span> {
                     <span class="ty">Text</span>(product.name     ?? <span class="st">"Inconnu"</span>)
@@ -607,13 +607,13 @@
     const toc = document.querySelector('.toc');
     const open = toc.classList.toggle('open');
     this.setAttribute('aria-expanded', open);
-    this.textContent = open ? '✕' : '☰';
+    this.textContent = open ? '' : '';
   });
   document.querySelectorAll('.toc a').forEach(a => {
     a.addEventListener('click', () => {
       document.querySelector('.toc')?.classList.remove('open');
       const btn = document.querySelector('.toc-toggle');
-      if (btn) { btn.setAttribute('aria-expanded', 'false'); btn.textContent = '☰'; }
+      if (btn) { btn.setAttribute('aria-expanded', 'false'); btn.textContent = ''; }
     });
   });
 </script>
