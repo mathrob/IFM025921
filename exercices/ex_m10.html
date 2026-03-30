@@ -47,12 +47,12 @@
   <main class="content">
 
     <h1>SwiftUI &amp; Core Data</h1>
-    <p class="subtitle">Module 10 — Laboratoire pratique · Inventaire de produits</p>
+    <p class="subtitle">Module 10 Laboratoire pratique · Inventaire de produits</p>
 
     <div class="callout info">
       <span class="callout-icon"></span>
       <div><strong>Objectif :</strong> Construire une application d'inventaire en ajoutant manuellement
-      tous les composants Core Data — sans cocher l'option automatique d'Xcode — afin de bien comprendre
+      tous les composants Core Data sans cocher l'option automatique d'Xcode afin de bien comprendre
       chaque pièce du puzzle.</div>
     </div>
 
@@ -100,11 +100,11 @@
     <div class="explain-grid">
       <div class="eg-row">
         <div class="eg-key">name</div>
-        <div class="eg-val">Type <strong>String</strong> — le nom du produit.</div>
+        <div class="eg-val">Type <strong>String</strong> le nom du produit.</div>
       </div>
       <div class="eg-row">
         <div class="eg-key">quantity</div>
-        <div class="eg-val">Type <strong>String</strong> — la quantité. On utilise String pour simplifier l'exercice. 
+        <div class="eg-val">Type <strong>String</strong> la quantité. On utilise String pour simplifier l'exercice. 
         En production, on préférerait <code>Int16</code> ou <code>Int32</code>.</div>
       </div>
     </div>
@@ -156,7 +156,7 @@
     <div class="explain-grid">
       <div class="eg-row">
         <div class="eg-key">NSPersistentContainer</div>
-        <div class="eg-val">Représente l'ensemble de la pile Core Data — il crée et gère tous les composants automatiquement.</div>
+        <div class="eg-val">Représente l'ensemble de la pile Core Data il crée et gère tous les composants automatiquement.</div>
       </div>
       <div class="eg-row">
         <div class="eg-key">loadPersistentStores</div>
@@ -202,12 +202,12 @@
       <span class="callout-icon"></span>
       <div><strong>Pattern environnement SwiftUI :</strong> En injectant le contexte ici,
       <em>n'importe quelle vue</em> dans l'arbre peut le récupérer avec
-      <code>@Environment(\.managedObjectContext)</code> — sans qu'on ait à le passer manuellement de vue en vue.</div>
+      <code>@Environment(\.managedObjectContext)</code> sans qu'on ait à le passer manuellement de vue en vue.</div>
     </div>
 
 
     <!-- ══════════════════════════════════════════════════════ -->
-    <h2 id="contentview"><span class="sec-num">05</span> ContentView — Interface principale</h2>
+    <h2 id="contentview"><span class="sec-num">05</span> ContentView Interface principale</h2>
 
     <div class="code-block">
       <div class="code-block-header">
@@ -226,7 +226,7 @@
     <span class="cm">// Contexte Core Data injecté depuis l'environnement</span>
     <span class="an">@Environment</span>(\.managedObjectContext) <span class="kw">private var</span> viewContext
 
-    <span class="cm">//  Syntaxe moderne (iOS 15+) — plus concise et type-safe</span>
+    <span class="cm">//  Syntaxe moderne (iOS 15+) plus concise et type-safe</span>
     <span class="an">@FetchRequest</span>(sortDescriptors: [])
     <span class="kw">private var</span> products: <span class="ty">FetchedResults</span>&lt;<span class="ty">Product</span>&gt;
 
@@ -354,7 +354,7 @@
       <span class="callout-icon"></span>
       <div><strong>fatalError en production ?</strong> Dans une vraie application, on remplacerait
       <code>fatalError</code> par une alerte SwiftUI qui informe l'utilisateur. <code>fatalError</code>
-      fait planter l'app — c'est acceptable en développement/démo, jamais en production.</div>
+      fait planter l'app c'est acceptable en développement/démo, jamais en production.</div>
     </div>
 
 
@@ -370,7 +370,7 @@
     <div class="callout fix">
       <span class="callout-icon"></span>
       <div><strong>Bonne pratique :</strong> <code>SortDescriptor(\.name)</code> est
-      <em>vérifié à la compilation</em> — si le nom de l'attribut change, Xcode le signale
+      <em>vérifié à la compilation</em> si le nom de l'attribut change, Xcode le signale
       immédiatement. C'est plus sûr que l'ancien <code>NSSortDescriptor(key: "name", ...)</code>
       qui utilise une chaîne de caractères non vérifiée.</div>
     </div>
@@ -380,7 +380,7 @@
         <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
         <span class="filename">ContentView.swift</span>
       </div>
-      <pre><span class="cm">//  SortDescriptor moderne — vérifié à la compilation (iOS 15+)</span>
+      <pre><span class="cm">//  SortDescriptor moderne vérifié à la compilation (iOS 15+)</span>
 <span class="an">@FetchRequest</span>(sortDescriptors: [<span class="ty">SortDescriptor</span>(\.name)])
 <span class="kw">private var</span> products: <span class="ty">FetchedResults</span>&lt;<span class="ty">Product</span>&gt;</pre>
     </div>
@@ -389,7 +389,7 @@
     <h3 id="recherche">Rechercher un produit</h3>
 
     <p>On crée une vue <code>ResultsView</code> qui filtre les produits selon le nom saisi.
-    Elle récupère son contexte <strong>depuis l'environnement</strong> — pas besoin de le passer en paramètre.</p>
+    Elle récupère son contexte <strong>depuis l'environnement</strong> pas besoin de le passer en paramètre.</p>
 
     <div class="code-block">
       <div class="code-block-header">
@@ -400,7 +400,7 @@
 
     <span class="kw">var</span> name: <span class="ty">String</span>
 
-    <span class="cm">//  Contexte récupéré depuis l'environnement — plus besoin de le passer en paramètre</span>
+    <span class="cm">//  Contexte récupéré depuis l'environnement plus besoin de le passer en paramètre</span>
     <span class="an">@Environment</span>(\.managedObjectContext) <span class="kw">private var</span> viewContext
 
     <span class="an">@State</span> <span class="kw">private var</span> matches: [<span class="ty">Product</span>]?
@@ -432,7 +432,7 @@
     <div class="code-block">
       <div class="code-block-header">
         <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
-        <span class="filename">ContentView.swift — boutons</span>
+        <span class="filename">ContentView.swift boutons</span>
       </div>
       <pre><span class="ty">HStack</span> {
     <span class="ty">Spacer</span>()
@@ -450,7 +450,7 @@
     </div>
 
     <!-- ── Modification ────────────────── -->
-    <h3 id="modification">Vue de modification — EditProductView</h3>
+    <h3 id="modification">Vue de modification EditProductView</h3>
 
     <p>Cette vue permet à l'utilisateur de modifier un produit existant.
     Elle utilise <code>@Environment</code> pour le contexte <strong>et</strong> pour le dismiss,
@@ -538,9 +538,9 @@
     <div class="code-block">
       <div class="code-block-header">
         <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
-        <span class="filename">ContentView.swift — liste cliquable</span>
+        <span class="filename">ContentView.swift liste cliquable</span>
       </div>
-      <pre><span class="cm">//  NavigationStack — remplace NavigationView (déprécié depuis iOS 16)</span>
+      <pre><span class="cm">//  NavigationStack remplace NavigationView (déprécié depuis iOS 16)</span>
 <span class="ty">NavigationStack</span> {
     <span class="ty">List</span> {
         <span class="ty">ForEach</span>(products) { product <span class="kw">in</span>
@@ -596,7 +596,7 @@
   <!-- ── Footer ───────────────────────────────────────────── -->
   <footer class="page-footer">
     Développé par <a href="https://github.com/mathrob">Mathieu Robson</a> ·
-    IFM025921 — Développement d'applications mobiles pour iOS &nbsp;©
+    IFM025921 Développement d'applications mobiles pour iOS &nbsp;©
   </footer>
 
 </div>

@@ -55,7 +55,7 @@
   <main class="content">
 
     <h1>Core Data &amp; SwiftUI</h1>
-    <p class="subtitle">Module 10 — Notes de cours · Persistance des données avec Core Data</p>
+    <p class="subtitle">Module 10 Notes de cours · Persistance des données avec Core Data</p>
 
     <!-- ══════════════════════════════════════════════════════ -->
     <h2 id="intro"><span class="sec-num">01</span> Introduction</h2>
@@ -65,19 +65,19 @@
     de contacts, un historique d'achats.</p>
 
     <p>Une première approche consiste à utiliser directement <strong>SQLite</strong>, la base de données
-    embarquée sur iOS. Ça fonctionne, mais ça oblige à écrire du SQL — un langage qui n'est pas orienté
+    embarquée sur iOS. Ça fonctionne, mais ça oblige à écrire du SQL un langage qui n'est pas orienté
     objet et qui ajoute de la complexité.</p>
 
     <div class="callout analogy">
       <span class="callout-icon"></span>
       <div><strong>Analogie :</strong> SQLite, c'est comme construire une maison en manipulant directement
-      les briques et le ciment. Core Data, c'est comme utiliser des panneaux préfabriqués — le résultat
+      les briques et le ciment. Core Data, c'est comme utiliser des panneaux préfabriqués le résultat
       final (la maison / la base de données SQLite) est le même, mais le travail est beaucoup plus simple.</div>
     </div>
 
     <p><strong>Core Data</strong> est un framework d'Apple qui sert d'intermédiaire entre votre code
     Swift et la base de données. Il vous permet de travailler avec vos données comme des <em>objets Swift</em>
-    normaux — sans écrire une seule ligne de SQL.</p>
+    normaux sans écrire une seule ligne de SQL.</p>
 
     <div class="explain-grid">
       <div class="eg-key">SQLite direct</div>
@@ -89,7 +89,7 @@
     <!-- ══════════════════════════════════════════════════════ -->
     <h2 id="stack"><span class="sec-num">02</span> La Stack Core Data</h2>
 
-    <p>Core Data n'est pas un composant unique — c'est un <strong>ensemble de couches</strong> qui
+    <p>Core Data n'est pas un composant unique c'est un <strong>ensemble de couches</strong> qui
     travaillent ensemble. On appelle cet ensemble la <em>Core Data Stack</em>. Votre code n'interagit
     qu'avec la couche du haut ; les couches inférieures fonctionnent de façon transparente.</p>
 
@@ -121,7 +121,7 @@
       <div class="stack-row">
         <div class="stack-box db"> Base de données SQLite<sub>Fichier sur disque</sub></div>
       </div>
-      <p class="stack-note">Votre code n'interagit qu'avec le Persistent Container et le Managed Object Context — les couches inférieures sont transparentes.</p>
+      <p class="stack-note">Votre code n'interagit qu'avec le Persistent Container et le Managed Object Context les couches inférieures sont transparentes.</p>
     </div>
 
     <!-- Component cards -->
@@ -139,7 +139,7 @@
         </ul>
         <div class="callout analogy" style="margin-top:12px; font-size:13px;">
           <span class="callout-icon" style="font-size:14px;"></span>
-          <div>C'est comme le gérant d'un entrepôt — il ne stocke rien lui-même, mais il organise tout et vous donne accès à ce dont vous avez besoin.</div>
+          <div>C'est comme le gérant d'un entrepôt il ne stocke rien lui-même, mais il organise tout et vous donne accès à ce dont vous avez besoin.</div>
         </div>
       </div>
 
@@ -155,14 +155,14 @@
         </ul>
         <div class="callout analogy" style="margin-top:12px; font-size:13px;">
           <span class="callout-icon" style="font-size:14px;"></span>
-          <div>C'est comme un brouillon dans Word — vous pouvez modifier le texte librement, mais rien n'est enregistré tant que vous n'appuyez pas sur <strong>Sauvegarder</strong>.</div>
+          <div>C'est comme un brouillon dans Word vous pouvez modifier le texte librement, mais rien n'est enregistré tant que vous n'appuyez pas sur <strong>Sauvegarder</strong>.</div>
         </div>
       </div>
 
       <div class="comp-card green" id="mom">
         <div class="role"> Schéma des données</div>
         <h4>Managed Object Model</h4>
-        <p>Définit la <strong>structure</strong> de vos données — les entités, leurs
+        <p>Définit la <strong>structure</strong> de vos données les entités, leurs
         attributs et les relations entre elles.</p>
         <ul>
           <li>Contenu dans le fichier <code>.xcdatamodeld</code></li>
@@ -172,7 +172,7 @@
         </ul>
         <div class="callout analogy" style="margin-top:12px; font-size:13px;">
           <span class="callout-icon" style="font-size:14px;"></span>
-          <div>C'est le plan d'architecte — il décrit comment les données doivent être organisées, sans contenir de données lui-même.</div>
+          <div>C'est le plan d'architecte il décrit comment les données doivent être organisées, sans contenir de données lui-même.</div>
         </div>
       </div>
 
@@ -195,7 +195,7 @@
       <h4>Persistent Store Object</h4>
       <p>C'est le support de stockage physique. Par défaut sur iOS, c'est un fichier <strong>SQLite</strong>.
       Core Data supporte aussi XML, binaire et mémoire vive (en RAM, non persistant).</p>
-      <p style="margin:0; font-size:14px;">Le choix du type de store est transparent — votre code Swift appelle toujours les mêmes méthodes Core Data, quelle que soit la technologie de stockage sous-jacente.</p>
+      <p style="margin:0; font-size:14px;">Le choix du type de store est transparent votre code Swift appelle toujours les mêmes méthodes Core Data, quelle que soit la technologie de stockage sous-jacente.</p>
     </div>
 
     <!-- ══════════════════════════════════════════════════════ -->
@@ -207,22 +207,18 @@
     <div class="lifecycle">
       <div class="lifecycle-steps">
         <div class="lc-step">
-          <div class="lc-icon"></div>
           <div class="lc-label">1. Créer</div>
           <div class="lc-sub">On instancie un objet Swift dans le MOC</div>
         </div>
         <div class="lc-step">
-          <div class="lc-icon"></div>
           <div class="lc-label">2. Modifier</div>
           <div class="lc-sub">On assigne les valeurs des attributs</div>
         </div>
         <div class="lc-step">
-          <div class="lc-icon"></div>
           <div class="lc-label">3. Sauvegarder</div>
           <div class="lc-sub">On appelle <code>.save()</code> sur le MOC</div>
         </div>
         <div class="lc-step">
-          <div class="lc-icon"></div>
           <div class="lc-label">4. Persister</div>
           <div class="lc-sub">Les données sont écrites dans SQLite sur disque</div>
         </div>
@@ -350,7 +346,7 @@
     <p>Voici les trois éléments Swift que vous utiliserez le plus souvent avec Core Data.</p>
 
     <!-- PersistenceController -->
-    <h3 id="persistence-ctrl">1 — Initialiser la Stack : PersistenceController</h3>
+    <h3 id="persistence-ctrl">1 Initialiser la Stack : PersistenceController</h3>
 
     <p>On crée une structure <code>PersistenceController</code> (généralement dans un fichier
     <code>Persistence.swift</code>) qui initialise le <code>NSPersistentContainer</code> et expose
@@ -388,7 +384,7 @@
     </div>
 
     <!-- @FetchRequest -->
-    <h3 id="fetchrequest">2 — Lire des données : @FetchRequest</h3>
+    <h3 id="fetchrequest">2 Lire des données : @FetchRequest</h3>
 
     <p><code>@FetchRequest</code> est un <em>property wrapper</em> SwiftUI qui <strong>lit automatiquement</strong>
     les données depuis Core Data et <strong>met à jour la vue</strong> dès qu'un changement est détecté.
@@ -396,7 +392,7 @@
 
     <div class="callout analogy">
       <span class="callout-icon"></span>
-      <div><strong>Analogie :</strong> C'est comme un abonnement en direct — au lieu de demander les
+      <div><strong>Analogie :</strong> C'est comme un abonnement en direct au lieu de demander les
       données une seule fois, <code>@FetchRequest</code> vous <em>notifie</em> chaque fois que les
       données changent. La vue se re-dessine automatiquement.</div>
     </div>
@@ -422,7 +418,7 @@
 
     <div class="explain-grid">
       <div class="eg-key">sortDescriptors: []</div>
-      <div class="eg-val">Aucun tri — l'ordre est celui de l'insertion dans la base.</div>
+      <div class="eg-val">Aucun tri l'ordre est celui de l'insertion dans la base.</div>
       <div class="eg-key">SortDescriptor(\.name)</div>
       <div class="eg-val">Tri alphabétique ascendant (A → Z). Utilise un <em>keypath</em> Swift, vérifié à la compilation.</div>
       <div class="eg-key">FetchedResults&lt;Product&gt;</div>
@@ -430,9 +426,9 @@
     </div>
 
     <!-- NSPredicate -->
-    <h3 id="nspredicate">3 — Filtrer les données : NSPredicate</h3>
+    <h3 id="nspredicate">3 Filtrer les données : NSPredicate</h3>
 
-    <p>Un <code>NSPredicate</code> définit des <strong>critères de filtrage</strong> — l'équivalent de
+    <p>Un <code>NSPredicate</code> définit des <strong>critères de filtrage</strong> l'équivalent de
     la clause <code>WHERE</code> en SQL. On peut l'utiliser avec <code>@FetchRequest</code> ou dans
     une requête ponctuelle.</p>
 
@@ -441,7 +437,7 @@
         <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
         <span class="filename">Exemples de NSPredicate</span>
       </div>
-      <pre><span class="cm">// Égalité exacte — produits dont le nom est exactement "Pomme"</span>
+      <pre><span class="cm">// Égalité exacte produits dont le nom est exactement "Pomme"</span>
 <span class="ty">NSPredicate</span>(format: <span class="st">"name == %@"</span>, <span class="st">"Pomme"</span>)
 
 <span class="cm">// Contient (insensible à la casse et aux accents grâce à [cd])</span>
@@ -450,7 +446,7 @@
 <span class="cm">// Commence par</span>
 <span class="ty">NSPredicate</span>(format: <span class="st">"name BEGINSWITH[cd] %@"</span>, <span class="st">"A"</span>)
 
-<span class="cm">// Comparaison numérique — quantité supérieure à 10</span>
+<span class="cm">// Comparaison numérique quantité supérieure à 10</span>
 <span class="ty">NSPredicate</span>(format: <span class="st">"quantity > %d"</span>, <span class="nu">10</span>)
 
 <span class="cm">// Combinaison de critères avec AND / OR</span>
@@ -499,7 +495,7 @@
     <a href="../exercices/ex_m10.html" class="lab-cta" id="lab">
       <div class="lab-text">
         <h3> Passer au laboratoire</h3>
-        <p>Module 10 — Créer un projet SwiftUI avec Core Data de A à Z</p>
+        <p>Module 10 Créer un projet SwiftUI avec Core Data de A à Z</p>
       </div>
       <span class="lab-arrow">→</span>
     </a>
@@ -509,7 +505,7 @@
   <!-- ── Footer ─────────────────────────────────────────────── -->
   <footer class="page-footer">
     Développé par <a href="https://github.com/mathrob">Mathieu Robson</a> ·
-    IFM025921 — Développement d'applications mobiles pour iOS &nbsp;©
+    IFM025921 Développement d'applications mobiles pour iOS &nbsp;©
   </footer>
 
 </div>
