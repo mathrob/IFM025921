@@ -1,457 +1,641 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>IFM025921</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" />
-  <link rel="stylesheet" href="../style.css" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Module 10 – Core Data &amp; SwiftUI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../cours.css">
 </head>
-
 <body>
-  <header>
-    <h1 style="color: white">Module 10 - Exercice</h1>
+
+<div class="page-wrap">
+
+  <!-- ── Top bar ──────────────────────────────────────────── -->
+  <header class="top-bar">
+    <a href="../index.html" class="back-btn">← Accueil</a>
+    <span class="page-badge">IFM025921 · Module 10 · Laboratoire</span>
+    <button class="toc-toggle" aria-label="Menu" aria-expanded="false">☰</button>
   </header>
-  <div class="container">
-    <a href="../index.html" class="back-link">← Retour au module principal</a>
 
-    <section id="module-10" class="module-section">
-      <h1 id="projet-coredata">Créer un projet SwiftUI avec Core Data</h1>
+  <!-- ── Sidebar TOC ──────────────────────────────────────── -->
+  <nav class="toc" aria-label="Table des matières">
+    <p class="toc-title">Sur cette page</p>
+    <ul>
+      <li><a href="#creer-projet">1. Créer le projet</a></li>
+      <li><a href="#modele-donnees">2. Ajouter le modèle</a>
+        <ul><li><a href="#definir-entite">Définir une entité</a></li></ul>
+      </li>
+      <li><a href="#persistence">3. PersistenceController</a></li>
+      <li><a href="#injection">4. Injection du contexte</a></li>
+      <li><a href="#contentview">5. ContentView</a></li>
+      <li><a href="#fonctions">6. Fonctions CRUD</a></li>
+      <li><a href="#ameliorations">7. Améliorations</a>
+        <ul>
+          <li><a href="#tri">Trier les produits</a></li>
+          <li><a href="#recherche">Rechercher</a></li>
+          <li><a href="#modification">Modifier un produit</a></li>
+          <li><a href="#navigation-edit">Navigation vers l'édition</a></li>
+          <li><a href="#erreurs">Gestion des erreurs</a></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
 
-      <h2>Créer le projet « CoreDataDemo »</h2>
-      <ol>
-        <li>Lancez Xcode et cliquez sur «Create a new Xcode project».</li>
-        <li>Sélectionnez «IOS» et «App».</li>
-        <li>Donnez un nom à votre projet, par exemple «CoreDataDemo».</li>
-        <li>Ne cochez pas l’option «Core Data» dans la partie Storage. Laissez-la sur «None».</li>
-        <li>Sélectionnez l’emplacement de sauvegarde, puis cliquez sur «Finish».</li>
-      </ol>
+  <!-- ── Main content ─────────────────────────────────────── -->
+  <main class="content">
 
-      <p>
-        <strong>Objectif</strong> : Nous allons ajouter manuellement tous les éléments nécessaires à
-        l’utilisation de Core Data.
-      </p>
+    <h1>SwiftUI &amp; Core Data</h1>
+    <p class="subtitle">Module 10 — Laboratoire pratique · Inventaire de produits</p>
 
-      <h2>Ajouter le modèle de données (.xcdatamodeld)</h2>
-      <p>Comme nous n’avons pas coché l’option Core Data, Xcode n’a pas créé de fichier .xcdatamodeld par défaut.
-        Nous allons le créer nous-mêmes.</p>
+    <div class="callout info">
+      <span class="callout-icon">🎯</span>
+      <div><strong>Objectif :</strong> Construire une application d'inventaire en ajoutant manuellement
+      tous les composants Core Data — sans cocher l'option automatique d'Xcode — afin de bien comprendre
+      chaque pièce du puzzle.</div>
+    </div>
 
-      <ol>
-        <li>Appuyez sur Cmd+N pour créer un nouveau fichier.</li>
-        <li>Dans la section iOS, cherchez la rubrique Core Data.</li>
-        <li>Sélectionnez « Data Model » puis cliquez sur « Next ».</li>
-        <li>Donnez un nom au fichier, par exemple « Products ».</li>
-        <li>Cliquez sur « Create ».</li>
-        <li>Vous verrez apparaître un fichier Products.xcdatamodeld dans votre arborescence.</li>
-      </ol>
+    <!-- ══════════════════════════════════════════════════════ -->
+    <h2 id="creer-projet"><span class="sec-num">01</span> Créer le projet « CoreDataDemo »</h2>
 
-      <h3>Définir une entité (Entity)</h3>
-      <ol>
-        <li>Ouvrez Products.xcdatamodeld.</li>
-        <li>Dans la fenêtre principale, cliquez sur « Add Entity » en bas.</li>
-        <li>Renommez l’entité « Product » (double-clic sur le nom par défaut).</li>
-        <li>Dans la section Attributes, cliquez sur + pour ajouter un attribut :
-          <ul>
-            <li>name (String) : pour le nom du produit.</li>
-            <li>quantity (String) : pour stocker la quantité du produit (vous pourriez utiliser un entier,
-              mais on reste simple).</li>
-          </ul>
-        </li>
-      </ol>
+    <ol class="steps">
+      <li>Lancez Xcode et cliquez sur <strong>«&nbsp;Create a new Xcode project&nbsp;»</strong>.</li>
+      <li>Sélectionnez <strong>iOS</strong> puis <strong>App</strong>.</li>
+      <li>Nommez le projet <strong>CoreDataDemo</strong>.</li>
+      <li>Dans la partie <em>Storage</em>, laissez sur <strong>None</strong> (ne cochez pas Core Data).</li>
+      <li>Choisissez l'emplacement et cliquez sur <strong>Finish</strong>.</li>
+    </ol>
 
-      <p>Votre modèle de données contient désormais une entité Product avec deux attributs : name et quantity.
-      </p>
+    <div class="callout tip">
+      <span class="callout-icon">💡</span>
+      <div>En n'utilisant pas l'option automatique, on crée chaque fichier Core Data
+      <strong>nous-mêmes</strong>. C'est la meilleure façon de comprendre ce que fait Xcode en coulisse.</div>
+    </div>
 
-      <h2>Créer la structure PersistenceController</h2>
-      <p>Maintenant, nous allons créer un fichier Swift pour configurer la stack Core Data </p>
 
-      <ol>
-        <li>Appuyez sur Cmd+N pour créer un nouveau fichier Swift.</li>
-        <li>Nommez ce fichier Persistence.swift et enregistrez-le à la racine de votre projet.</li>
-        <li>Ajoutez le code suivant :
-          <pre><code class="language-swift">import CoreData
+    <!-- ══════════════════════════════════════════════════════ -->
+    <h2 id="modele-donnees"><span class="sec-num">02</span> Ajouter le modèle de données</h2>
 
-struct PersistenceController {
-static let shared = PersistenceController()
-let container: NSPersistentContainer
+    <p>Comme Core Data n'a pas été coché, il n'y a pas de fichier <code>.xcdatamodeld</code> dans le projet.
+    On va le créer manuellement.</p>
 
-init() {
-  // « Products » correspond au nom du fichier .xcdatamodeld (sans l’extension)
-  container = NSPersistentContainer(name: "Products")
+    <ol class="steps">
+      <li>Appuyez sur <strong>⌘ N</strong> pour créer un nouveau fichier.</li>
+      <li>Dans la section <strong>Core Data</strong>, sélectionnez <strong>Data Model</strong>, puis <strong>Next</strong>.</li>
+      <li>Nommez le fichier <strong>Products</strong> et cliquez sur <strong>Create</strong>.</li>
+    </ol>
 
-  container.loadPersistentStores { (storeDescription, error) in
-      if let error = error as NSError? {
-          // En cas d’erreur, on arrête l’application (fatalError)
-          // Pour une app de production, on gérerait l’erreur différemment
-          fatalError("Échec du chargement du store: \(error)")
-      }
-  }
+    <p>Un fichier <code>Products.xcdatamodeld</code> apparaît dans l'arborescence du projet.</p>
+
+    <h3 id="definir-entite">Définir une entité</h3>
+
+    <ol class="steps">
+      <li>Ouvrez <code>Products.xcdatamodeld</code> dans Xcode.</li>
+      <li>Cliquez sur <strong>Add Entity</strong> en bas de l'éditeur.</li>
+      <li>Double-cliquez sur le nom par défaut et renommez-le <strong>Product</strong>.</li>
+      <li>Dans la section <strong>Attributes</strong>, cliquez sur <strong>+</strong> deux fois pour ajouter :</li>
+    </ol>
+
+    <div class="explain-grid">
+      <div class="eg-row">
+        <div class="eg-key">name</div>
+        <div class="eg-val">Type <strong>String</strong> — le nom du produit.</div>
+      </div>
+      <div class="eg-row">
+        <div class="eg-key">quantity</div>
+        <div class="eg-val">Type <strong>String</strong> — la quantité. On utilise String pour simplifier l'exercice. 
+        En production, on préférerait <code>Int16</code> ou <code>Int32</code>.</div>
+      </div>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════════════════ -->
+    <h2 id="persistence"><span class="sec-num">03</span> Créer le PersistenceController</h2>
+
+    <p>Ce fichier configure la <strong>pile Core Data</strong> (le « stack »). 
+    C'est lui qui crée la base de données SQLite et qui fournit le contexte de travail.</p>
+
+    <ol class="steps">
+      <li>Appuyez sur <strong>⌘ N</strong>, choisissez <strong>Swift File</strong>.</li>
+      <li>Nommez-le <strong>Persistence.swift</strong>.</li>
+      <li>Remplacez le contenu par le code suivant :</li>
+    </ol>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+        <span class="filename">Persistence.swift</span>
+      </div>
+      <pre><span class="kw">import</span> CoreData
+
+<span class="kw">struct</span> <span class="ty">PersistenceController</span> {
+
+    <span class="cm">// Instance unique partagée dans toute l'application (singleton)</span>
+    <span class="kw">static let</span> shared = <span class="ty">PersistenceController</span>()
+
+    <span class="kw">let</span> container: <span class="ty">NSPersistentContainer</span>
+
+    <span class="kw">init</span>() {
+        <span class="cm">// "Products" = nom du fichier .xcdatamodeld (sans l'extension)</span>
+        container = <span class="ty">NSPersistentContainer</span>(name: <span class="st">"Products"</span>)
+
+        container.<span class="fn">loadPersistentStores</span> { (storeDescription, error) <span class="kw">in</span>
+            <span class="kw">if let</span> error = error <span class="kw">as</span> <span class="ty">NSError</span>? {
+                <span class="cm">// En production, on afficherait une alerte plutôt qu'un crash</span>
+                <span class="fn">fatalError</span>(<span class="st">"Échec du chargement du store: \(error)"</span>)
+            }
+        }
+
+        <span class="cm new">// ✅ Synchronise automatiquement le contexte principal</span>
+        <span class="kw new">container.viewContext.automaticallyMergesChangesFromParent = <span class="kw">true</span></span>
+    }
+}</pre>
+    </div>
+
+    <div class="explain-grid">
+      <div class="eg-row">
+        <div class="eg-key">NSPersistentContainer</div>
+        <div class="eg-val">Représente l'ensemble de la pile Core Data — il crée et gère tous les composants automatiquement.</div>
+      </div>
+      <div class="eg-row">
+        <div class="eg-key">loadPersistentStores</div>
+        <div class="eg-val">Initialise la base de données SQLite sur disque. On attrape les erreurs ici.</div>
+      </div>
+      <div class="eg-row">
+        <div class="eg-key">automaticallyMergesChangesFromParent</div>
+        <div class="eg-val">Assure que le contexte principal reste synchronisé si des données sont modifiées en arrière-plan.</div>
+      </div>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════════════════ -->
+    <h2 id="injection"><span class="sec-num">04</span> Injecter le contexte dans SwiftUI</h2>
+
+    <p>Pour que toutes les vues puissent accéder à la base de données, on injecte le
+    <strong>viewContext</strong> dans l'environnement SwiftUI dès le point d'entrée de l'application.</p>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+        <span class="filename">CoreDataDemoApp.swift</span>
+      </div>
+      <pre><span class="kw">import</span> SwiftUI
+
+<span class="an">@main</span>
+<span class="kw">struct</span> <span class="ty">CoreDataDemoApp</span>: <span class="ty">App</span> {
+
+    <span class="kw">let</span> persistenceController = <span class="ty">PersistenceController</span>.shared
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="ty">Scene</span> {
+        <span class="ty">WindowGroup</span> {
+            <span class="ty">ContentView</span>()
+                <span class="cm">// Toutes les vues enfants pourront accéder au contexte via @Environment</span>
+                .<span class="fn">environment</span>(\.managedObjectContext,
+                             persistenceController.container.viewContext)
+        }
+    }
+}</pre>
+    </div>
+
+    <div class="callout info">
+      <span class="callout-icon">🌐</span>
+      <div><strong>Pattern environnement SwiftUI :</strong> En injectant le contexte ici,
+      <em>n'importe quelle vue</em> dans l'arbre peut le récupérer avec
+      <code>@Environment(\.managedObjectContext)</code> — sans qu'on ait à le passer manuellement de vue en vue.</div>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════════════════ -->
+    <h2 id="contentview"><span class="sec-num">05</span> ContentView — Interface principale</h2>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+        <span class="filename">ContentView.swift</span>
+      </div>
+      <pre><span class="kw">import</span> SwiftUI
+<span class="kw">import</span> CoreData
+
+<span class="kw">struct</span> <span class="ty">ContentView</span>: <span class="ty">View</span> {
+
+    <span class="cm">// Champs de saisie liés à l'interface</span>
+    <span class="an">@State</span> <span class="kw">private var</span> name     = <span class="st">""</span>
+    <span class="an">@State</span> <span class="kw">private var</span> quantity = <span class="st">""</span>
+
+    <span class="cm">// Contexte Core Data injecté depuis l'environnement</span>
+    <span class="an">@Environment</span>(\.managedObjectContext) <span class="kw">private var</span> viewContext
+
+    <span class="cm">// ✅ Syntaxe moderne (iOS 15+) — plus concise et type-safe</span>
+    <span class="an">@FetchRequest</span>(sortDescriptors: [])
+    <span class="kw">private var</span> products: <span class="ty">FetchedResults</span>&lt;<span class="ty">Product</span>&gt;
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="ty">View</span> {
+        <span class="ty">NavigationStack</span> {
+            <span class="ty">VStack</span> {
+                <span class="ty">TextField</span>(<span class="st">"Nom du produit"</span>, text: $name)
+                <span class="ty">TextField</span>(<span class="st">"Quantité"</span>, text: $quantity)
+                    .<span class="fn">keyboardType</span>(.numberPad)
+
+                <span class="ty">HStack</span> {
+                    <span class="ty">Spacer</span>()
+                    <span class="ty">Button</span>(<span class="st">"Ajouter"</span>) {
+                        <span class="fn">addProduct</span>()
+                    }
+                    <span class="cm">// ✅ Désactivé tant que les champs sont vides</span>
+                    .<span class="fn">disabled</span>(name.<span class="fn">isEmpty</span> || quantity.<span class="fn">isEmpty</span>)
+                    <span class="ty">Spacer</span>()
+                    <span class="ty">Button</span>(<span class="st">"Effacer"</span>) {
+                        name     = <span class="st">""</span>
+                        quantity = <span class="st">""</span>
+                    }
+                    <span class="ty">Spacer</span>()
+                }
+                .<span class="fn">padding</span>()
+
+                <span class="ty">List</span> {
+                    <span class="ty">ForEach</span>(products) { product <span class="kw">in</span>
+                        <span class="ty">HStack</span> {
+                            <span class="ty">Text</span>(product.name     ?? <span class="st">"Inconnu"</span>)
+                            <span class="ty">Spacer</span>()
+                            <span class="ty">Text</span>(product.quantity ?? <span class="st">"0"</span>)
+                        }
+                    }
+                    .<span class="fn">onDelete</span>(perform: deleteProducts)
+                }
+                .<span class="fn">listStyle</span>(.plain)
+            }
+            .<span class="fn">padding</span>()
+            .<span class="fn">textFieldStyle</span>(<span class="ty">RoundedBorderTextFieldStyle</span>())
+            .<span class="fn">navigationTitle</span>(<span class="st">"Inventaire"</span>)
+        }
+    }
+}</pre>
+    </div>
+
+    <div class="explain-grid">
+      <div class="eg-row">
+        <div class="eg-key">@FetchRequest(sortDescriptors: [])</div>
+        <div class="eg-val">Récupère <em>tous</em> les objets <code>Product</code> de la base. La liste se met à jour automatiquement dès qu'un produit est ajouté ou supprimé.</div>
+      </div>
+      <div class="eg-row">
+        <div class="eg-key">FetchedResults&lt;Product&gt;</div>
+        <div class="eg-val">Tableau réactif fourni par Core Data. SwiftUI re-dessine la vue à chaque changement.</div>
+      </div>
+      <div class="eg-row">
+        <div class="eg-key">.disabled(name.isEmpty || ...)</div>
+        <div class="eg-val">Empêche d'ajouter un produit vide. Bonne pratique à systématiser.</div>
+      </div>
+      <div class="eg-row">
+        <div class="eg-key">.onDelete</div>
+        <div class="eg-val">Permet de supprimer un produit en glissant vers la gauche dans la liste.</div>
+      </div>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════════════════ -->
+    <h2 id="fonctions"><span class="sec-num">06</span> Fonctions CRUD</h2>
+
+    <p>On ajoute ces fonctions dans une <strong>extension</strong> de <code>ContentView</code> pour garder le code bien organisé.</p>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+        <span class="filename">ContentView.swift (extension)</span>
+      </div>
+      <pre><span class="kw">extension</span> <span class="ty">ContentView</span> {
+
+    <span class="kw">private func</span> <span class="fn">addProduct</span>() {
+        <span class="fn">withAnimation</span> {
+            <span class="kw">let</span> newProduct       = <span class="ty">Product</span>(context: viewContext)
+            newProduct.name     = name
+            newProduct.quantity = quantity
+            <span class="fn">saveContext</span>()
+            <span class="cm new">// ✅ On vide les champs après l'ajout pour éviter les doublons accidentels</span>
+            name     = <span class="st new">""</span>
+            quantity = <span class="st new">""</span>
+        }
+    }
+
+    <span class="kw">private func</span> <span class="fn">deleteProducts</span>(offsets: <span class="ty">IndexSet</span>) {
+        <span class="fn">withAnimation</span> {
+            offsets.<span class="fn">map</span> { products[$0] }.<span class="fn">forEach</span>(viewContext.delete)
+            <span class="fn">saveContext</span>()
+        }
+    }
+
+    <span class="kw">private func</span> <span class="fn">saveContext</span>() {
+        <span class="kw">do</span> {
+            <span class="kw">try</span> viewContext.<span class="fn">save</span>()
+        } <span class="kw">catch</span> {
+            <span class="cm">// En production : afficher une alerte à l'utilisateur</span>
+            <span class="fn">fatalError</span>(<span class="st">"Erreur lors de la sauvegarde : \(error)"</span>)
+        }
+    }
+}</pre>
+    </div>
+
+    <div class="explain-grid">
+      <div class="eg-row">
+        <div class="eg-key">addProduct()</div>
+        <div class="eg-val">Crée un objet <code>Product</code>, assigne les valeurs, sauvegarde, puis vide les champs.</div>
+      </div>
+      <div class="eg-row">
+        <div class="eg-key">deleteProducts(offsets:)</div>
+        <div class="eg-val">Supprime les produits aux indices fournis par <code>.onDelete</code>, puis sauvegarde.</div>
+      </div>
+      <div class="eg-row">
+        <div class="eg-key">saveContext()</div>
+        <div class="eg-val">Appelle <code>viewContext.save()</code> pour persister les changements dans SQLite.</div>
+      </div>
+    </div>
+
+    <div class="callout warn">
+      <span class="callout-icon">⚠️</span>
+      <div><strong>fatalError en production ?</strong> Dans une vraie application, on remplacerait
+      <code>fatalError</code> par une alerte SwiftUI qui informe l'utilisateur. <code>fatalError</code>
+      fait planter l'app — c'est acceptable en développement/démo, jamais en production.</div>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════════════════ -->
+    <h2 id="ameliorations"><span class="sec-num">07</span> Améliorations possibles</h2>
+
+    <!-- ── Tri ─────────────────────────── -->
+    <h3 id="tri">Trier les produits par nom</h3>
+
+    <p>Pour afficher les produits en ordre alphabétique, on remplace le
+    <code>@FetchRequest</code> par une version avec tri.</p>
+
+    <div class="callout fix">
+      <span class="callout-icon">✅</span>
+      <div><strong>Bonne pratique :</strong> <code>SortDescriptor(\.name)</code> est
+      <em>vérifié à la compilation</em> — si le nom de l'attribut change, Xcode le signale
+      immédiatement. C'est plus sûr que l'ancien <code>NSSortDescriptor(key: "name", ...)</code>
+      qui utilise une chaîne de caractères non vérifiée.</div>
+    </div>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+        <span class="filename">ContentView.swift</span>
+      </div>
+      <pre><span class="cm">// ✅ SortDescriptor moderne — vérifié à la compilation (iOS 15+)</span>
+<span class="an">@FetchRequest</span>(sortDescriptors: [<span class="ty">SortDescriptor</span>(\.name)])
+<span class="kw">private var</span> products: <span class="ty">FetchedResults</span>&lt;<span class="ty">Product</span>&gt;</pre>
+    </div>
+
+    <!-- ── Recherche ───────────────────── -->
+    <h3 id="recherche">Rechercher un produit</h3>
+
+    <p>On crée une vue <code>ResultsView</code> qui filtre les produits selon le nom saisi.
+    Elle récupère son contexte <strong>depuis l'environnement</strong> — pas besoin de le passer en paramètre.</p>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+        <span class="filename">ResultsView.swift</span>
+      </div>
+      <pre><span class="kw">struct</span> <span class="ty">ResultsView</span>: <span class="ty">View</span> {
+
+    <span class="kw">var</span> name: <span class="ty">String</span>
+
+    <span class="cm">// ✅ Contexte récupéré depuis l'environnement — plus besoin de le passer en paramètre</span>
+    <span class="an">@Environment</span>(\.managedObjectContext) <span class="kw">private var</span> viewContext
+
+    <span class="an">@State</span> <span class="kw">private var</span> matches: [<span class="ty">Product</span>]?
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="ty">View</span> {
+        <span class="ty">List</span>(matches ?? []) { match <span class="kw">in</span>
+            <span class="ty">HStack</span> {
+                <span class="ty">Text</span>(match.name     ?? <span class="st">"Inconnu"</span>)
+                <span class="ty">Spacer</span>()
+                <span class="ty">Text</span>(match.quantity ?? <span class="st">"0"</span>)
+            }
+        }
+        .<span class="fn">navigationTitle</span>(<span class="st">"Résultats"</span>)
+        .<span class="fn">task</span> {
+            <span class="kw">let</span> fetchRequest: <span class="ty">NSFetchRequest</span>&lt;<span class="ty">Product</span>&gt; = <span class="ty">Product</span>.<span class="fn">fetchRequest</span>()
+            <span class="cm">// CONTAINS[cd] = insensible à la casse ET aux accents</span>
+            fetchRequest.predicate = <span class="ty">NSPredicate</span>(
+                format: <span class="st">"name CONTAINS[cd] %@"</span>, name
+            )
+            matches = <span class="kw">try</span>? viewContext.<span class="fn">fetch</span>(fetchRequest)
+        }
+    }
+}</pre>
+    </div>
+
+    <p>Dans <code>ContentView</code>, le bouton <strong>Chercher</strong> pointe vers cette vue. 
+    Il n'y a plus besoin de passer <code>viewContext</code> en paramètre :</p>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+        <span class="filename">ContentView.swift — boutons</span>
+      </div>
+      <pre><span class="ty">HStack</span> {
+    <span class="ty">Spacer</span>()
+    <span class="ty">Button</span>(<span class="st">"Ajouter"</span>) { <span class="fn">addProduct</span>() }
+        .<span class="fn">disabled</span>(name.<span class="fn">isEmpty</span> || quantity.<span class="fn">isEmpty</span>)
+    <span class="ty">Spacer</span>()
+    <span class="cm">// ✅ On ne passe plus viewContext en paramètre</span>
+    <span class="ty">NavigationLink</span>(destination: <span class="ty">ResultsView</span>(name: name)) {
+        <span class="ty">Text</span>(<span class="st">"Chercher"</span>)
+    }
+    <span class="ty">Spacer</span>()
+    <span class="ty">Button</span>(<span class="st">"Effacer"</span>) { name = <span class="st">""</span>; quantity = <span class="st">""</span> }
+    <span class="ty">Spacer</span>()
+}</pre>
+    </div>
+
+    <!-- ── Modification ────────────────── -->
+    <h3 id="modification">Vue de modification — EditProductView</h3>
+
+    <p>Cette vue permet à l'utilisateur de modifier un produit existant.
+    Elle utilise <code>@Environment</code> pour le contexte <strong>et</strong> pour le dismiss,
+    ce qui évite tout couplage inutile.</p>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+        <span class="filename">EditProductView.swift</span>
+      </div>
+      <pre><span class="kw">struct</span> <span class="ty">EditProductView</span>: <span class="ty">View</span> {
+
+    <span class="cm">// L'objet Product à modifier (observé pour réagir à ses changements)</span>
+    <span class="an">@ObservedObject</span> <span class="kw">var</span> product: <span class="ty">Product</span>
+
+    <span class="cm">// ✅ Contexte récupéré depuis l'environnement</span>
+    <span class="an">@Environment</span>(\.managedObjectContext) <span class="kw">private var</span> viewContext
+    <span class="cm">// ✅ Permet de fermer la vue automatiquement après la sauvegarde</span>
+    <span class="an">@Environment</span>(\.dismiss)             <span class="kw">private var</span> dismiss
+
+    <span class="kw">@State private var</span> name:     <span class="ty">String</span> = <span class="st">""</span>
+    <span class="kw">@State private var</span> quantity: <span class="ty">String</span> = <span class="st">""</span>
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="ty">View</span> {
+        <span class="ty">Form</span> {
+            <span class="ty">Section</span>(header: <span class="ty">Text</span>(<span class="st">"Informations du produit"</span>)) {
+                <span class="ty">TextField</span>(<span class="st">"Nom du produit"</span>, text: $name)
+                <span class="ty">TextField</span>(<span class="st">"Quantité"</span>,       text: $quantity)
+                    .<span class="fn">keyboardType</span>(.numberPad)
+            }
+
+            <span class="ty">Section</span> {
+                <span class="ty">Button</span>(<span class="st">"Enregistrer"</span>) {
+                    <span class="fn">saveChanges</span>()
+                }
+                .<span class="fn">buttonStyle</span>(.borderedProminent)
+                .<span class="fn">disabled</span>(name.<span class="fn">isEmpty</span> || quantity.<span class="fn">isEmpty</span>)
+            }
+        }
+        <span class="cm">// ✅ Le titre affiche dynamiquement le nom du produit en cours de modification</span>
+        .<span class="fn">navigationTitle</span>(product.name ?? <span class="st">"Modifier"</span>)
+        .<span class="fn">onAppear</span> { <span class="fn">loadData</span>() }
+    }
+
+    <span class="kw">private func</span> <span class="fn">loadData</span>() {
+        name     = product.name     ?? <span class="st">""</span>
+        quantity = product.quantity ?? <span class="st">""</span>
+    }
+
+    <span class="kw">private func</span> <span class="fn">saveChanges</span>() {
+        product.name     = name
+        product.quantity = quantity
+        <span class="kw">do</span> {
+            <span class="kw">try</span> viewContext.<span class="fn">save</span>()
+            <span class="fn">dismiss</span>() <span class="cm">// ✅ Retour automatique à la liste après sauvegarde</span>
+        } <span class="kw">catch</span> {
+            <span class="fn">print</span>(<span class="st">"Erreur : \(error.localizedDescription)"</span>)
+        }
+    }
+}</pre>
+    </div>
+
+    <div class="explain-grid">
+      <div class="eg-row">
+        <div class="eg-key">@ObservedObject var product</div>
+        <div class="eg-val">Observe l'objet Core Data en direct. Si une autre vue le modifie, celle-ci se met aussi à jour.</div>
+      </div>
+      <div class="eg-row">
+        <div class="eg-key">@Environment(\.dismiss)</div>
+        <div class="eg-val">Permet de fermer la vue programmatiquement après une action. Pratique après une sauvegarde réussie.</div>
+      </div>
+      <div class="eg-row">
+        <div class="eg-key">.onAppear { loadData() }</div>
+        <div class="eg-val">Pré-remplit les champs avec les données existantes du produit à l'ouverture de la vue.</div>
+      </div>
+    </div>
+
+    <!-- ── Navigation vers édition ──────── -->
+    <h3 id="navigation-edit">Navigation vers la vue de modification</h3>
+
+    <p>On remplace le simple <code>HStack</code> dans la liste par un <code>NavigationLink</code>
+    pour chaque produit. On utilise <code>NavigationStack</code> (pas <code>NavigationView</code>,
+    qui est déprécié depuis iOS 16).</p>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+        <span class="filename">ContentView.swift — liste cliquable</span>
+      </div>
+      <pre><span class="cm">// ✅ NavigationStack — remplace NavigationView (déprécié depuis iOS 16)</span>
+<span class="ty">NavigationStack</span> {
+    <span class="ty">List</span> {
+        <span class="ty">ForEach</span>(products) { product <span class="kw">in</span>
+            <span class="cm">// ✅ On ne passe plus viewContext, il vient de l'environnement</span>
+            <span class="ty">NavigationLink</span>(destination: <span class="ty">EditProductView</span>(product: product)) {
+                <span class="ty">HStack</span> {
+                    <span class="ty">Text</span>(product.name     ?? <span class="st">"Inconnu"</span>)
+                        .<span class="fn">font</span>(.headline)
+                    <span class="ty">Spacer</span>()
+                    <span class="ty">Text</span>(product.quantity ?? <span class="st">"0"</span>)
+                        .<span class="fn">foregroundColor</span>(.secondary)
+                }
+            }
+        }
+        .<span class="fn">onDelete</span>(perform: deleteProducts)
+    }
+    .<span class="fn">navigationTitle</span>(<span class="st">"Inventaire"</span>)
+}</pre>
+    </div>
+
+    <!-- ── Gestion erreurs ─────────────── -->
+    <h3 id="erreurs">Gestion des erreurs plus robuste</h3>
+
+    <p>En production, on remplace <code>fatalError</code> par une alerte SwiftUI :</p>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+        <span class="filename">ContentView.swift</span>
+      </div>
+      <pre><span class="an">@State</span> <span class="kw">private var</span> saveErrorMessage: <span class="ty">String</span>?
+<span class="an">@State</span> <span class="kw">private var</span> showSaveError = <span class="kw">false</span>
+
+<span class="kw">private func</span> <span class="fn">saveContext</span>() {
+    <span class="kw">do</span> {
+        <span class="kw">try</span> viewContext.<span class="fn">save</span>()
+    } <span class="kw">catch</span> {
+        saveErrorMessage = error.<span class="fn">localizedDescription</span>
+        showSaveError    = <span class="kw">true</span>
+    }
 }
-}
-</code></pre>
-        </li>
-      </ol>
-      <h3>Explications :</h3>
-      <ul>
-        <li style="margin-left: 30px;"> • NSPersistentContainer : représente l’ensemble de la pile Core Data.
-        </li>
-        <li style="margin-left: 30px;">• container.loadPersistentStores : initialise la base de données (SQLite
-          par défaut) et gère les
-          erreurs éventuelles.</li>
-      </ul>
 
-      <h2>Injecter le Managed Object Context dans SwiftUI</h2>
-      <p>Dans votre fichier CoreDataDemoApp.swift, on va utiliser le PersistenceController pour fournir le
-        viewContext aux vues SwiftUI.</p>
-      <pre><code class="language-swift">import SwiftUI
+<span class="cm">// Dans body, ajouter le modificateur :</span>
+.<span class="fn">alert</span>(<span class="st">"Erreur de sauvegarde"</span>, isPresented: $showSaveError) {
+    <span class="ty">Button</span>(<span class="st">"OK"</span>, role: .cancel) { }
+} message: {
+    <span class="ty">Text</span>(saveErrorMessage ?? <span class="st">"Erreur inconnue"</span>)
+}</pre>
+    </div>
 
-@main
-struct CoreDataDemoApp: App {
-let persistenceController = PersistenceController.shared
+  </main>
 
-var body: some Scene {
-  WindowGroup {
-      ContentView()
-          // On injecte le viewContext dans l’environnement
-          .environment(\.managedObjectContext, persistenceController.container.viewContext)
-  }
-}
-}
-</code></pre>
-      <p><strong>Avantage</strong> : Toutes les vues pourront accéder à @Environment(\.managedObjectContext) pour
-        créer, lire ou supprimer des objets.</p>
-
-      <h2>Mettre en place l’interface (ContentView.swift)</h2>
-      <pre><code class="language-swift">import SwiftUI
-import CoreData
-
-struct ContentView: View {
-// Champs de saisie pour le nom et la quantité
-@State private var name = ""
-@State private var quantity = ""
-
-// Récupération du contexte Core Data via l’environnement
-@Environment(\.managedObjectContext) private var viewContext
-
-// FetchRequest pour récupérer tous les Product
-@FetchRequest(
-  entity: Product.entity(),
-  sortDescriptors: [] // On pourra ajouter un tri plus tard
-)
-private var products: FetchedResults< Product >
-
-var body: some View {
-  NavigationStack {
-      VStack {
-          TextField("Nom du produit", text: $name)
-          TextField("Quantité", text: $quantity)
-              .keyboardType(.numberPad)
-
-          HStack {
-              Spacer()
-              Button("Add") {
-                  addProduct()
-              }
-              Spacer()
-              Button("Clear") {
-                  name = ""
-                  quantity = ""
-              }
-              Spacer()
-          }
-          .padding()
-
-          // Affichage de la liste des produits
-          List {
-              ForEach(products) { product in
-                  HStack {
-                      Text(product.name ?? "Inconnu")
-                      Spacer()
-                      Text(product.quantity ?? "0")
-                  }
-              }
-              .onDelete(perform: deleteProducts)
-          }
-          .listStyle(.plain)
-      }
-      .padding()
-      .textFieldStyle(RoundedBorderTextFieldStyle())
-      .navigationTitle("Inventaire")
-  }
-}
-}
-</code></pre>
-      <h3>Explications :</h3>
-      <ul>
-        <li style="margin-left: 30px;">• @FetchRequest : récupère tous les objets Product de la base, mis à jour
-          en temps réel.</li>
-        <li style="margin-left: 30px;">• Liste : affiche chaque Product.</li>
-        <li style="margin-left: 30px;">• onDelete : permet de supprimer un produit en glissant vers la gauche.
-        </li>
-      </ul>
-
-      <h3>Ajouter les fonctions Core Data (ajout/suppression)</h3>
-      <p>Toujours dans ContentView :</p>
-      <pre><code class="language-swift">extension ContentView {
-private func addProduct() {
-  withAnimation {
-      let newProduct = Product(context: viewContext)
-      newProduct.name = name
-      newProduct.quantity = quantity
-
-      saveContext()
-  }
-}
-
-private func deleteProducts(offsets: IndexSet) {
-  withAnimation {
-      offsets.map { products[$0] }.forEach(viewContext.delete)
-      saveContext()
-  }
-}
-
-private func saveContext() {
-  do {
-      try viewContext.save()
-  } catch {
-      // Arrêt brutal si erreur (fatalError)
-      // En production, on afficherait un message d’erreur plus propre
-      fatalError("Erreur lors de la sauvegarde : \(error)")
-  }
-}
-}
-</code></pre>
-      <h3>Explications :</h3>
-      <ul>
-        <li style="margin-left: 30px;"> • addProduct() : crée un objet Product, assigne name et quantity, puis
-          appelle saveContext().</li>
-        <li style="margin-left: 30px;"> • deleteProducts(offsets:) : supprime les produits sélectionnés dans la
-          liste, puis sauvegarde.</li>
-        <li style="margin-left: 30px;">• saveContext() : tente de sauvegarder les changements. En cas d’erreur,
-          on arrête l’application (vous pourriez faire autrement).</li>
-      </ul>
-
-      <h2>Améliorations possibles</h2>
-      <h3>Trier les produits</h3>
-      <p>Pour trier par ordre alphabétique, on peut ajouter un NSSortDescriptor :</p>
-      <pre><code class="language-swift">@FetchRequest(
-entity: Product.entity(),
-sortDescriptors: [NSSortDescriptor(key: "name", ascending: true)]
-)
-private var products: FetchedResults< Product >
-</code></pre>
-
-      <h3>Rechercher un produit</h3>
-      <p>On peut créer une vue de recherche (ResultsView) qui utilise un NSPredicate :</p>
-      <pre><code class="language-swift">struct ResultsView: View {
-var name: String
-var viewContext: NSManagedObjectContext
-
-@State var matches: [Product]?
-
-var body: some View {
-  VStack {
-      List {
-          ForEach(matches ?? []) { match in
-              HStack {
-                  Text(match.name ?? "Not found")
-                  Spacer()
-                  Text(match.quantity ?? "Not found")
-              }
-          }
-      }
-      .navigationTitle("Results")
-  }
-  .task {
-      let fetchRequest: NSFetchRequest<Product> = Product.fetchRequest()
-      
-      fetchRequest.entity = Product.entity()
-      // CONTAINS[cd] = insensible à la casse et aux accents
-      fetchRequest.predicate = NSPredicate(format: "name CONTAINS[cd] %@", name)
-      matches = try? viewContext.fetch(fetchRequest)
-  }
-}
-}
-</code></pre>
-      <p>Cela permet d’afficher uniquement les produits selon le nom.</p>
-
-      <h3>ContentView</h3>
-      <p>On peut ajouter des boutons pour accéder à la vue de recherche :</p>
-      <pre><code class="language-swift">...
-
-HStack {
-Spacer()
-
-Button("Add") {
-  addProduct()
-}
-
-Spacer()
-
-NavigationLink(destination: ResultsView(name: name, viewContext: viewContext)) {
-  Text("Find")
-}
-
-Spacer()
-
-Button("Clear") {
-  name = ""
-  quantity = ""
-}
-Spacer()
-}
-
-...
-</code></pre>
-
-      <h3>Création de la vue de modification (EditProductView)</h3>
-      <p>Lorsqu’un utilisateur sélectionne un produit dans la liste, il doit pouvoir modifier ses informations
-        (nom et quantité) et sauvegarder ces modifications. Nous allons créer une vue EditProductView qui
-        affichera un formulaire pré-rempli avec les données existantes du produit.</p>
-
-      <pre><code class="language-swift">struct EditProductView: View {
-@ObservedObject var product: Product
-var viewContext: NSManagedObjectContext
-
-@State private var name: String = ""
-@State private var quantity: String = ""
-@State private var showConfirmation = false
-
-var body: some View {
-  Form {
-      Section(header: Text("Informations du produit")) {
-          TextField("Nom du produit", text: $name)
-          TextField("Quantité", text: $quantity)
-              .keyboardType(.numberPad)
-      }
-
-      Section {
-          Button("Enregistrer") {
-              saveChanges()
-          }
-          .buttonStyle(.borderedProminent)
-          .disabled(name.isEmpty || quantity.isEmpty) // Empêche l'enregistrement si les champs sont vides
-      }
-  }
-  .navigationTitle("Modifier Produit")
-  .onAppear {
-      loadData()
-  }
-  .alert("Modification enregistrée", isPresented: $showConfirmation) {
-      Button("OK", role: .cancel) { }
-  }
-}
-
-/// Charge les données actuelles du produit dans les champs de saisie.
-private func loadData() {
-  name = product.name ?? ""
-  quantity = product.quantity ?? ""
-}
-
-/// Sauvegarde les modifications dans Core Data.
-private func saveChanges() {
-  product.name = name
-  product.quantity = quantity
-
-  do {
-      try viewContext.save()
-      showConfirmation = true
-  } catch {
-      print("Erreur lors de la sauvegarde : \(error.localizedDescription)")
-  }
-}
-}
-</code></pre>
-      <h4>Explication :</h4>
-      <ul>
-        <li style="margin-left: 30px;">• @ObservedObject var product : Permet d’observer les modifications sur
-          l’objet Product provenant de Core Data.</li>
-        <li style="margin-left: 30px;">• var viewContext: NSManagedObjectContext : Nécessaire pour sauvegarder
-          les modifications dans Core Data.</li>
-        <li style="margin-left: 30px;">• @State private var name et quantity : Variables locales pour stocker
-          temporairement les valeurs du produit.</li>
-        <li style="margin-left: 30px;">• Form : Structure SwiftUI permettant d’afficher un formulaire.</li>
-        <li style="margin-left: 30px;">• TextField : Champs de saisie permettant de modifier le nom et la
-          quantité du produit.</li>
-        <li style="margin-left: 30px;">• Button(“Enregistrer”) : Sauvegarde les modifications en mettant à jour
-          l’objet product puis en enregistrant dans Core Data.</li>
-        <li style="margin-left: 30px;">• .onAppear : Remplit les champs de texte avec les données actuelles du
-          produit lors de l’affichage de la vue.</li>
-        <li style="margin-left: 30px;">• .alert : Affiche un message de confirmation après l’enregistrement des
-          modifications.</li>
-      </ul>
-
-      <h2>Navigation vers la vue de modification</h2>
-      <p>Nous devons maintenant permettre à l’utilisateur d’accéder à EditProductView depuis la liste des produits
-        affichée dans ContentView. Pour cela, nous allons utiliser NavigationLink.</p>
-      <pre><code class="language-swift">...
-
-NavigationView {
-List {
-  ForEach(products) { product in
-      NavigationLink(destination: EditProductView(product: product, viewContext: viewContext)) {
-          HStack {
-              Text(product.name ?? "Inconnu")
-                  .font(.headline)
-
-              Spacer()
-
-              Text(product.quantity ?? "0")
-                  .foregroundColor(.secondary)
-          }
-      }
-  }
-  .onDelete(perform: deleteProducts)
-}
-.navigationTitle("Produits")
-}
-
-...
-</code></pre>
-      <h4>Explication :</h4>
-      <ul>
-        <li style="margin-left: 30px;">• List : Affiche une liste des produits enregistrés.</li>
-        <li style="margin-left: 30px;">• ForEach(products) : Itère sur chaque produit stocké dans Core Data.</li>
-        <li style="margin-left: 30px;">• NavigationLink(destination: EditProductView(…)) : Permet d’ouvrir
-          EditProductView en passant le produit sélectionné et le contexte Core Data.</li>
-      </ul>
-
-      <h3>Gérer les erreurs plus finement</h3>
-      <p>Au lieu d’utiliser fatalError, on peut afficher une alerte, ou logger l’erreur dans la console, etc.</p>
-
-    </section>
-  </div>
-  <footer class="footer">
-    <p>Développé par <a href="https://github.com/mathrob" style="color: white; text-decoration: underline;">Mathieu
-        Robson</a> &copy; <span id="current-year"></span></p>
-    <script>
-      document.getElementById('current-year').textContent = new Date().getFullYear();
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
-    <script>
-      hljs.highlightAll();
-    </script>
+  <!-- ── Footer ───────────────────────────────────────────── -->
+  <footer class="page-footer">
+    Développé par <a href="https://github.com/mathrob">Mathieu Robson</a> ·
+    IFM025921 — Développement d'applications mobiles pour iOS &nbsp;©
   </footer>
-  <div class="back-to-top" id="back-to-top">↑</div>
-  <script>
-    const backToTopButton = document.getElementById('back-to-top');
 
-    window.addEventListener('scroll', () => {
-      if (window.scrollY > 300) {
-        backToTopButton.style.display = 'block';
-      } else {
-        backToTopButton.style.display = 'none';
+</div>
+
+<!-- ── TOC toggle mobile ───────────────────────────────────── -->
+<script>
+  document.querySelector('.toc-toggle')?.addEventListener('click', function() {
+    const toc = document.querySelector('.toc');
+    const open = toc.classList.toggle('open');
+    this.setAttribute('aria-expanded', open);
+    this.textContent = open ? '✕' : '☰';
+  });
+  document.querySelectorAll('.toc a').forEach(a => {
+    a.addEventListener('click', () => {
+      document.querySelector('.toc')?.classList.remove('open');
+      const btn = document.querySelector('.toc-toggle');
+      if (btn) { btn.setAttribute('aria-expanded', 'false'); btn.textContent = '☰'; }
+    });
+  });
+</script>
+
+<!-- ── TOC highlight on scroll ──────────────────────────────── -->
+<script>
+  const tocLinks = document.querySelectorAll('.toc a');
+  const sections = [...tocLinks]
+    .map(a => document.querySelector(a.getAttribute('href')))
+    .filter(Boolean);
+
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        tocLinks.forEach(a => a.classList.remove('active'));
+        const link = document.querySelector(`.toc a[href="#${e.target.id}"]`);
+        if (link) link.classList.add('active');
       }
     });
+  }, { rootMargin: '-20% 0px -70% 0px' });
 
-    backToTopButton.addEventListener('click', () => {
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
-    });
-  </script>
+  sections.forEach(s => obs.observe(s));
+</script>
 </body>
-
 </html>
