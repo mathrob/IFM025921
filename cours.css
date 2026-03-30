@@ -374,8 +374,11 @@ code {
 .stack-row { display: flex; align-items: center; gap: 16px; width: 100%; justify-content: center; }
 .stack-box {
   border-radius: 10px; padding: 12px 20px; text-align: center;
-  font-weight: 700; font-size: 14px; min-width: 200px;
+  font-weight: 700; font-size: 14px; min-width: 200px; max-width: 260px;
   border: 2px solid transparent; transition: transform .2s;
+}
+.stack-row:has(.stack-arrow-h) .stack-box {
+  flex: 1; min-width: 0;
 }
 .stack-box:hover { transform: scale(1.03); }
 .stack-box.app { background: #eef5fd; border-color: var(--blue);   color: var(--blue-dark); }
@@ -410,19 +413,22 @@ code {
   padding: 0 8px; position: relative;
 }
 .lc-step:not(:last-child)::after {
-  content: "\2192"; position: absolute; right: -8px; top: 22px;
+  content: "\2192"; position: absolute; right: -8px; top: 14px;
   font-size: 20px; color: var(--accent); font-weight: 700;
 }
-.lc-icon {
-  width: 48px; height: 48px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 22px; margin: 0 auto 10px;
+.lc-label {
+  font-size: 14px; font-weight: 700; margin-bottom: 4px;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
 }
-.lc-step:nth-child(1) .lc-icon { background: var(--blue-bg); }
-.lc-step:nth-child(2) .lc-icon { background: var(--purple-bg); }
-.lc-step:nth-child(3) .lc-icon { background: var(--yellow-bg); }
-.lc-step:nth-child(4) .lc-icon { background: var(--green-bg); }
-.lc-label { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+.lc-label::before {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px; border-radius: 50%;
+  font-size: 13px; font-weight: 800; color: #fff; flex-shrink: 0;
+}
+.lc-step:nth-child(1) .lc-label::before { content: "1"; background: var(--blue); }
+.lc-step:nth-child(2) .lc-label::before { content: "2"; background: var(--purple); }
+.lc-step:nth-child(3) .lc-label::before { content: "3"; background: var(--accent); }
+.lc-step:nth-child(4) .lc-label::before { content: "4"; background: var(--green); }
 .lc-sub   { font-size: 12px; color: var(--text-soft); line-height: 1.4; }
 
 /* ─── 17. Table attributs (notes) ─────────────────────────────── */
@@ -502,6 +508,7 @@ code {
 
   .stack-row { flex-wrap: wrap; }
   .stack-box { min-width: 160px; }
+  .stack-row:has(.stack-arrow-h) .stack-box { min-width: 120px; }
   .lab-cta { flex-direction: column; text-align: center; }
 }
 
@@ -558,5 +565,4 @@ code {
   .lab-cta .lab-arrow { font-size: 24px; }
 
   .lifecycle { padding: 16px; }
-  .lc-icon { width: 40px; height: 40px; font-size: 18px; }
 }
