@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IFM025921</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" />
+  <link rel="stylesheet" href="../style.css" />
+</head>
+
+<body>
+  <header>
+    <h1 style="color: white">Module 12 - Exercice</h1>
+  </header>
+  <div class="container">
+    <a href="../index.html" class="back-link">← Retour au module principal</a>
+
+    <section id="module-12" class="module-section">
+      <h1>Les Musées nationaux d'Ottawa</h1>
+
+      <h2>Objectif</h2>
+      <p>
+        Créer une application iOS interactive qui affiche une carte des musées nationaux d’Ottawa, permettant aux
+        utilisateurs de : </p>
+
+      <ul>
+        <li style="margin-left: 30px;"> • Visualiser les emplacements des musées sur une carte.</li>
+        <li style="margin-left: 30px;"> • Sélectionner un musée pour afficher des informations détaillées.</li>
+        <li style="margin-left: 30px;"> • Consulter le site web officiel du musée sélectionné.</li>
+        <li style="margin-left: 30px;"> • Afficher l’itinéraire depuis la position actuelle de l’utilisateur jusqu’au
+          musée sélectionné.</li>
+      </ul>
+
+      <h2>Ressources fournies</h2>
+      <p>Les ressources suivantes sont disponibles pour faciliter le développement :</p>
+      <ul>
+        <li><strong>Fichier des musées</strong> : Contient les informations détaillées sur chaque musée, y compris le
+          nom, les coordonnées géographiques et l’URL du site web.</li>
+        <li><strong>Images</strong> : Ensemble d’icônes et d’images pour l’interface utilisateur.</li>
+      </ul>
+
+      <a href="./download/module12/Ressources.zip" class="download-link"
+        style="font-size: x-large; text-decoration: underline;" download>
+        Vous pouvez télécharger ces ressources ici
+      </a>
+
+      <h2>Fonctionnalités requises</h2>
+
+      <h3>Affichage de la carte</h3>
+      <ul>
+        <li>• Intégrer une carte interactive centrée sur la ville d’Ottawa.</li>
+        <li>• Afficher la position actuelle de l’utilisateur sur la carte.</li>
+        <li>• Placer des marqueurs pour chaque musée en utilisant les coordonnées fournies dans le fichier JSON.</li>
+      </ul>
+      <img src="../imgs/musees_home.png" alt="Diagramme de la Stack Core Data"
+        style="width: 100%; max-width: 300px; margin: 20px auto; display: block;">
+
+      <h3>Sélection d’un musée</h3>
+      <ul>
+        <li>• Permettre à l’utilisateur de toucher un marqueur pour sélectionner un musée.</li>
+        <li>• Sélectionné et proposer deux options :
+          <ul>
+            <li style="margin-left: 30px;">• Afficher plus d’informations.</li>
+            <li style="margin-left: 30px;">• Visiter le site web du musée.</li>
+          </ul>
+        </li>
+      </ul>
+      <img src="../imgs/musees_selected.png" alt="Diagramme de la Stack Core Data"
+        style="width: 100%; max-width: 300px; margin: 20px auto; display: block;">
+
+      <h3>Navigation vers le site web du musée <img src="../imgs/web_icon.png" alt="Diagramme de la Stack Core Data"
+          style="width: 10%; max-width: 30px; vertical-align: middle;"> </h3>
+      <ul>
+        <li>• Intégrer une WebView pour afficher le site web officiel du musée sélectionné.
+        </li>
+        <li>• Assurer une navigation fluide entre la vue principale et la WebView.</li>
+      </ul>
+
+
+      <p>Faites une recherche sur l’utilisation de <strong>WebView</strong> et l’importation de <strong>WebKit</strong>
+        dans votre projet.</p>
+      <img src="../imgs/musees_web.png" alt="Diagramme de la Stack Core Data"
+        style="width: 100%; max-width: 300px; margin: 20px auto; display: block;">
+
+      <h3>Affichage des informations détaillées <img src="../imgs/info_icon.png" alt="Diagramme de la Stack Core Data"
+          style="width: 10%; max-width: 30px; vertical-align: middle;"></h3>
+      <p>Créer une nouvelle vue affichant :</p>
+      <ul>
+        <li>• Une image représentative du musée.</li>
+        <li>• Le nom et une description du musée.</li>
+        <li>• L’itinéraire textuel depuis la position actuelle de l’utilisateur jusqu’au musée.</li>
+      </ul>
+
+      <div style="display: flex; justify-content: center; gap: 40px; flex-wrap: wrap;">
+        <img src="../imgs/musees_info1.png" alt="Diagramme de la Stack Core Data"
+          style="width: 100%; max-width: 300px; display: block;">
+        <img src="../imgs/musees_info2.png" alt="Diagramme de la Stack Core Data"
+          style="width: 100%; max-width: 300px; display: block;">
+      </div>
+
+      <h2>Directives techniques</h2>
+      <ul>
+        <li> • Utilisation de MapKit : Pour intégrer et gérer la carte interactive.</li>
+        <li> • Gestion de la localisation : Demander l’autorisation de l’utilisateur pour accéder à sa position actuelle
+          et l’afficher sur la carte.</li>
+        <li> • Intégration de WebView : Importer le framework WebKit et utiliser WKWebView pour afficher les sites web
+          des musées.</li>
+      </ul>
+
+      <br />
+    </section>
+  </div>
+  <footer class="footer">
+    <p>Développé par <a href="https://github.com/mathrob" style="color: white; text-decoration: underline;">Mathieu
+        Robson</a> &copy; <span id="current-year"></span></p>
+    <script>
+      document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script>
+      hljs.highlightAll();
+    </script>
+  </footer>
+  <div class="back-to-top" id="back-to-top">↑</div>
+  <script>
+    const backToTopButton = document.getElementById('back-to-top');
+
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 300) {
+        backToTopButton.style.display = 'block';
+      } else {
+        backToTopButton.style.display = 'none';
+      }
+    });
+
+    backToTopButton.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+  </script>
+</body>
+
+</html>
