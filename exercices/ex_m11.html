@@ -1,146 +1,614 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>IFM025921</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" />
-  <link rel="stylesheet" href="../style.css" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Module 11 – Exercice SwiftData</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../cours.css">
+<style>
+  :root {
+    --accent:      #0e7c6e;
+    --accent-dark: #065248;
+    --accent-bg:   #e6f7f5;
+  }
+  .back-btn:hover { background: #c9ede9; }
+</style>
 </head>
-
 <body>
-  <header>
-    <h1 style="color: white">Module 11 - Exercice</h1>
+<div class="page-wrap">
+
+  <header class="top-bar">
+    <a href="../index.html" class="back-btn">← Accueil</a>
+    <span class="page-badge">IFM025921 · Module 11 · Laboratoire SwiftData</span>
+    <span class="ios-badge">iOS 17+</span>
+    <button class="toc-toggle" aria-label="Menu" aria-expanded="false"></button>
   </header>
-  <div class="container">
-    <a href="../index.html" class="back-link">← Retour au module principal</a>
 
-    <section id="module-11" class="module-section">
-      <h1>Les Musées nationaux d'Ottawa</h1>
+  <nav class="toc" aria-label="Table des matières">
+    <p class="toc-title">Sur cette page</p>
+    <ul>
+      <li><a href="#creer-projet">1. Créer le projet</a></li>
+      <li><a href="#modeles">2. Les modèles de données</a>
+        <ul>
+          <li><a href="#visitor">Visitor.swift</a></li>
+          <li><a href="#logentry">LogEntry.swift</a></li>
+        </ul>
+      </li>
+      <li><a href="#container">3. Configurer le ModelContainer</a></li>
+      <li><a href="#listview">4. VisitorListView</a></li>
+      <li><a href="#relationship">5. Ajouter la relation</a></li>
+      <li><a href="#detailview">6. VisitorDetailView</a></li>
+      <li><a href="#contentview">7. ContentView</a></li>
+      <li><a href="#recherche">8. Recherche avec #Predicate</a>
+        <ul>
+          <li><a href="#step-contentview">ContentView</a></li>
+          <li><a href="#step-listview">VisitorListView</a></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
 
-      <h2>Objectif</h2>
-      <p>
-        Créer une application iOS interactive qui affiche une carte des musées nationaux d’Ottawa, permettant aux
-        utilisateurs de : </p>
+  <main class="content">
 
-      <ul>
-        <li style="margin-left: 30px;"> • Visualiser les emplacements des musées sur une carte.</li>
-        <li style="margin-left: 30px;"> • Sélectionner un musée pour afficher des informations détaillées.</li>
-        <li style="margin-left: 30px;"> • Consulter le site web officiel du musée sélectionné.</li>
-        <li style="margin-left: 30px;"> • Afficher l’itinéraire depuis la position actuelle de l’utilisateur jusqu’au
-          musée sélectionné.</li>
-      </ul>
+    <h1>SwiftUI &amp; SwiftData</h1>
+    <p class="subtitle">Module 11 — Laboratoire pratique · Journal de visites</p>
 
-      <h2>Ressources fournies</h2>
-      <p>Les ressources suivantes sont disponibles pour faciliter le développement :</p>
-      <ul>
-        <li><strong>Fichier des musées</strong> : Contient les informations détaillées sur chaque musée, y compris le
-          nom, les coordonnées géographiques et l’URL du site web.</li>
-        <li><strong>Images</strong> : Ensemble d’icônes et d’images pour l’interface utilisateur.</li>
-      </ul>
+    <div class="callout new">
+      <span class="callout-icon">*</span>
+      <div><strong>Objectif :</strong> Construire une application de journal de visites — un registre
+      de visiteurs avec leur historique. L'exercice couvre les modèles SwiftData, les relations entre
+      entités, la navigation SwiftUI et la recherche avec <code>#Predicate</code>.</div>
+    </div>
 
-      <a href="./download/module11/Ressources.zip" class="download-link"
-        style="font-size: x-large; text-decoration: underline;" download>
-        Vous pouvez télécharger ces ressources ici
-      </a>
+    <p>Voici les fichiers que vous allez créer :</p>
 
-      <h2>Fonctionnalités requises</h2>
+    <div class="file-tree">
+      <div class="folder">SwiftDataDemo/</div>
+      <div class="file">SwiftDataDemoApp.swift</div>
+      <div class="file">ContentView.swift</div>
+      <div class="file new-file">Visitor.swift</div>
+      <div class="file new-file">LogEntry.swift</div>
+      <div class="file new-file">VisitorListView.swift</div>
+      <div class="file new-file">VisitorDetailView.swift</div>
+    </div>
 
-      <h3>Affichage de la carte</h3>
-      <ul>
-        <li>• Intégrer une carte interactive centrée sur la ville d’Ottawa.</li>
-        <li>• Afficher la position actuelle de l’utilisateur sur la carte.</li>
-        <li>• Placer des marqueurs pour chaque musée en utilisant les coordonnées fournies dans le fichier JSON.</li>
-      </ul>
-      <img src="../imgs/musees_home.png" alt="Diagramme de la Stack Core Data"
-        style="width: 100%; max-width: 300px; margin: 20px auto; display: block;">
+    <!-- ══ 01 ══════════════════════════════ -->
+    <h2 id="creer-projet"><span class="sec-num">01</span> Créer le projet</h2>
 
-      <h3>Sélection d’un musée</h3>
-      <ul>
-        <li>• Permettre à l’utilisateur de toucher un marqueur pour sélectionner un musée.</li>
-        <li>• Sélectionné et proposer deux options :
-          <ul>
-            <li style="margin-left: 30px;">• Afficher plus d’informations.</li>
-            <li style="margin-left: 30px;">• Visiter le site web du musée.</li>
-          </ul>
-        </li>
-      </ul>
-      <img src="../imgs/musees_selected.png" alt="Diagramme de la Stack Core Data"
-        style="width: 100%; max-width: 300px; margin: 20px auto; display: block;">
+    <ol class="steps">
+      <li>Lancez Xcode et cliquez sur <strong>Create a new Xcode project</strong>.</li>
+      <li>Sélectionnez <strong>iOS</strong> puis <strong>App</strong>.</li>
+      <li>Nommez le projet <strong>SwiftDataDemo</strong>.</li>
+      <li>Dans <em>Storage</em>, laissez sur <strong>None</strong> — on configure tout manuellement.</li>
+      <li>Cliquez sur <strong>Finish</strong>.</li>
+    </ol>
 
-      <h3>Navigation vers le site web du musée <img src="../imgs/web_icon.png" alt="Diagramme de la Stack Core Data"
-          style="width: 10%; max-width: 30px; vertical-align: middle;"> </h3>
-      <ul>
-        <li>• Intégrer une WebView pour afficher le site web officiel du musée sélectionné.
-        </li>
-        <li>• Assurer une navigation fluide entre la vue principale et la WebView.</li>
-      </ul>
+    <div class="callout info">
+      <span class="callout-icon">i</span>
+      <div><strong>Pas de fichier .xcdatamodeld :</strong> Contrairement à Core Data, SwiftData ne
+      nécessite aucun fichier de modèle visuel. Tout se définit directement dans le code Swift avec
+      la macro <code>@Model</code>.</div>
+    </div>
 
+    <!-- ══ 02 ══════════════════════════════ -->
+    <h2 id="modeles"><span class="sec-num">02</span> Les modèles de données</h2>
 
-      <p>Faites une recherche sur l’utilisation de <strong>WebView</strong> et l’importation de <strong>WebKit</strong>
-        dans votre projet.</p>
-      <img src="../imgs/musees_web.png" alt="Diagramme de la Stack Core Data"
-        style="width: 100%; max-width: 300px; margin: 20px auto; display: block;">
+    <p>L'application gère deux entités :</p>
 
-      <h3>Affichage des informations détaillées <img src="../imgs/info_icon.png" alt="Diagramme de la Stack Core Data"
-          style="width: 10%; max-width: 30px; vertical-align: middle;"></h3>
-      <p>Créer une nouvelle vue affichant :</p>
-      <ul>
-        <li>• Une image représentative du musée.</li>
-        <li>• Le nom et une description du musée.</li>
-        <li>• L’itinéraire textuel depuis la position actuelle de l’utilisateur jusqu’au musée.</li>
-      </ul>
+    <div class="explain-grid">
+      <div class="eg-key">Visitor</div>
+      <div class="eg-val">Représente un visiteur — prénom et nom de famille.</div>
+      <div class="eg-key">LogEntry</div>
+      <div class="eg-val">Représente une visite — la date et l'heure. Un visiteur peut avoir plusieurs entrées de log (relation one-to-many).</div>
+    </div>
 
-      <div style="display: flex; justify-content: center; gap: 40px; flex-wrap: wrap;">
-        <img src="../imgs/musees_info1.png" alt="Diagramme de la Stack Core Data"
-          style="width: 100%; max-width: 300px; display: block;">
-        <img src="../imgs/musees_info2.png" alt="Diagramme de la Stack Core Data"
-          style="width: 100%; max-width: 300px; display: block;">
+    <h3 id="visitor">Visitor.swift</h3>
+
+    <ol class="steps">
+      <li>Appuyez sur <strong>Cmd+N</strong>, choisissez <strong>Swift File</strong>.</li>
+      <li>Nommez-le <strong>Visitor.swift</strong> et cliquez sur <strong>Create</strong>.</li>
+      <li>Remplacez le contenu par le code suivant :</li>
+    </ol>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+        <span class="filename">Visitor.swift</span>
       </div>
+      <pre><span class="kw">import</span> Foundation
+<span class="kw">import</span> SwiftData
 
-      <h2>Directives techniques</h2>
-      <ul>
-        <li> • Utilisation de MapKit : Pour intégrer et gérer la carte interactive.</li>
-        <li> • Gestion de la localisation : Demander l’autorisation de l’utilisateur pour accéder à sa position actuelle
-          et l’afficher sur la carte.</li>
-        <li> • Intégration de WebView : Importer le framework WebKit et utiliser WKWebView pour afficher les sites web
-          des musées.</li>
-      </ul>
+<span class="an">@Model</span>
+<span class="kw">final class</span> <span class="ty">Visitor</span> {
+    <span class="kw">var</span> firstname: <span class="ty">String</span>
+    <span class="kw">var</span> lastname:  <span class="ty">String</span>
 
-      <br />
-    </section>
-  </div>
-  <footer class="footer">
-    <p>Développé par <a href="https://github.com/mathrob" style="color: white; text-decoration: underline;">Mathieu
-        Robson</a> &copy; <span id="current-year"></span></p>
-    <script>
-      document.getElementById('current-year').textContent = new Date().getFullYear();
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
-    <script>
-      hljs.highlightAll();
-    </script>
+    <span class="kw">init</span>(firstname: <span class="ty">String</span>, lastname: <span class="ty">String</span>) {
+        self.firstname = firstname
+        self.lastname  = lastname
+    }
+}</pre>
+    </div>
+
+    <div class="explain-grid">
+      <div class="eg-key">@Model</div>
+      <div class="eg-val">Transforme la classe en modèle SwiftData persistant. Remplace entièrement le fichier <code>.xcdatamodeld</code> de Core Data.</div>
+      <div class="eg-key">final class</div>
+      <div class="eg-val">
+        SwiftData requiert des <strong>classes</strong> (pas des structs) car les objets doivent être suivis par référence — SwiftData a besoin de détecter les mutations sur le même objet partagé en mémoire.<br><br>
+        Le mot-clé <code>final</code> interdit l'héritage : aucune autre classe ne peut étendre <code>Visitor</code>. Cela permet au compilateur d'optimiser les appels de méthodes (dispatch statique plutôt que dynamique) et rend le code plus prévisible. En pratique, la grande majorité des modèles SwiftData n'ont pas besoin d'être hérités — <code>final</code> est donc presque toujours la bonne option.
+      </div>
+    </div>
+
+    <h3 id="logentry">LogEntry.swift</h3>
+
+    <ol class="steps">
+      <li>Créez un second fichier Swift nommé <strong>LogEntry.swift</strong>.</li>
+      <li>Ajoutez le code suivant :</li>
+    </ol>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+        <span class="filename">LogEntry.swift</span>
+      </div>
+      <pre><span class="kw">import</span> Foundation
+<span class="kw">import</span> SwiftData
+
+<span class="an">@Model</span>
+<span class="kw">final class</span> <span class="ty">LogEntry</span> {
+    <span class="kw">var</span> date: <span class="ty">Date</span>
+
+    <span class="kw">init</span>(date: <span class="ty">Date</span>) {
+        self.date = date
+    }
+}</pre>
+    </div>
+
+    <!-- ══ 03 ══════════════════════════════ -->
+    <h2 id="container"><span class="sec-num">03</span> Configurer le ModelContainer</h2>
+
+    <p>Le <code>ModelContainer</code> initialise la base de données SwiftData. On le déclare
+    une seule fois dans le point d'entrée de l'application avec le modificateur
+    <code>.modelContainer(for:)</code>.</p>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+        <span class="filename">SwiftDataDemoApp.swift</span>
+      </div>
+      <pre><span class="kw">import</span> SwiftUI
+<span class="kw">import</span> SwiftData
+
+<span class="an">@main</span>
+<span class="kw">struct</span> <span class="ty">SwiftDataDemoApp</span>: <span class="ty">App</span> {
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="ty">Scene</span> {
+        <span class="ty">WindowGroup</span> {
+            <span class="ty">ContentView</span>()
+        }
+        <span class="cm">// Une seule ligne configure toute la persistance</span>
+        .<span class="fn">modelContainer</span>(<span class="kw">for</span>: <span class="ty">Visitor</span>.self)
+    }
+}</pre>
+    </div>
+
+    <div class="callout tip">
+      <span class="callout-icon">+</span>
+      <div><strong>Un seul modèle suffit :</strong> On passe uniquement <code>Visitor.self</code>.
+      SwiftData détecte automatiquement <code>LogEntry</code> via la relation <code>@Relationship</code>
+      que vous définirez plus loin — pas besoin de le lister explicitement.</div>
+    </div>
+
+    <!-- ══ 04 ══════════════════════════════ -->
+    <h2 id="listview"><span class="sec-num">04</span> VisitorListView — Liste des visiteurs</h2>
+
+    <p>Cette vue affiche la liste des visiteurs. Elle utilise <code>@Query</code> pour lire les données
+    en temps réel et <code>@Environment(\.modelContext)</code> pour les suppressions.</p>
+
+    <ol class="steps">
+      <li>Créez un nouveau fichier SwiftUI View : <strong>Cmd+N → SwiftUI View</strong>.</li>
+      <li>Nommez-le <strong>VisitorListView.swift</strong>.</li>
+      <li>Remplacez le contenu par le code suivant :</li>
+    </ol>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+        <span class="filename">VisitorListView.swift</span>
+      </div>
+      <pre><span class="kw">import</span> SwiftUI
+<span class="kw">import</span> SwiftData
+
+<span class="kw">struct</span> <span class="ty">VisitorListView</span>: <span class="ty">View</span> {
+
+    <span class="an">@Environment</span>(\.modelContext) <span class="kw">private var</span> context
+    <span class="an">@Query</span> <span class="kw">var</span> visitors: [<span class="ty">Visitor</span>]
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="ty">View</span> {
+        <span class="ty">List</span> {
+            <span class="ty">ForEach</span>(visitors) { visitor <span class="kw">in</span>
+                <span class="ty">NavigationLink</span>(value: visitor) {
+                    <span class="kw">if</span> visitor.lastname.<span class="fn">isEmpty</span> {
+                        <span class="ty">Text</span>(<span class="st">"Modifier le visiteur"</span>)
+                            .<span class="fn">foregroundStyle</span>(.secondary)
+                    } <span class="kw">else</span> {
+                        <span class="ty">Text</span>(<span class="st">"\(visitor.lastname), \(visitor.firstname)"</span>)
+                    }
+                }
+            }
+            .<span class="fn">onDelete</span>(perform: deleteVisitor)
+        }
+    }
+}
+
+<span class="kw">extension</span> <span class="ty">VisitorListView</span> {
+    <span class="kw">private func</span> <span class="fn">deleteVisitor</span>(_ offsets: <span class="ty">IndexSet</span>) {
+        <span class="kw">for</span> index <span class="kw">in</span> offsets {
+            context.<span class="fn">delete</span>(visitors[index])
+        }
+    }
+}</pre>
+    </div>
+
+    <div class="explain-grid">
+      <div class="eg-key">@Query var visitors</div>
+      <div class="eg-val">Lit tous les objets <code>Visitor</code> depuis la base. La vue se redessine automatiquement à chaque ajout ou suppression.</div>
+      <div class="eg-key">NavigationLink(value: visitor)</div>
+      <div class="eg-val">Crée un lien de navigation en passant l'objet. La vue de destination est définie dans <code>ContentView</code> via <code>.navigationDestination</code>.</div>
+      <div class="eg-key">deleteVisitor(_:)</div>
+      <div class="eg-val">Supprime les visiteurs du contexte. L'autosave de SwiftData persiste les changements automatiquement — pas besoin d'appeler <code>context.save()</code>.</div>
+    </div>
+
+    <div class="callout warn">
+      <span class="callout-icon">!</span>
+      <div><strong>Autosave :</strong> SwiftData active l'autosave par défaut — les suppressions sont
+      persistées sans appeler <code>context.save()</code> manuellement. C'est différent de Core Data
+      où <code>viewContext.save()</code> était obligatoire.</div>
+    </div>
+
+    <!-- ══ 05 ══════════════════════════════ -->
+    <h2 id="relationship"><span class="sec-num">05</span> Ajouter la relation @Relationship</h2>
+
+    <p>Chaque visiteur peut avoir plusieurs entrées de log. On établit cette relation one-to-many
+    dans le modèle <code>Visitor</code> avec <code>@Relationship</code>.</p>
+
+    <p>Modifiez <strong>Visitor.swift</strong> en ajoutant les lignes surlignées :</p>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+        <span class="filename">Visitor.swift — mis à jour</span>
+      </div>
+      <pre><span class="kw">import</span> Foundation
+<span class="kw">import</span> SwiftData
+
+<span class="an">@Model</span>
+<span class="kw">final class</span> <span class="ty">Visitor</span> {
+    <span class="kw">var</span> firstname: <span class="ty">String</span>
+    <span class="kw">var</span> lastname:  <span class="ty">String</span>
+
+<span class="hl">    <span class="cm">// cascade : supprimer un Visitor supprime aussi toutes ses LogEntry</span></span>
+<span class="hl">    <span class="an">@Relationship</span>(deleteRule: .cascade) <span class="kw">var</span> visits: [<span class="ty">LogEntry</span>] = []</span>
+
+    <span class="kw">init</span>(firstname: <span class="ty">String</span>, lastname: <span class="ty">String</span>) {
+        self.firstname = firstname
+        self.lastname  = lastname
+    }
+}</pre>
+    </div>
+
+    <div class="explain-grid">
+      <div class="eg-key">@Relationship(deleteRule: .cascade)</div>
+      <div class="eg-val">Définit la relation one-to-many. La règle <code>.cascade</code> assure que supprimer un visiteur supprime automatiquement toutes ses visites — aucune donnée orpheline.</div>
+      <div class="eg-key">var visits: [LogEntry] = []</div>
+      <div class="eg-val">Tableau initialisé vide. Un nouveau visiteur n'a aucune visite au départ.</div>
+    </div>
+
+    <div class="callout info">
+      <span class="callout-icon">i</span>
+      <div><strong>Relation inverse automatique :</strong> SwiftData déduit la relation inverse
+      (<code>LogEntry -> Visitor</code>) automatiquement. Pas besoin de la déclarer dans
+      <code>LogEntry</code>, contrairement à Core Data.</div>
+    </div>
+
+    <!-- ══ 06 ══════════════════════════════ -->
+    <h2 id="detailview"><span class="sec-num">06</span> VisitorDetailView — Détail et ajout de visites</h2>
+
+    <p>Cette vue permet de modifier le prénom et le nom d'un visiteur, et d'ajouter des entrées dans
+    son journal. Elle utilise <code>@Bindable</code> pour lier les champs de texte directement aux
+    propriétés du modèle — sans <code>@State</code> intermédiaire.</p>
+
+    <ol class="steps">
+      <li>Créez un nouveau fichier SwiftUI View nommé <strong>VisitorDetailView.swift</strong>.</li>
+      <li>Ajoutez le code suivant :</li>
+    </ol>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+        <span class="filename">VisitorDetailView.swift</span>
+      </div>
+      <pre><span class="kw">import</span> SwiftUI
+<span class="kw">import</span> SwiftData
+
+<span class="kw">struct</span> <span class="ty">VisitorDetailView</span>: <span class="ty">View</span> {
+
+    <span class="cm">// @Bindable permet $visitor.firstname et $visitor.lastname</span>
+    <span class="cm">// directement dans les TextField — sans copie @State</span>
+    <span class="an">@Bindable</span> <span class="kw">var</span> visitor: <span class="ty">Visitor</span>
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="ty">View</span> {
+        <span class="ty">Form</span> {
+            <span class="ty">Section</span>(<span class="st">"Visiteur"</span>) {
+                <span class="ty">TextField</span>(<span class="st">"Prénom"</span>,          text: $visitor.firstname)
+                <span class="ty">TextField</span>(<span class="st">"Nom"</span>,              text: $visitor.lastname)
+            }
+
+            <span class="ty">Section</span>(<span class="st">"Historique des visites"</span>) {
+                <span class="ty">Button</span>(<span class="st">"Ajouter une visite"</span>, action: addVisit)
+
+                <span class="ty">ForEach</span>(visitor.visits) { visit <span class="kw">in</span>
+                    <span class="ty">Text</span>(visit.date.<span class="fn">formatted</span>(
+                        date: .abbreviated,
+                        time: .shortened
+                    ))
+                }
+            }
+        }
+        .<span class="fn">navigationTitle</span>(<span class="st">"Détail du visiteur"</span>)
+        .<span class="fn">navigationBarTitleDisplayMode</span>(.inline)
+    }
+}
+
+<span class="kw">extension</span> <span class="ty">VisitorDetailView</span> {
+    <span class="kw">private func</span> <span class="fn">addVisit</span>() {
+        visitor.visits.<span class="fn">append</span>(<span class="ty">LogEntry</span>(date: <span class="ty">Date</span>.now))
+    }
+}</pre>
+    </div>
+
+    <div class="explain-grid">
+      <div class="eg-key">@Bindable var visitor</div>
+      <div class="eg-val">Permet la liaison bidirectionnelle <code>$visitor.firstname</code> directement sur un objet <code>@Model</code>. SwiftData détecte la modification et la persiste automatiquement. Beaucoup plus simple que le pattern <code>@State + saveChanges()</code> de Core Data.</div>
+      <div class="eg-key">addVisit()</div>
+      <div class="eg-val">Ajoute une <code>LogEntry</code> au tableau <code>visitor.visits</code>. SwiftData détecte la mutation du tableau et persiste la nouvelle entrée via l'autosave.</div>
+      <div class="eg-key">.formatted(date:time:)</div>
+      <div class="eg-val"><code>.abbreviated</code> produit "9 oct. 2024" et <code>.shortened</code> produit "14:32". Formate la date de façon lisible et localisée.</div>
+    </div>
+
+    <div class="callout tip">
+      <span class="callout-icon">+</span>
+      <div><strong>@Bindable vs Core Data :</strong> Dans l'exercice Core Data, on utilisait
+      <code>@State private var name</code> comme copie locale, puis on la réécrivait dans l'objet
+      avec <code>saveChanges()</code>. Avec <code>@Bindable</code>, on lie directement les propriétés
+      du modèle — le code est plus court et les risques d'oubli de sauvegarde sont éliminés.</div>
+    </div>
+
+    <!-- ══ 07 ══════════════════════════════ -->
+    <h2 id="contentview"><span class="sec-num">07</span> ContentView — Navigation principale</h2>
+
+    <p>Le <code>ContentView</code> intègre <code>VisitorListView</code> dans un <code>NavigationStack</code>,
+    définit la destination de navigation et ajoute un bouton pour créer un nouveau visiteur.</p>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+        <span class="filename">ContentView.swift</span>
+      </div>
+      <pre><span class="kw">import</span> SwiftUI
+<span class="kw">import</span> SwiftData
+
+<span class="kw">struct</span> <span class="ty">ContentView</span>: <span class="ty">View</span> {
+
+    <span class="an">@Environment</span>(\.modelContext) <span class="kw">private var</span> context
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="ty">View</span> {
+        <span class="ty">NavigationStack</span> {
+            <span class="ty">VisitorListView</span>()
+                .<span class="fn">navigationTitle</span>(<span class="st">"Visiteurs"</span>)
+                <span class="cm">// Quand un NavigationLink(value: visitor) est activé,</span>
+                <span class="cm">// SwiftUI crée automatiquement un VisitorDetailView(visitor:)</span>
+                .<span class="fn">navigationDestination</span>(<span class="kw">for</span>: <span class="ty">Visitor</span>.self,
+                                        destination: <span class="ty">VisitorDetailView</span>.init)
+                .<span class="fn">toolbar</span> {
+                    <span class="ty">Button</span>(<span class="st">"Nouveau visiteur"</span>,
+                           systemImage: <span class="st">"plus"</span>,
+                           action: addVisitor)
+                }
+        }
+    }
+}
+
+<span class="kw">extension</span> <span class="ty">ContentView</span> {
+    <span class="kw">private func</span> <span class="fn">addVisitor</span>() {
+        context.<span class="fn">insert</span>(<span class="ty">Visitor</span>(firstname: <span class="st">""</span>, lastname: <span class="st">""</span>))
+    }
+}
+
+<span class="an">#Preview</span> {
+    <span class="ty">ContentView</span>()
+}</pre>
+    </div>
+
+    <div class="explain-grid">
+      <div class="eg-key">.navigationDestination(for: Visitor.self, destination: VisitorDetailView.init)</div>
+      <div class="eg-val">Déclare que tout <code>NavigationLink(value: visitor)</code> dans l'arbre affiche <code>VisitorDetailView(visitor:)</code> en passant l'objet automatiquement. Pattern iOS 16+ recommandé.</div>
+      <div class="eg-key">addVisitor()</div>
+      <div class="eg-val">Crée un visiteur vide et l'insère dans le contexte. L'entrée "Modifier le visiteur" apparaît immédiatement dans la liste grâce à <code>@Query</code>.</div>
+    </div>
+
+    <div class="callout info">
+      <span class="callout-icon">i</span>
+      <div><strong>Tester l'app :</strong> Lancez le simulateur. Tapez sur <strong>+</strong> —
+      un visiteur vide apparaît. Sélectionnez-le, entrez un prénom et un nom, puis tapez
+      <strong>Ajouter une visite</strong>. Fermez et relancez l'app — les données sont persistées.</div>
+    </div>
+
+    <!-- ══ 08 ══════════════════════════════ -->
+    <h2 id="recherche"><span class="sec-num">08</span> Recherche avec #Predicate</h2>
+
+    <p>On rend la liste filtrable avec une barre de recherche dans <code>ContentView</code>
+    et un <code>#Predicate</code> dynamique dans <code>VisitorListView</code>.</p>
+
+    <div class="callout purple">
+      <span class="callout-icon">!</span>
+      <div><strong>Limitation de @Query :</strong> <code>@Query</code> ne peut pas capturer directement
+      une variable <code>@State</code> de la vue parente. La solution est de passer la valeur via
+      <code>init()</code> et d'initialiser <code>@Query</code> à l'intérieur.</div>
+    </div>
+
+    <h3 id="step-contentview">Étape 1 — Ajouter la barre de recherche dans ContentView</h3>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+        <span class="filename">ContentView.swift — mis à jour</span>
+      </div>
+      <pre><span class="kw">struct</span> <span class="ty">ContentView</span>: <span class="ty">View</span> {
+
+    <span class="an">@Environment</span>(\.modelContext) <span class="kw">private var</span> context
+<span class="hl">    <span class="an">@State</span> <span class="kw">private var</span> search: <span class="ty">String</span> = <span class="st">""</span></span>
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="ty">View</span> {
+        <span class="ty">NavigationStack</span> {
+<span class="hl">            <span class="ty">VisitorListView</span>(search: search)</span>
+                .<span class="fn">navigationTitle</span>(<span class="st">"Visiteurs"</span>)
+<span class="hl">                .<span class="fn">searchable</span>(text: $search)</span>
+                .<span class="fn">navigationDestination</span>(<span class="kw">for</span>: <span class="ty">Visitor</span>.self,
+                                        destination: <span class="ty">VisitorDetailView</span>.init)
+                .<span class="fn">toolbar</span> {
+                    <span class="ty">Button</span>(<span class="st">"Nouveau visiteur"</span>,
+                           systemImage: <span class="st">"plus"</span>,
+                           action: addVisitor)
+                }
+        }
+    }
+}
+
+<span class="kw">extension</span> <span class="ty">ContentView</span> {
+    <span class="kw">private func</span> <span class="fn">addVisitor</span>() {
+        context.<span class="fn">insert</span>(<span class="ty">Visitor</span>(firstname: <span class="st">""</span>, lastname: <span class="st">""</span>))
+    }
+}
+
+<span class="an">#Preview</span> {
+    <span class="ty">ContentView</span>()
+}</pre>
+    </div>
+
+    <h3 id="step-listview">Étape 2 — Ajouter le filtre dans VisitorListView</h3>
+
+    <p>On ajoute un <code>init(search:)</code> qui reconfigure <code>@Query</code>
+    avec un <code>#Predicate</code> dynamique selon le texte saisi.</p>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+        <span class="filename">VisitorListView.swift — mis à jour</span>
+      </div>
+      <pre><span class="kw">struct</span> <span class="ty">VisitorListView</span>: <span class="ty">View</span> {
+
+    <span class="an">@Environment</span>(\.modelContext) <span class="kw">private var</span> context
+    <span class="an">@Query</span> <span class="kw">var</span> visitors: [<span class="ty">Visitor</span>]
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="ty">View</span> {
+        <span class="ty">List</span> {
+            <span class="ty">ForEach</span>(visitors) { visitor <span class="kw">in</span>
+                <span class="ty">NavigationLink</span>(value: visitor) {
+                    <span class="kw">if</span> visitor.lastname.<span class="fn">isEmpty</span> {
+                        <span class="ty">Text</span>(<span class="st">"Modifier le visiteur"</span>).<span class="fn">foregroundStyle</span>(.secondary)
+                    } <span class="kw">else</span> {
+                        <span class="ty">Text</span>(<span class="st">"\(visitor.lastname), \(visitor.firstname)"</span>)
+                    }
+                }
+            }
+            .<span class="fn">onDelete</span>(perform: deleteVisitor)
+        }
+    }
+
+<span class="hl">    <span class="cm">// Initializer qui configure @Query selon le texte de recherche</span></span>
+<span class="hl">    <span class="kw">init</span>(search: <span class="ty">String</span>) {</span>
+<span class="hl">        <span class="kw">let</span> predicate = <span class="an">#Predicate</span>&lt;<span class="ty">Visitor</span>&gt; { visitor <span class="kw">in</span></span>
+<span class="hl">            <span class="kw">if</span> search.<span class="fn">isEmpty</span> {</span>
+<span class="hl">                <span class="kw">return true</span>  <span class="cm">// Champ vide = afficher tous les visiteurs</span></span>
+<span class="hl">            } <span class="kw">else</span> {</span>
+<span class="hl">                <span class="cm">// Filtrer par nom, insensible à la casse et aux accents</span></span>
+<span class="hl">                <span class="kw">return</span> visitor.lastname.<span class="fn">localizedStandardContains</span>(search)</span>
+<span class="hl">            }</span>
+<span class="hl">        }</span>
+<span class="hl">        <span class="cm">// _visitors = accès à la valeur sous-jacente de @Query depuis l'init</span></span>
+<span class="hl">        _visitors = <span class="ty">Query</span>(filter: predicate, sort: \.lastname)</span>
+<span class="hl">    }</span>
+}
+
+<span class="kw">extension</span> <span class="ty">VisitorListView</span> {
+    <span class="kw">private func</span> <span class="fn">deleteVisitor</span>(_ offsets: <span class="ty">IndexSet</span>) {
+        <span class="kw">for</span> index <span class="kw">in</span> offsets { context.<span class="fn">delete</span>(visitors[index]) }
+    }
+}</pre>
+    </div>
+
+    <div class="explain-grid">
+      <div class="eg-key">#Predicate&lt;Visitor&gt; { ... }</div>
+      <div class="eg-val">Définit le critère de filtrage en Swift pur, vérifié à la compilation. Si le nom d'une propriété change, Xcode le signale immédiatement — impossible d'avoir un crash en production à cause d'une faute dans une string.</div>
+      <div class="eg-key">.localizedStandardContains()</div>
+      <div class="eg-val">Recherche insensible à la casse et aux accents. "smith" trouve "Smith", "SMITH", "Smíth", etc. Méthode recommandée pour les recherches texte utilisateur.</div>
+      <div class="eg-key">_visitors = Query(filter:sort:)</div>
+      <div class="eg-val">Le préfixe <code>_</code> accède à la valeur sous-jacente du property wrapper <code>@Query</code> depuis l'<code>init</code>. C'est le seul endroit où cette syntaxe est utilisée.</div>
+      <div class="eg-key">sort: \.lastname</div>
+      <div class="eg-val">Les résultats sont toujours triés alphabétiquement par nom de famille, que la recherche soit active ou non.</div>
+    </div>
+
+    <div class="callout tip">
+      <span class="callout-icon">+</span>
+      <div><strong>Tester la recherche :</strong> Ajoutez plusieurs visiteurs avec des noms similaires
+      (ex. "Smith, Tom", "Smith, Bob", "Smithers, Alice"). La barre de recherche apparaît en tirant
+      la liste vers le bas. Tapez "smith" — seuls les visiteurs dont le nom contient "smith"
+      s'affichent, insensible à la casse.</div>
+    </div>
+
+  </main>
+
+  <footer class="page-footer">
+    Développé par <a href="https://github.com/mathrob">Mathieu Robson</a> ·
+    IFM025921 Développement d'applications mobiles pour iOS &nbsp;©
   </footer>
-  <div class="back-to-top" id="back-to-top">↑</div>
-  <script>
-    const backToTopButton = document.getElementById('back-to-top');
 
-    window.addEventListener('scroll', () => {
-      if (window.scrollY > 300) {
-        backToTopButton.style.display = 'block';
-      } else {
-        backToTopButton.style.display = 'none';
+</div>
+
+<!-- ── TOC toggle mobile ───────────────────────────────────── -->
+<script>
+  document.querySelector('.toc-toggle')?.addEventListener('click', function() {
+    const toc = document.querySelector('.toc');
+    const open = toc.classList.toggle('open');
+    this.setAttribute('aria-expanded', open);
+  });
+  document.querySelectorAll('.toc a').forEach(a => {
+    a.addEventListener('click', () => {
+      document.querySelector('.toc')?.classList.remove('open');
+      const btn = document.querySelector('.toc-toggle');
+      if (btn) { btn.setAttribute('aria-expanded', 'false'); }
+    });
+  });
+</script>
+
+<!-- ── TOC highlight on scroll ──────────────────────────────── -->
+<script>
+  const links = document.querySelectorAll('.toc a');
+  const ids = [...links].map(a => a.getAttribute('href').slice(1));
+  const sections = ids.map(id => document.getElementById(id)).filter(Boolean);
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(a => a.classList.remove('active'));
+        const a = document.querySelector(`.toc a[href="#${e.target.id}"]`);
+        if (a) a.classList.add('active');
       }
     });
-
-    backToTopButton.addEventListener('click', () => {
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
-    });
-  </script>
+  }, { rootMargin: '-15% 0px -70% 0px' });
+  sections.forEach(s => obs.observe(s));
+</script>
 </body>
-
 </html>

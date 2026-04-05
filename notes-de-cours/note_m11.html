@@ -1,709 +1,771 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>IFM025921</title>
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" />
-    <link rel="stylesheet" href="../style.css" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Module 11 – Notes de cours – SwiftData</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../cours.css">
 </head>
-
 <body>
-    <header>
-        <h1 style="color: white">Module 11 - Note de cours</h1>
-    </header>
-    <div class="container">
-        <a href="../index.html" class="back-link">← Retour au module principal</a>
+<div class="page-wrap">
 
-        <section id="module-11" class="module-section">
-            <h1>MapKit</h1>
-            <p>MapKit est un framework développé par Apple qui permet d’intégrer des cartes interactives dans les
-                applications iOS. Il repose sur le service de cartographie d’Apple, offrant des fonctionnalités
-                similaires à celles de Google Maps. MapKit fournit des classes pour afficher des cartes, ajouter des
-                annotations, tracer des itinéraires, et bien plus. Il est facile à utiliser et offre de nombreuses
-                options pour personnaliser l’apparence et le comportement des cartes.</p>
+  <!--  Top bar  -->
+  <header class="top-bar">
+    <a href="../index.html" class="back-btn">← Accueil</a>
+    <span class="page-badge">IFM025921 · Module 11 · Notes de cours</span>
+    <span class="ios-badge">Requiert iOS 17+</span>
+    <button class="toc-toggle" aria-label="Menu" aria-expanded="false"></button>
+  </header>
 
-            <h2>Affichage de cartes</h2>
-            <p>Pour intégrer une carte interactive dans votre application SwiftUI, commencez par importer le framework
-                MapKit, qui fournit les classes nécessaires pour travailler avec des cartes.</p>
-            <pre><code class="swift">import MapKit</code></pre>
+  <!--  Sidebar TOC  -->
+  <nav class="toc" aria-label="Table des matières">
+    <p class="toc-title">Sur cette page</p>
+    <ul>
+      <li><a href="#intro">1. Introduction</a></li>
+      <li><a href="#vs-coredata">2. SwiftData vs Core Data</a></li>
+      <li><a href="#composants">3. Composants principaux</a></li>
+      <li><a href="#model">4. @Model</a>
+        <ul>
+          <li><a href="#attribute">@Attribute</a></li>
+          <li><a href="#transient">@Transient</a></li>
+        </ul>
+      </li>
+      <li><a href="#container">5. ModelContainer</a>
+        <ul>
+          <li><a href="#configuration">ModelConfiguration</a></li>
+        </ul>
+      </li>
+      <li><a href="#context">6. ModelContext</a>
+        <ul>
+          <li><a href="#crud">Opérations CRUD</a></li>
+          <li><a href="#autosave">Autosave</a></li>
+        </ul>
+      </li>
+      <li><a href="#query">7. @Query</a></li>
+      <li><a href="#predicate">8. #Predicate &amp; FetchDescriptor</a></li>
+      <li><a href="#relationship">9. @Relationship</a></li>
+      <li><a href="#lab">Laboratoire</a></li>
+    </ul>
+  </nav>
 
-            <h3>Utilisation de la vue Map</h3>
-            <p>La vue Map de SwiftUI permet d’afficher une carte interactive dans votre interface :</p>
-            <pre><code class="swift">struct ContentView: View {
-    var body: some View {
-        Map()
+  <!--  Main  -->
+  <main class="content">
+
+    <h1>SwiftData</h1>
+    <p class="subtitle">Module 11 — Notes de cours · Persistance moderne avec SwiftData</p>
+    <span class="req-badge"> iOS 17+ · Xcode 15+ · Swift 5.9+</span>
+
+    <!--  -->
+    <h2 id="intro"><span class="sec-num">01</span> Introduction</h2>
+
+    <p>SwiftData est le framework de persistance de données moderne d'Apple, introduit à la
+    <strong>WWDC 2023</strong> avec iOS 17. Il a été conçu pour remplacer progressivement Core Data
+    en offrant une approche <em>déclarative</em> totalement intégrée à SwiftUI.</p>
+
+    <p>Là où Core Data demande de configurer un fichier <code>.xcdatamodeld</code>, de gérer
+    manuellement un <code>NSPersistentContainer</code>, et d'apprendre une API ancienne, SwiftData
+    permet de définir ses modèles <strong>directement dans le code Swift</strong>, avec des macros.</p>
+
+    <div class="callout new">
+      <div><strong>Conçu pour SwiftUI :</strong> SwiftData s'intègre nativement avec SwiftUI.
+      Les données se synchronisent automatiquement avec l'interface — pas besoin de <code>@Published</code>,
+      de <code>ObservableObject</code>, ni de <code>@FetchRequest</code>. Un seul macro <code>@Query</code>
+      suffit.</div>
+    </div>
+
+    <div class="callout info">
+      <span class="callout-icon"></span>
+      <div><strong>Sous le capot :</strong> SwiftData est bâti <em>par-dessus</em> Core Data.
+      Il utilise le même moteur SQLite, mais expose une API Swift moderne. Les deux frameworks peuvent
+      coexister dans le même projet lors d'une migration progressive.</div>
+    </div>
+
+    <!--  -->
+    <h2 id="vs-coredata"><span class="sec-num">02</span> SwiftData vs Core Data</h2>
+
+    <p>Voici un aperçu des équivalences entre les deux frameworks :</p>
+
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Concept</th>
+          <th>Core Data</th>
+          <th>SwiftData</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Définir un modèle</td>
+          <td><span class="tag-old">.xcdatamodeld</span> (éditeur visuel)</td>
+          <td><span class="tag-new">@Model</span> (classe Swift pure)</td>
+        </tr>
+        <tr>
+          <td>Initialiser le stockage</td>
+          <td><span class="tag-old">NSPersistentContainer</span></td>
+          <td><span class="tag-new">ModelContainer</span></td>
+        </tr>
+        <tr>
+          <td>Zone de travail en mémoire</td>
+          <td><span class="tag-old">NSManagedObjectContext</span></td>
+          <td><span class="tag-new">ModelContext</span></td>
+        </tr>
+        <tr>
+          <td>Lire des données dans SwiftUI</td>
+          <td><span class="tag-old">@FetchRequest</span></td>
+          <td><span class="tag-new">@Query</span></td>
+        </tr>
+        <tr>
+          <td>Filtrer des données</td>
+          <td><span class="tag-old">NSPredicate</span> (String non vérifiée)</td>
+          <td><span class="tag-new">#Predicate</span> (vérifié à la compilation)</td>
+        </tr>
+        <tr>
+          <td>Trier des données</td>
+          <td><span class="tag-old">NSSortDescriptor</span></td>
+          <td><span class="tag-new">SortDescriptor + FetchDescriptor</span></td>
+        </tr>
+        <tr>
+          <td>Relations</td>
+          <td>Via l'éditeur visuel</td>
+          <td><span class="tag-new">@Relationship</span> (dans le code)</td>
+        </tr>
+        <tr>
+          <td>Injecter dans SwiftUI</td>
+          <td><code>.environment(\.managedObjectContext, ...)</code></td>
+          <td><code>.modelContainer(for:)</code></td>
+        </tr>
+        <tr>
+          <td>Minimum iOS</td>
+          <td>iOS 3+</td>
+          <td>iOS 17+</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!--  -->
+    <h2 id="composants"><span class="sec-num">03</span> Composants principaux</h2>
+
+    <p>La Stack SwiftData est plus simple que la Stack Core Data — elle se résume à
+    <strong>trois composants</strong> que vous utilisez directement :</p>
+
+    <!-- Stack diagram -->
+    <div class="stack-diagram">
+      <p class="sd-title">Stack SwiftData</p>
+      <div class="stack-box app"> Application SwiftUI<sub>Votre code — vues, @Query</sub></div>
+      <div class="stack-arrow">↕</div>
+      <div class="stack-box ctx"> ModelContext<sub>Zone de travail (créer, modifier, supprimer)</sub></div>
+      <div class="stack-arrow">↕</div>
+      <div class="stack-box cont"> ModelContainer<sub>Pont entre le contexte et le stockage</sub></div>
+      <div class="stack-arrow">↕</div>
+      <div class="stack-box db"> Base de données SQLite<sub>Fichier sur disque — géré automatiquement</sub></div>
+      <p class="stack-note">Comparé à Core Data, le Persistent Store Coordinator et le Persistent Store sont
+      complètement cachés par SwiftData — vous n'en avez jamais besoin directement.</p>
+    </div>
+
+    <div class="macro-grid">
+      <div class="macro-card">
+        <div class="macro-name orange">@Model</div>
+        <div class="role">Définir la structure</div>
+        <p>Transforme une classe Swift ordinaire en modèle persistant. Remplace le fichier <code>.xcdatamodeld</code>.</p>
+      </div>
+      <div class="macro-card blue">
+        <div class="macro-name blue">ModelContainer</div>
+        <div class="role">Gérer le stockage</div>
+        <p>Configure la base de données. Se déclare une seule fois dans le point d'entrée de l'app avec <code>.modelContainer(for:)</code>.</p>
+      </div>
+      <div class="macro-card purple">
+        <div class="macro-name purple">ModelContext</div>
+        <div class="role">Zone de travail</div>
+        <p>Permet d'insérer, de modifier et de supprimer des objets. Récupéré via <code>@Environment(\.modelContext)</code>.</p>
+      </div>
+      <div class="macro-card teal">
+        <div class="macro-name teal">@Query</div>
+        <div class="role">Lire les données</div>
+        <p>Récupère et observe automatiquement les données. La vue se met à jour seule à chaque changement.</p>
+      </div>
+    </div>
+
+    <!--  -->
+    <h2 id="model"><span class="sec-num">04</span> @Model — Définir un modèle</h2>
+
+    <p>Le macro <code>@Model</code> est le cœur de SwiftData. On l'applique à une classe Swift pour
+    la transformer en modèle persistant. SwiftData génère automatiquement tout le code nécessaire
+    pour stocker et retrouver les instances de cette classe.</p>
+
+    <div class="callout analogy">
+      <span class="callout-icon"></span>
+      <div><strong>Analogie :</strong> <code>@Model</code>, c'est comme remplir une fiche de formulaire
+      pour décrire vos données. SwiftData lit cette fiche et crée automatiquement la table correspondante
+      dans SQLite — sans que vous ayez à écrire une ligne de SQL.</div>
+    </div>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+        <span class="filename">Product.swift</span>
+      </div>
+      <pre><span class="kw">import</span> SwiftData
+
+<span class="cm">//  @Model transforme cette classe en modèle persistant</span>
+<span class="an">@Model</span>
+<span class="kw">final class</span> <span class="ty">Product</span> {
+
+    <span class="kw">var</span> name:     <span class="ty">String</span>
+    <span class="kw">var</span> quantity: <span class="ty">Int</span>       <span class="cm">//  Utilisez Int, pas String, pour les nombres</span>
+    <span class="kw">var</span> price:    <span class="ty">Double</span>
+    <span class="kw">var</span> addedAt:  <span class="ty">Date</span>
+
+    <span class="kw">init</span>(name: <span class="ty">String</span>, quantity: <span class="ty">Int</span>, price: <span class="ty">Double</span>) {
+        self.name     = name
+        self.quantity = quantity
+        self.price    = price
+        self.addedAt  = <span class="ty">Date</span>.now
     }
-}</code></pre>
-            <h4>Explication :</h4>
-            <p> • Map() : Crée une carte interactive.</p>
+}</pre>
+    </div>
 
-            <h2>Personnalisation de cartes</h2>
-            <p>MapKit offre de nombreuses options pour personnaliser l’apparence des cartes, notamment le style, les
-                contrôles, les marqueurs, les annotations, etc.</p>
+    <div class="explain-grid">
+      <div class="eg-key">@Model</div>
+      <div class="eg-val">Macro Swift qui rend la classe observable et persistante en une seule ligne. Génère automatiquement les méthodes de suivi des changements.</div>
+      <div class="eg-key">final class</div>
+      <div class="eg-val">SwiftData requiert des <strong>classes</strong> (pas des structs), car il doit suivre les changements par référence. <code>final</code> est recommandé pour la performance.</div>
+      <div class="eg-key">Propriétés Swift</div>
+      <div class="eg-val">Toutes les propriétés dont le type est supporté (String, Int, Double, Bool, Date, URL, UUID…) sont automatiquement persistées — aucune annotation nécessaire.</div>
+    </div>
 
-            <h3>Position de la caméra</h3>
-            <p>La position de la caméra permet de définir la région affichée sur la carte :</p>
-            <pre><code class="swift">struct ContentView: View {
-    let cameraPosition: MapCameraPosition = .region(.init(center: .init(latitude: 45.439857, longitude: -75.627043), latitudinalMeters: 400, longitudinalMeters: 400))
-    
-    var body: some View {
-        Map(initialPosition: cameraPosition)
+    <div class="callout tip">
+      <div><strong>Pas besoin de fichier .xcdatamodeld :</strong> Toute la définition du schéma se fait
+      dans le code Swift. Xcode comprend la structure à partir du macro <code>@Model</code> directement.</div>
+    </div>
+
+    <!-- @Attribute -->
+    <h3 id="attribute">@Attribute — Contraintes sur les propriétés</h3>
+
+    <p>Le macro <code>@Attribute</code> permet d'ajouter des options spéciales à une propriété
+    du modèle — par exemple, forcer l'unicité ou externaliser de gros fichiers.</p>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+        <span class="filename">Product.swift</span>
+      </div>
+      <pre><span class="an">@Model</span>
+<span class="kw">final class</span> <span class="ty">Product</span> {
+
+    <span class="cm">// Valeur unique — SwiftData refuse les doublons sur ce champ</span>
+    <span class="an">@Attribute</span>(.unique) <span class="kw">var</span> name: <span class="ty">String</span>
+
+    <span class="cm">// Stocké en dehors du fichier SQLite (recommandé pour les images > quelques Ko)</span>
+    <span class="an">@Attribute</span>(.externalStorage) <span class="kw">var</span> thumbnail: <span class="ty">Data</span>?
+
+    <span class="kw">var</span> quantity: <span class="ty">Int</span>
+    <span class="kw">var</span> price:    <span class="ty">Double</span>
+
+    <span class="kw">init</span>(name: <span class="ty">String</span>, quantity: <span class="ty">Int</span>, price: <span class="ty">Double</span>) {
+        self.name     = name
+        self.quantity = quantity
+        self.price    = price
     }
-}</code></pre>
-            <h4>Explication :</h4>
-            <ul>
-                <li style="margin-left: 30px;">• MapCameraPosition: Structure utilisée pour définir la position de la
-                    caméra.</li>
-                <li style="margin-left: 30px;">• .region(): Définit la région affichée sur la carte.</li>
-                <li style="margin-left: 30px;"> • .init(): Initialise un objet CLLocationCoordinate2D avec des
-                    coordonnées spécifiques.</li>
-                <li style="margin-left: 30px;"> • latitudinalMeters et longitudinalMeters: Distances en mètres
-                    définissant l’étendue de la région affichée.</li>
-            </ul>
+}</pre>
+    </div>
 
-            <h3>Styles de carte</h3>
-            <p>Le modificateur <strong>.mapStyle(_:)</strong> permet de choisir le style de la carte :</p>
-            <ul>
-                <li style="margin-left: 30px;"><strong>.standard</strong> : Carte classique (par défaut).</li>
-                <li style="margin-left: 30px;"><strong>.satellite</strong> : Vue satellite.</li>
-                <li style="margin-left: 30px;"><strong>.hybrid</strong> : Combinaison d’images satellites et de noms de
-                    rues.</li>
-                <li style="margin-left: 30px;"><strong>.hybrid(elevation: .realistic)</strong> : Vue 3D avec relief
-                    réaliste (iOS 16+).</li>
-            </ul>
-            <pre><code class="swift">struct ContentView: View {
-var body: some View {
-    Map()
-        .mapStyle(.satellite)
-}</code></pre>
+    <div class="explain-grid">
+      <div class="eg-key">@Attribute(.unique)</div>
+      <div class="eg-val">SwiftData refuse l'insertion si une valeur identique existe déjà. Équivalent d'une contrainte UNIQUE en SQL.</div>
+      <div class="eg-key">@Attribute(.externalStorage)</div>
+      <div class="eg-val">Les données volumineuses (images, PDF) sont stockées dans un fichier séparé plutôt qu'inline dans SQLite — améliore les performances.</div>
+    </div>
 
-            <h3>Contrôles de la carte</h3>
-            <p>Les contrôles de carte permettent d’ajouter des éléments interactifs à la carte :</p>
-            <ul>
-                <li style="margin-left: 30px;"><strong>MapUserLocationButton</strong> : Bouton pour afficher la position
-                    de l’utilisateur.</li>
-                <li style="margin-left: 30px;"><strong>MapCompass</strong> : Boussole pour orienter la carte.</li>
-                <li style="margin-left: 30px;"><strong>MapPitchToggle</strong> : Bouton pour basculer entre la vue 2D et
-                    3D.</li>
-                <li style="margin-left: 30px;"><strong>MapScaleView</strong> : Échelle pour mesurer les distances sur la
-                    carte.</li>
-            </ul>
-            <pre><code class="swift">struct ContentView: View {
-    var body: some View {
-        Map()
-            .mapStyle(.hybrid)
-            .mapControls {
-                MapUserLocationButton()
-                MapCompass()
-                MapPitchToggle()
-                MapScaleView()
-            }
+    <!-- @Transient -->
+    <h3 id="transient">@Transient — Propriétés non persistées</h3>
+
+    <p>Par défaut, <em>toutes</em> les propriétés d'un modèle sont persistées. Si vous avez besoin
+    d'une propriété temporaire (calculée, de débogage, etc.) qui ne doit <strong>pas</strong> être
+    sauvegardée dans la base, utilisez <code>@Transient</code>.</p>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+        <span class="filename">Product.swift</span>
+      </div>
+      <pre><span class="an">@Model</span>
+<span class="kw">final class</span> <span class="ty">Product</span> {
+    <span class="kw">var</span> name:     <span class="ty">String</span>
+    <span class="kw">var</span> quantity: <span class="ty">Int</span>
+    <span class="kw">var</span> price:    <span class="ty">Double</span>
+
+    <span class="cm">//  Cette propriété existe seulement en mémoire — jamais sauvegardée</span>
+    <span class="an">@Transient</span> <span class="kw">var</span> isBeingEdited: <span class="ty">Bool</span> = <span class="kw">false</span>
+
+    <span class="kw">init</span>(name: <span class="ty">String</span>, quantity: <span class="ty">Int</span>, price: <span class="ty">Double</span>) {
+        self.name     = name
+        self.quantity = quantity
+        self.price    = price
     }
-}</code></pre>
+}</pre>
+    </div>
 
-            <h3>Marqueurs (Markers)</h3>
-            <p>Les marqueurs sont des points d’intérêt affichés sur la carte :</p>
-            <pre><code class="swift">struct ContentView: View {
-    var body: some View {
-        Map {
-            Marker("La Cite", coordinate: CLLocationCoordinate2D(latitude: 45.439857, longitude: -75.627043))
+    <!--  -->
+    <h2 id="container"><span class="sec-num">05</span> ModelContainer — Configurer le stockage</h2>
+
+    <p>Le <code>ModelContainer</code> est le pont entre vos modèles et la base de données SQLite.
+    On le configure <strong>une seule fois</strong>, à la racine de l'application, et SwiftUI
+    l'injecte automatiquement dans tout l'arbre de vues.</p>
+
+    <div class="callout analogy">
+      <div><strong>Analogie :</strong> Le ModelContainer, c'est comme l'entrepôt d'une entreprise.
+      Vous le configurez une fois (où il est, sa taille, ses règles). Ensuite les employés
+      (ModelContext) vont chercher et ranger des objets dedans au quotidien.</div>
+    </div>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+        <span class="filename">CoreDataDemoApp.swift</span>
+      </div>
+      <pre><span class="kw">import</span> SwiftUI
+<span class="kw">import</span> SwiftData
+
+<span class="an">@main</span>
+<span class="kw">struct</span> <span class="ty">CoreDataDemoApp</span>: <span class="ty">App</span> {
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="ty">Scene</span> {
+        <span class="ty">WindowGroup</span> {
+            <span class="ty">ContentView</span>()
         }
-    }
-}</code></pre>
-            <h4>Explication :</h4>
-            <ul>
-                <li style="margin-left: 30px;">• Marker() : Crée un marqueur avec un titre et des coordonnées
-                    spécifiques.</li>
-                <li style="margin-left: 30px;">• CLLocationCoordinate2D : Structure représentant les coordonnées
-                    géographiques d’un point.</li>
-            </ul>
-
-            <h3>Annotations</h3>
-            <p>Les annotations sont des vues personnalisées que l’on peut afficher sur la carte :</p>
-            <pre><code class="swift">struct ContentView: View {
-    var body: some View {
-        Map {
-            Annotation("La Cite", coordinate: CLLocationCoordinate2D(latitude: 45.439857, longitude: -75.627043), anchor: .center) {
-                Image(systemName: "graduationcap.fill")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .foregroundStyle(.white)
-                    .frame(width: 20, height: 20)
-                    .padding(7)
-                    .background(.pink.gradient, in: .circle)
-                
-            }
-        }
-    }
-}</code></pre>
-            <h4>Explication :</h4>
-            <ul>
-                <li style="margin-left: 30px;">• Annotation() : Crée une annotation avec un titre, des coordonnées, un
-                    point d’ancrage et une vue personnalisée.</li>
-            </ul>
-
-            <h2>Géolocalisation de l’appareil</h2>
-            <p>MapKit permet d’accéder à la position de l’utilisateur en utilisant le gestionnaire de localisation
-                (CLLocationManager).</p>
-
-            <h3>Autorisation d’utiliser la localisation</h3>
-            <p>Il est nécessaire d’ajouter la clé <strong>NSLocationWhenInUseUsageDescription</strong> dans le fichier
-                <strong>Info.plist</strong> pour demander l’autorisation d’utiliser la localisation :
-            </p>
-            <img src="../imgs/info_plist_map1.png" alt="Diagramme de la Stack Core Data"
-                style="width: 100%; max-width: 800px; margin: 20px auto; display: block;">
-            <h4>Étapes à suivre</h4>
-            <ol>
-                <li>Sélectionnez le premier fichier de l’arborescence de votre projet. Ce fichier porte le nom de votre
-                    projet.</li>
-                <li>Ensuite, sélectionnez <strong>Info</strong>.</li>
-                <li>Dans la liste, placez votre souris sur l’un des éléments afin de faire apparaître les symboles “+”
-                    et “-”. Cliquez sur <strong>“+”</strong>.</li>
-            </ol>
-
-            <hr style="border: 1px solid gray; margin: 20px 0;">
-
-            <img src="../imgs/info_plist_map2.png" alt="Diagramme de la Stack Core Data"
-                style="width: 100%; max-width: 800px; margin: 20px auto; display: block;">
-            <p>4. Une liste d’éléments s’affichera. Sélectionnez <strong>Privacy - Location When In Use Usage
-                    Description</strong>.</p>
-
-            <hr style="border: 1px solid gray; margin: 20px 0;">
-
-            <img src="../imgs/info_plist_map_privacy.png" alt="Diagramme de la Stack Core Data"
-                style="width: 100%; max-width: 800px; margin: 20px auto; display: block;">
-            <p>5. Vous devriez maintenant voir cette clé ajoutée à la liste.</p>
-
-            <hr style="border: 1px solid gray; margin: 20px 0;">
-
-            <img src="../imgs/info_plist_map_message.png" alt="Diagramme de la Stack Core Data"
-                style="width: 100%; max-width: 800px; margin: 20px auto; display: block;">
-            <p>6. Sélectionnez l’espace vide à droite dans la colonne <strong>Value</strong>, puis inscrivez un message
-                expliquant à l’utilisateur pourquoi l’application a besoin d’accéder à sa localisation.</p>
-
-            <hr style="border: 1px solid gray; margin: 20px 0;">
-
-            <img src="../imgs/info_plist_map_list.png" alt="Diagramme de la Stack Core Data"
-                style="width: 100%; max-width: 800px; margin: 20px auto; display: block;">
-            <p>7. Vous devriez maintenant voir cette clé ajoutée à la liste.</p>
-
-            <h3>CLLocationManager</h3>
-            <p>Le gestionnaire de localisation permet de suivre la position de l’utilisateur :</p>
-            <pre><code class="swift">import MapKit
-
-class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
-    private let locationManager = CLLocationManager()
-    
-    @Published var currentLocation: CLLocationCoordinate2D? // Localisation actuelle
-
-    override init() {
-        super.init()
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.requestWhenInUseAuthorization()
-        locationManager.startUpdatingLocation()
-    }
-
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        currentLocation = locations.last?.coordinate
-    }
-}</code></pre>
-            <h4>Explication :</h4>
-            <ul>
-                <li style="margin-left: 30px;">• <strong>CLLocationManager</strong> : Classe pour gérer la localisation
-                    de
-                    l’appareil.</li>
-                <li style="margin-left: 30px;">• <strong>CLLocationManagerDelegate</strong> : Protocole pour recevoir
-                    les
-                    mises à jour de localisation.</li>
-                <li style="margin-left: 30px;">• <strong>currentLocation</strong> : Coordonnées géographiques de la
-                    localisation actuelle.</li>
-                <li style="margin-left: 30px;">• <strong>init()</strong> : Initialise le gestionnaire de localisation et
-                    demande l’autorisation d’utiliser la localisation.</li>
-                <li style="margin-left: 30px;">• <strong>locationManager(_:didUpdateLocations:)</strong> : Méthode
-                    appelée lorsqu’une nouvelle localisation est disponible.</li>
-            </ul>
-
-            <h4>ContentView</h4>
-            <pre><code class="swift">struct ContentView: View {
-    @StateObject private var locationManager = LocationManager()
-    @State private var position: MapCameraPosition = .userLocation(fallback: .automatic)
-
-    var body: some View {
-        Map(position: $position) {
-            UserAnnotation()
-        }
-    }
-}</code></pre>
-            <h4>Explication :</h4>
-            <ul>
-                <li style="margin-left: 30px;">• <strong>@StateObject private var locationManager</strong> :
-                    Gestionnaire
-                    de localisation partagé.</li>
-                <li style="margin-left: 30px;">• <strong>@State private var position</strong> : Position de la caméra
-                    (initialisée à la localisation de l’utilisateur).</li>
-                <li style="margin-left: 30px;">• <strong>Map(position:)</strong> : Crée une carte centrée sur la
-                    localisation de l’utilisateur.</li>
-                <li style="margin-left: 30px;">• <strong>UserAnnotation()</strong> : Annotation pour afficher la
-                    position de l’utilisateur.</li>
-            </ul>
-
-            <p>Lorsque l'utilisateur utilisera l'application pour la première fois un message lui sera afficher lui
-                demandant d'autoriser la localisation</p>
-            <img src="../imgs/allow_location.png" alt="Diagramme de la Stack Core Data"
-                style="width: 100%; max-width: 300px; margin: 20px auto; display: block;">
-
-            <h2>Recherche de services avec MapKit</h2>
-            <p>MapKit propose des services de recherche pour trouver
-                des lieux, des adresses, des points d’intérêt, etc. Ces services sont fournis par le framework
-                MapKit, qui offre des classes pour effectuer des recherches et afficher les résultats sur une carte.</p>
-
-            <h3>MKLocalSearch</h3>
-            <p>La classe <strong>MKLocalSearch</strong> permet d’effectuer des recherches locales :</p>
-            <pre><code class="swift">private func search() async {
-    guard !query.isEmpty, let region = visibleRegion else {
-        isSearching = false
-        return
-    }
-    
-    do {
-        let results = try await performSearch(searchTerm: query, visibleRegion: region)
-        DispatchQueue.main.async {
-            self.mapItems = results
-            self.isSearching = false
-        }
-    } catch {
-        DispatchQueue.main.async {
-            self.mapItems = []
-            self.isSearching = false
-        }
-        print("Erreur de recherche : \(error.localizedDescription)")
+        <span class="cm">//  Une seule ligne suffit pour configurer toute la persistance</span>
+        .<span class="fn">modelContainer</span>(<span class="kw">for</span>: [<span class="ty">Product</span>.self])
     }
 }
 
-private func performSearch(searchTerm: String, visibleRegion: MKCoordinateRegion) async throws -> [MKMapItem] {
-    let request = MKLocalSearch.Request()
-    request.naturalLanguageQuery = searchTerm
-    request.resultTypes = .pointOfInterest
-    request.region = visibleRegion
-    
-    let search = MKLocalSearch(request: request)
-    let response = try await search.start()
-    
-    return response.mapItems
-}</code></pre>
-            <h4>Explication :</h4>
-            <ul>
-                <li style="margin-left: 30px;">• <strong>search()</strong> : Méthode asynchrone pour effectuer une
-                    recherche locale.</li>
-                <li style="margin-left: 30px;">• <strong>performSearch(searchTerm:visibleRegion:)</strong> : Méthode
-                    asynchrone pour exécuter la recherche.</li>
-                <li style="margin-left: 30px;">• <strong>MKLocalSearch.Request</strong> : Objet pour définir les
-                    paramètres de recherche.</li>
-                <li style="margin-left: 30px;">• <strong>request.naturalLanguageQuery</strong> : Terme de recherche
-                    (ex. : “restaurants”).</li>
-                <li style="margin-left: 30px;">• <strong>request.resultTypes</strong> : Type de résultats (ex. :
-                    pointOfInterest).</li>
-                <li style="margin-left: 30px;">• <strong>request.region</strong> : Région visible sur la carte.</li>
-                <li style="margin-left: 30px;">• <strong>MKLocalSearch</strong> : Objet pour exécuter la recherche.</li>
-                <li style="margin-left: 30px;">• <strong>search.start()</strong> : Lance la recherche et renvoie les
-                    résultats.</li>
-            </ul>
-
-            <h3>ContentView</h3>
-            <pre><code class="swift">struct ContentView: View {
-    @State private var query: String = ""
-    @State private var isSearching: Bool = false
-    @State private var mapItems: [MKMapItem] = []
-    @State private var visibleRegion: MKCoordinateRegion?
-    
-    var body: some View {
-        HStack(spacing: 10) {
-            TextField("Rechercher un service", text: $query)
-                .textFieldStyle(.roundedBorder)
-            
-            Button("Search") {
-                isSearching = true
-            }
-            .buttonStyle(.bordered)
-        }
-        .padding(.horizontal)
-        
-        Map {
-            ForEach(mapItems, id: \.self) { mapItem in
-                Marker(item: mapItem)
-            }
-        }
-        .onMapCameraChange { context in
-            visibleRegion = context.region
-        }
-        .task(id: isSearching) {
-            if isSearching {
-                await search()
-            }
-        }
-        
-        List(mapItems, id: \.self) { mapItem in
-            VStack(alignment: .leading) {
-                Text(mapItem.name ?? "")
-                    .font(.title3)
-                Text(mapItem.phoneNumber ?? "")
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                Text("\(mapItem.placemark.thoroughfare ?? "") \(mapItem.placemark.subThoroughfare ?? ""), \(mapItem.placemark.locality ?? ""), \(mapItem.placemark.administrativeArea ?? ""), \(mapItem.placemark.postalCode ?? ""), \(mapItem.placemark.country ?? "")")
-                    .frame(maxWidth: .infinity, alignment: .leading)
-            }
-        }
-    }
-
-    private func search() async {
-        ...
-    }
-
-    private func performSearch(searchTerm: String, visibleRegion: MKCoordinateRegion) async throws -> [MKMapItem] {
-        ...
-    }
-}</code></pre>
-            <h4>Explication :</h4>
-            <ul>
-                <li style="margin-left: 30px;">• <strong>query</strong> : Terme de recherche saisi par l’utilisateur.
-                </li>
-                <li style="margin-left: 30px;">• <strong>isSearching</strong> : Indique si une recherche est en cours.
-                </li>
-                <li style="margin-left: 30px;">• <strong>mapItems</strong> : Résultats de la recherche.</li>
-                <li style="margin-left: 30px;">• <strong>visibleRegion</strong> : Région visible sur la carte.</li>
-                <li style="margin-left: 30px;">• <strong>TextField</strong> : Champ de texte pour saisir le terme de
-                    recherche.</li>
-                <li style="margin-left: 30px;">• <strong>Button</strong> : Bouton pour lancer la recherche.</li>
-                <li style="margin-left: 30px;">• <strong>Map</strong> : Carte pour afficher les résultats.</li>
-                <li style="margin-left: 30px;">• <strong>Marker(item:)</strong> : Marqueur pour chaque résultat.</li>
-                <li style="margin-left: 30px;">• <strong>onMapCameraChange</strong> : Déclenché lors d’un changement de
-                    position sur la carte.</li>
-                <li style="margin-left: 30px;">• <strong>task(id:)</strong> : Exécute la recherche lorsqu’isSearching
-                    est
-                    vrai.</li>
-                <li style="margin-left: 30px;">• <strong>List</strong> : Liste pour afficher les résultats sous forme de
-                    texte.</li>
-            </ul>
-
-            <h2>Itinéraires avec MapKit</h2>
-            <p>MapKit permet de tracer des itinéraires entre deux points en utilisant le service de directions
-                (MKDirections).</p>
-
-            <pre><code class="swift">struct ContentView: View {
-    ...
-    
-    @State private var position: MapCameraPosition = .userLocation(fallback: .automatic)
-    @State private var route: MKRoute?
-    @StateObject private var locationManager = LocationManager()
-    @State private var selectedMapItem: MKMapItem?
-    
-    private func calculateDirections(from: MKMapItem, to: MKMapItem) async -> MKRoute {
-        let directionsRequest = MKDirections.Request()
-        directionsRequest.transportType = .automobile
-        directionsRequest.source = from
-        directionsRequest.destination = to
-        
-        let directions = MKDirections(request: directionsRequest)
-        let response = try! await directions.calculate()
-        
-        return response.routes.first!
-    }
-    
-    private func requestCalculateDirections() async {
-        route = nil
-        
-        if let selectedMapItem {
-            guard let currentUserLocation = locationManager.currentLocation else {
-                return
-            }
-            
-            let startingMapItem = MKMapItem(placemark: MKPlacemark(coordinate: 
-                CLLocationCoordinate2D(
-                    latitude: currentUserLocation.latitude, 
-                    longitude: currentUserLocation.longitude
-                )
-            ))
-            
-            self.route = await calculateDirections(from: startingMapItem, to: selectedMapItem)
-        }
-    }
-    
-    var body: some View {
-        ...
-        
-        Map(position: $position, selection: $selectedMapItem) {
-            ForEach(mapItems, id: \.self) { mapItem in
-                Marker(item: mapItem)
-            }
-            
-            if let route {
-                MapPolyline(route)
-                    .stroke(.blue, lineWidth: 5)
-            }
-            
-            UserAnnotation()
-        }
-        .onMapCameraChange { ... }
-        .task(id: isSearching) { ... }
-        .task(id: selectedMapItem) {
-            if let selectedMapItem {
-                await requestCalculateDirections()
-            }
-        }
-    }
-    
-    private func search() async { ... }
-    
-    private func performSearch(searchTerm: String, visibleRegion: MKCoordinateRegion) async throws -> [MKMapItem] { ... }
-}</code></pre>
-            <h4>Explication :</h4>
-            <ul>
-                <li style="margin-left: 30px;">• <strong>route</strong> : Itinéraire entre le point de départ et le
-                    point
-                    d’arrivée.</li>
-                <li style="margin-left: 30px;">• <strong>selectedMapItem</strong> : Point d’arrivée sélectionné par
-                    l’utilisateur.</li>
-                <li style="margin-left: 30px;">• <strong>calculateDirections(from:to:)</strong> : Méthode asynchrone
-                    pour
-                    calculer un itinéraire.</li>
-                <li style="margin-left: 30px;">• <strong>requestCalculateDirections()</strong> : Méthode asynchrone pour
-                    demander le calcul d’un itinéraire.</li>
-                <li style="margin-left: 30px;">• <strong>MapPolyline</strong> : Ligne pour afficher l’itinéraire sur la
-                    carte.</li>
-                <li style="margin-left: 30px;">• <strong>selection</strong> : Point d’arrivée sélectionné par
-                    l’utilisateur.</li>
-                <li style="margin-left: 30px;">• <strong>task(id:)</strong> : Exécute requestCalculateDirections()
-                    lorsque
-                    selectedMapItem est défini.</li>
-            </ul>
-
-            <h2>Tester l'application avec geolocalisation</h2>
-            <p>A la base l'emulateur n'a pas de gps d'integrer mais il est tout de meme posible de simuler une position.
-                Pour
-                cela, il faut sélectionner une position dans le menu <strong>Features > Location</strong> :</p>
-
-            <img src="../imgs/simulation-position.png" alt="Diagramme de la Stack Core Data"
-                style="width: 100%; max-width: 300px; margin: 20px auto; display: block;">
-
-            <h2>Géocodage et Géocodage Inverse</h2>
-            <p>Le géocodage est le processus de conversion d’une adresse (ex. : « 10 rue de Rivoli, Paris ») en
-                coordonnées géographiques (latitude et longitude). Inversement, le géocodage inverse transforme des
-                coordonnées (ex. : 48.8566, 2.3522) en adresse ou nom de lieu.</p>
-            <h3>Pourquoi est-ce utile ?</h3>
-            <ul>
-                <li style="margin-left: 30px;"> • <strong>Géocodage</strong> : Permet à l’utilisateur de saisir une
-                    adresse (ou un nom de lieu) et d’obtenir la position exacte sur une carte.</li>
-                <li style="margin-left: 30px;"> • <strong>Géocodage inverse</strong> : Affiche une adresse lisible à
-                    partir de la position GPS, par exemple pour donner plus de sens à des coordonnées.</li>
-            </ul>
-
-            <h3>CoreLocation</h3>
-            <p>Pour effectuer ces opérations, nous utilisons la classe <strong>CLGeocoder</strong> fournie par le
-                framework <strong>CoreLocation</strong>. Elle propose deux méthodes principales :</p>
-            <ol>
-                <li><strong>geocodeAddressString(_:)</strong> : Convertit une adresse en coordonnées.</li>
-                <li><strong>reverseGeocodeLocation(_:)</strong> : Convertit des coordonnées en adresse.</li>
-            </ol>
-            <pre><code class="swift">import CoreLocation</code></pre>
-
-            <h3>Vue d’exemple : Géocodage et Géocodage Inverse</h3>
-            <p>Ci-dessous, une vue SwiftUI nommée GeocodingView qui illustre pas à pas comment :</p>
-            <ol>
-                <li><strong>Demander une adresse</strong> pour obtenir ses coordonnées (géocodage).</li>
-                <li><strong>Saisir des coordonnées</strong> pour récupérer une adresse (géocodage inverse).</li>
-            </ol>
-            <pre><code class="swift">import SwiftUI
-import CoreLocation
-
-struct GeocodingView: View {
-    // État pour stocker l'adresse saisie
-    @State private var address: String = ""
-    
-    // État pour stocker les champs latitude et longitude
-    @State private var latitude: String = ""
-    @State private var longitude: String = ""
-    
-    // Résultats à afficher
-    @State private var geocodedCoordinates: String = "Coordonnées : -"
-    @State private var reverseGeocodedAddress: String = "Adresse : -"
-    
-    // Géocodeur de CoreLocation
-    let geocoder = CLGeocoder()
-    
-    var body: some View {
-        NavigationView {
-            VStack(spacing: 20) {
-                
-                // Section 1 : Géocodage (Adresse -> Coordonnées)
-                VStack {
-                    TextField("Entrez une adresse", text: $address)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .padding()
-                    
-                    Button("Obtenir les coordonnées") {
-                        geocodeAddress()
-                    }
-                    .buttonStyle(.borderedProminent)
-                    
-                    Text(geocodedCoordinates)
-                        .foregroundColor(.blue)
-                }
-                .padding()
-                .background(Color(.systemGray6))
-                .cornerRadius(10)
-                
-                // Section 2 : Géocodage inverse (Coordonnées -> Adresse)
-                VStack {
-                    TextField("Latitude", text: $latitude)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .keyboardType(.decimalPad)
-                    TextField("Longitude", text: $longitude)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .keyboardType(.decimalPad)
-                    
-                    Button("Obtenir l'adresse") {
-                        reverseGeocodeCoordinates()
-                    }
-                    .buttonStyle(.borderedProminent)
-                    
-                    Text(reverseGeocodedAddress)
-                        .foregroundColor(.blue)
-                }
-                .padding()
-                .background(Color(.systemGray6))
-                .cornerRadius(10)
-                
-                Spacer()
-            }
-            .padding()
-            .navigationTitle("Géocodage")
-        }
-    }
-    
-    // MARK: - Étape 1 : Géocodage (Adresse -> Coordonnées)
-    func geocodeAddress() {
-        // Vérifie que le champ 'address' n'est pas vide
-        guard !address.isEmpty else {
-            geocodedCoordinates = "Veuillez saisir une adresse"
-            return
-        }
-        
-        geocoder.geocodeAddressString(address) { (placemarks, error) in
-            if let error = error {
-                geocodedCoordinates = "Erreur : \(error.localizedDescription)"
-            } else if let location = placemarks?.first?.location {
-                let lat = location.coordinate.latitude
-                let lon = location.coordinate.longitude
-                geocodedCoordinates = "Coordonnées : \(lat), \(lon)"
-            } else {
-                geocodedCoordinates = "Aucune correspondance trouvée"
-            }
-        }
-    }
-    
-    // MARK: - Étape 2 : Géocodage inverse (Coordonnées -> Adresse)
-    func reverseGeocodeCoordinates() {
-        // Convertit les champs latitude et longitude en Double
-        guard let lat = Double(latitude), let lon = Double(longitude) else {
-            reverseGeocodedAddress = "Coordonnées invalides"
-            return
-        }
-        
-        let location = CLLocation(latitude: lat, longitude: lon)
-        geocoder.reverseGeocodeLocation(location) { (placemarks, error) in
-            if let error = error {
-                reverseGeocodedAddress = "Erreur : \(error.localizedDescription)"
-            } else if let placemark = placemarks?.first {
-                // Compose une adresse lisible
-                let name = placemark.name ?? ""
-                let locality = placemark.locality ?? ""
-                let country = placemark.country ?? ""
-                
-                reverseGeocodedAddress = "Adresse : \(name), \(locality), \(country)"
-            } else {
-                reverseGeocodedAddress = "Aucune adresse trouvée"
-            }
-        }
-    }
-}</code></pre>
-            <h4>Explication :</h4>
-            <ol>
-                <li><strong>@State private var address: String</strong> : Stocke l’adresse saisie par l’utilisateur pour
-                    le géocodage.</li>
-                <li><strong>@State private var latitude, longitude</strong> : Champs pour saisir des coordonnées lors du
-                    géocodage inverse.</li>
-                <li><strong>geocodedCoordinates, reverseGeocodedAddress</strong> : Variables pour afficher le résultat
-                    des opérations.</li>
-                <li><strong>CLGeocoder</strong> : Objet qui exécute les requêtes de géocodage et de géocodage inverse.
-                </li>
-                <li><strong>geocodeAddress()</strong> : <ul>
-                        <li style="margin-left: 30px;">• Vérifie que l’adresse n’est pas vide.</li>
-                        <li style="margin-left: 30px;">• Appelle geocodeAddressString pour convertir l’adresse en
-                            coordonnées.</li>
-                        <li style="margin-left: 30px;">• Met à jour geocodedCoordinates avec le résultat (ou un message
-                            d’erreur).</li>
-                    </ul>
-                </li>
-                <li><strong>reverseGeocodeCoordinates()</strong> : <ul>
-                        <li style="margin-left: 30px;">• Convertit les champs latitude/longitude en Double.</li>
-                        <li style="margin-left: 30px;">• Crée un CLLocation à partir de ces coordonnées.</li>
-                        <li style="margin-left: 30px;">• Appelle reverseGeocodeLocation pour obtenir l’adresse.</li>
-                        <li style="margin-left: 30px;">• Met à jour reverseGeocodedAddress avec l’adresse lisible.</li>
-                    </ul>
-                </li>
-            </ol>
-
-            <h2>Points Importants à Retenir</h2>
-            <ul>
-                <li style="margin-left: 30px;"> • <strong>Asynchrone</strong> : Les opérations de géocodage sont
-                    asynchrones, elles s’exécutent dans un bloc de rappel (closure).</li>
-                <li style="margin-left: 30px;"> • <strong>Limites</strong> : Le géocodage dépend d’une connexion réseau
-                    et peut échouer si l’adresse n’est pas reconnue.</li>
-                <li style="margin-left: 30px;"> • <strong>Internationalisation</strong> : Les noms de rues, villes,
-                    etc., varient selon la langue et le pays.</li>
-                <li style="margin-left: 30px;"> • <strong>Confidentialité</strong> : Si vous utilisez la localisation,
-                    assurez-vous de respecter les règles de confidentialité (Info.plist, autorisations).</li>
-            </ul>
-        </section>
+<span class="cm">// Pour plusieurs modèles :</span>
+.<span class="fn">modelContainer</span>(<span class="kw">for</span>: [<span class="ty">Product</span>.self, <span class="ty">Category</span>.self, <span class="ty">Order</span>.self])</pre>
     </div>
-</body>
-</section>
+
+    <h3 id="configuration">ModelConfiguration — Options avancées</h3>
+
+    <p>Si vous avez besoin de personnaliser le comportement du conteneur (stockage en mémoire,
+    lecture seule, emplacement personnalisé), utilisez <code>ModelConfiguration</code>.</p>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+        <span class="filename">Exemples ModelConfiguration</span>
+      </div>
+      <pre><span class="cm">// Stockage en mémoire (données perdues à la fermeture — utile pour les previews)</span>
+<span class="kw">let</span> config = <span class="ty">ModelConfiguration</span>(isStoredInMemoryOnly: <span class="kw">true</span>)
+<span class="kw">let</span> container = <span class="kw">try</span> <span class="ty">ModelContainer</span>(<span class="kw">for</span>: <span class="ty">Product</span>.self,
+                                    configurations: config)
+
+<span class="cm">// Emplacement personnalisé sur disque</span>
+<span class="kw">let</span> url    = <span class="ty">URL</span>.applicationSupportDirectory.<span class="fn">appending</span>(path: <span class="st">"myapp.store"</span>)
+<span class="kw">let</span> config = <span class="ty">ModelConfiguration</span>(url: url)
+
+<span class="cm">// Lecture seule (utile pour des données pré-chargées)</span>
+<span class="kw">let</span> config = <span class="ty">ModelConfiguration</span>(isReadOnly: <span class="kw">true</span>)</pre>
+    </div>
+
+    <div class="callout tip">
+      <div><strong>Previews Xcode :</strong> Utilisez <code>isStoredInMemoryOnly: true</code> dans vos
+      <code>#Preview</code> pour éviter de polluer la vraie base de données lors du développement.</div>
+    </div>
+
+    <!--  -->
+    <h2 id="context"><span class="sec-num">06</span> ModelContext — Travailler avec les données</h2>
+
+    <p>Le <code>ModelContext</code> est votre espace de travail au quotidien. Toutes les opérations
+    sur les données (créer, modifier, supprimer, sauvegarder) passent par lui.</p>
+
+    <div class="callout analogy">
+      <div><strong>Analogie :</strong> Le ModelContext, c'est comme un brouillon dans un traitement de
+      texte. Vous pouvez écrire, effacer, modifier librement — rien n'est enregistré sur disque tant
+      que vous n'avez pas cliqué <strong>Sauvegarder</strong>. Si vous fermez sans sauvegarder, vos
+      changements sont perdus.</div>
+    </div>
+
+    <p>Dans SwiftUI, on récupère le contexte depuis l'environnement :</p>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+        <span class="filename">ContentView.swift</span>
+      </div>
+      <pre><span class="kw">import</span> SwiftUI
+<span class="kw">import</span> SwiftData
+
+<span class="kw">struct</span> <span class="ty">ContentView</span>: <span class="ty">View</span> {
+
+    <span class="cm">//  ModelContext fourni automatiquement par le .modelContainer de l'App</span>
+    <span class="an">@Environment</span>(\.modelContext) <span class="kw">private var</span> context
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="ty">View</span> { ... }
+}</pre>
+    </div>
+
+    <h3 id="crud">Opérations CRUD</h3>
+
+    <div class="lifecycle">
+      <div class="lifecycle-steps">
+        <div class="lc-step">
+          <div class="lc-icon"></div>
+          <div class="lc-label">Insert</div>
+          <div class="lc-sub"><code>context.insert(obj)</code></div>
+        </div>
+        <div class="lc-step">
+          <div class="lc-icon"></div>
+          <div class="lc-label">Update</div>
+          <div class="lc-sub">Modifier les propriétés directement</div>
+        </div>
+        <div class="lc-step">
+          <div class="lc-icon"></div>
+          <div class="lc-label">Delete</div>
+          <div class="lc-sub"><code>context.delete(obj)</code></div>
+        </div>
+        <div class="lc-step">
+          <div class="lc-icon"></div>
+          <div class="lc-label">Save</div>
+          <div class="lc-sub"><code>try context.save()</code></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+        <span class="filename">Opérations CRUD complètes</span>
+      </div>
+      <pre><span class="cm">//  Créer et insérer </span>
+<span class="kw">let</span> product = <span class="ty">Product</span>(name: <span class="st">"Pomme"</span>, quantity: <span class="nu">12</span>, price: <span class="nu">1.99</span>)
+context.<span class="fn">insert</span>(product)
+<span class="kw">try</span>? context.<span class="fn">save</span>()
+
+<span class="cm">//  Modifier </span>
+<span class="cm">// Il suffit de modifier la propriété — @Model suit les changements automatiquement</span>
+product.quantity = <span class="nu">20</span>
+<span class="kw">try</span>? context.<span class="fn">save</span>()
+
+<span class="cm">//  Supprimer </span>
+context.<span class="fn">delete</span>(product)
+<span class="kw">try</span>? context.<span class="fn">save</span>()
+
+<span class="cm">//  Supprimer depuis une liste (avec .onDelete) </span>
+<span class="kw">private func</span> <span class="fn">deleteProducts</span>(at offsets: <span class="ty">IndexSet</span>) {
+    <span class="kw">for</span> index <span class="kw">in</span> offsets {
+        context.<span class="fn">delete</span>(products[index])
+    }
+    <span class="kw">try</span>? context.<span class="fn">save</span>()
+}</pre>
+    </div>
+
+    <div class="callout warn">
+      <span class="callout-icon"></span>
+      <div><strong>Modifier sans insert :</strong> Si vous modifiez une propriété d'un objet
+      <em>déjà persisté</em>, vous n'avez <strong>pas</strong> besoin de rappeler <code>insert</code>.
+      SwiftData suit les changements automatiquement. Il suffit d'appeler <code>save()</code>.</div>
+    </div>
+
+    <h3 id="autosave">Autosave — Sauvegarde automatique</h3>
+
+    <p>Par défaut, SwiftData active l'<strong>autosave</strong> : le contexte se sauvegarde
+    automatiquement lorsque l'application passe en arrière-plan ou lors d'événements système.
+    Dans la plupart des cas, vous n'avez donc pas besoin d'appeler <code>save()</code> manuellement.</p>
+
+    <div class="explain-grid">
+      <div class="eg-key">Autosave ON (défaut)</div>
+      <div class="eg-val">Le système sauvegarde périodiquement et lors du passage en arrière-plan. Recommandé pour la majorité des applications.</div>
+      <div class="eg-key">Autosave OFF</div>
+      <div class="eg-val">Désactivé via <code>.modelContainer(for:isAutosaveEnabled: false)</code>. Utile si vous gérez des transactions complexes ou des annulations.</div>
+      <div class="eg-key">Contextes manuels</div>
+      <div class="eg-val">Les contextes créés manuellement (<code>ModelContext(container)</code>) n'ont <strong>pas</strong> d'autosave — il faut appeler <code>save()</code> explicitement.</div>
+    </div>
+
+    <!--  -->
+    <h2 id="query"><span class="sec-num">07</span> @Query — Lire les données dans SwiftUI</h2>
+
+    <p><code>@Query</code> est le macro SwiftUI de SwiftData pour lire des données depuis la base.
+    Il remplace <code>@FetchRequest</code> de Core Data. La vue se met à jour automatiquement
+    dès qu'un changement est détecté.</p>
+
+    <div class="callout analogy">
+      <div><strong>Analogie :</strong> <code>@Query</code>, c'est comme un fil RSS en direct.
+      Vous vous abonnez une fois, et chaque fois que quelque chose change dans la base,
+      votre vue reçoit la mise à jour automatiquement — sans action de votre part.</div>
+    </div>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+        <span class="filename">ContentView.swift</span>
+      </div>
+      <pre><span class="kw">struct</span> <span class="ty">ContentView</span>: <span class="ty">View</span> {
+
+    <span class="cm">// Récupère tous les produits, sans tri</span>
+    <span class="an">@Query</span> <span class="kw">var</span> products: [<span class="ty">Product</span>]
+
+    <span class="cm">// Trié alphabétiquement par nom (A → Z)</span>
+    <span class="an">@Query</span>(sort: \.name) <span class="kw">var</span> products: [<span class="ty">Product</span>]
+
+    <span class="cm">// Trié par date d'ajout, ordre décroissant (plus récent en premier)</span>
+    <span class="an">@Query</span>(sort: \.addedAt, order: .reverse) <span class="kw">var</span> products: [<span class="ty">Product</span>]
+
+    <span class="cm">// Trié par plusieurs critères</span>
+    <span class="an">@Query</span>(sort: [
+        <span class="ty">SortDescriptor</span>(\.name),
+        <span class="ty">SortDescriptor</span>(\.addedAt, order: .reverse)
+    ]) <span class="kw">var</span> products: [<span class="ty">Product</span>]
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="ty">View</span> {
+        <span class="ty">List</span>(products) { product <span class="kw">in</span>
+            <span class="ty">Text</span>(product.name)
+        }
+    }
+}</pre>
+    </div>
+
+    <div class="explain-grid">
+      <div class="eg-key">@Query var products: [Product]</div>
+      <div class="eg-val">Lit <em>tous</em> les objets Product depuis la base. Se met à jour automatiquement quand un produit est ajouté, modifié ou supprimé.</div>
+      <div class="eg-key">sort: \.name</div>
+      <div class="eg-val">Tri par keypath Swift — vérifié à la compilation. Bien plus sûr que les strings de Core Data.</div>
+      <div class="eg-key">order: .reverse</div>
+      <div class="eg-val">Inverse l'ordre de tri. Par défaut l'ordre est croissant (<code>.forward</code>).</div>
+    </div>
+
+    <div class="callout tip">
+      <div><strong>@Query vs Core Data @FetchRequest :</strong> <code>@Query</code> utilise un tableau
+      Swift natif (<code>[Product]</code>) plutôt que <code>FetchedResults&lt;Product&gt;</code>.
+      C'est plus simple à manipuler et compatible avec toutes les APIs Swift standard.</div>
+    </div>
+
+    <!--  -->
+    <h2 id="predicate"><span class="sec-num">08</span> #Predicate &amp; FetchDescriptor — Filtrer</h2>
+
+    <p>Pour filtrer les résultats, SwiftData utilise <code>#Predicate</code> — une version moderne
+    et <strong>type-safe</strong> de <code>NSPredicate</code>. La syntaxe est du Swift pur,
+    vérifiée à la compilation grâce aux macros.</p>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+        <span class="filename">Exemples #Predicate</span>
+      </div>
+      <pre><span class="cm">// Produits dont le nom contient "pomme" (insensible à la casse)</span>
+<span class="kw">let</span> searchText = <span class="st">"pomme"</span>
+<span class="kw">let</span> pred = <span class="an">#Predicate</span>&lt;<span class="ty">Product</span>&gt; {
+    $0.name.<span class="fn">localizedStandardContains</span>(searchText)
+}
+
+<span class="cm">// Produits dont la quantité est supérieure à 10</span>
+<span class="kw">let</span> pred = <span class="an">#Predicate</span>&lt;<span class="ty">Product</span>&gt; { $0.quantity > <span class="nu">10</span> }
+
+<span class="cm">// Combinaison de critères</span>
+<span class="kw">let</span> minQty = <span class="nu">5</span>
+<span class="kw">let</span> pred = <span class="an">#Predicate</span>&lt;<span class="ty">Product</span>&gt; {
+    $0.name.<span class="fn">localizedStandardContains</span>(searchText) && $0.quantity > minQty
+}</pre>
+    </div>
+
+    <div class="callout new">
+      <div><strong>Type-safe :</strong> Contrairement à <code>NSPredicate</code> qui accepte des chaînes
+      comme <code>"name CONTAINS[cd] %@"</code>, <code>#Predicate</code> est vérifié à la compilation.
+      Si vous faites une faute de frappe ou changez le nom d'une propriété, Xcode vous le signale
+      immédiatement — impossible d'avoir un crash en production pour une faute dans une string.</div>
+    </div>
+
+    <h3>Utiliser #Predicate avec @Query</h3>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+        <span class="filename">ContentView.swift</span>
+      </div>
+      <pre><span class="kw">struct</span> <span class="ty">ContentView</span>: <span class="ty">View</span> {
+    <span class="an">@State</span> <span class="kw">private var</span> searchText = <span class="st">""</span>
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="ty">View</span> {
+        <span class="ty">FilteredProductsView</span>(search: searchText)
+    }
+}
+
+<span class="cm">//  @Query ne peut pas utiliser des variables de la vue directement.</span>
+<span class="cm">// On crée une sous-vue qui reçoit la valeur et initialise @Query dans son init.</span>
+<span class="kw">struct</span> <span class="ty">FilteredProductsView</span>: <span class="ty">View</span> {
+    <span class="an">@Query</span> <span class="kw">private var</span> products: [<span class="ty">Product</span>]
+
+    <span class="kw">init</span>(search: <span class="ty">String</span>) {
+        <span class="kw">let</span> predicate = <span class="an">#Predicate</span>&lt;<span class="ty">Product</span>&gt; {
+            search.<span class="fn">isEmpty</span> || $0.name.<span class="fn">localizedStandardContains</span>(search)
+        }
+        _products = <span class="ty">Query</span>(filter: predicate, sort: \.name)
+    }
+
+    <span class="kw">var</span> body: <span class="kw">some</span> <span class="ty">View</span> {
+        <span class="ty">List</span>(products) { product <span class="kw">in</span>
+            <span class="ty">Text</span>(product.name)
+        }
+    }
+}</pre>
+    </div>
+
+    <div class="callout warn">
+      <span class="callout-icon"></span>
+      <div><strong>Limitation @Query :</strong> <code>@Query</code> ne peut pas capturer directement
+      des variables <code>@State</code> de la vue parente. La solution standard est de créer une
+      sous-vue qui reçoit la valeur et initialise <code>@Query</code> dans son <code>init()</code>,
+      comme montré ci-dessus.</div>
+    </div>
+
+    <h3>Requête ponctuelle avec FetchDescriptor</h3>
+
+    <p>Pour les cas où vous ne voulez pas de mise à jour automatique (par exemple dans une fonction
+    de recherche ou un traitement en arrière-plan), utilisez <code>FetchDescriptor</code> avec
+    <code>context.fetch()</code>.</p>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+        <span class="filename">Requête ponctuelle</span>
+      </div>
+      <pre><span class="kw">let</span> predicate   = <span class="an">#Predicate</span>&lt;<span class="ty">Product</span>&gt; { $0.quantity > <span class="nu">0</span> }
+<span class="kw">var</span> descriptor  = <span class="ty">FetchDescriptor</span>&lt;<span class="ty">Product</span>&gt;(
+    predicate:  predicate,
+    sortBy:    [<span class="ty">SortDescriptor</span>(\.name)]
+)
+descriptor.fetchLimit = <span class="nu">20</span>   <span class="cm">// Limiter le nombre de résultats</span>
+
+<span class="kw">let</span> results = <span class="kw">try</span>? context.<span class="fn">fetch</span>(descriptor)</pre>
+    </div>
+
+    <!--  -->
+    <h2 id="relationship"><span class="sec-num">09</span> @Relationship — Relations entre modèles</h2>
+
+    <p>Le macro <code>@Relationship</code> définit des liens entre deux modèles. SwiftData gère
+    automatiquement la cohérence des données dans les deux sens.</p>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+        <span class="filename">Exemple — Category + Product</span>
+      </div>
+      <pre><span class="an">@Model</span>
+<span class="kw">final class</span> <span class="ty">Category</span> {
+    <span class="kw">var</span> name: <span class="ty">String</span>
+
+    <span class="cm">// Une catégorie contient plusieurs produits (one-to-many)</span>
+    <span class="cm">// deleteRule: .cascade → supprimer la catégorie supprime aussi ses produits</span>
+    <span class="an">@Relationship</span>(deleteRule: .cascade) <span class="kw">var</span> products: [<span class="ty">Product</span>] = []
+
+    <span class="kw">init</span>(name: <span class="ty">String</span>) { self.name = name }
+}
+
+<span class="an">@Model</span>
+<span class="kw">final class</span> <span class="ty">Product</span> {
+    <span class="kw">var</span> name:     <span class="ty">String</span>
+    <span class="kw">var</span> quantity: <span class="ty">Int</span>
+
+    <span class="cm">// Relation inverse — un produit appartient à une catégorie</span>
+    <span class="kw">var</span> category: <span class="ty">Category</span>?
+
+    <span class="kw">init</span>(name: <span class="ty">String</span>, quantity: <span class="ty">Int</span>) {
+        self.name     = name
+        self.quantity = quantity
+    }
+}
+
+<span class="cm">// Utilisation :</span>
+<span class="kw">let</span> cat = <span class="ty">Category</span>(name: <span class="st">"Fruits"</span>)
+<span class="kw">let</span> p   = <span class="ty">Product</span>(name: <span class="st">"Pomme"</span>, quantity: <span class="nu">10</span>)
+cat.products.<span class="fn">append</span>(p)
+context.<span class="fn">insert</span>(cat)
+<span class="kw">try</span>? context.<span class="fn">save</span>()</pre>
+    </div>
+
+    <p>La règle de suppression (<code>deleteRule</code>) détermine ce qui arrive aux objets liés
+    quand l'objet parent est supprimé :</p>
+
+    <table class="rules-table">
+      <thead>
+        <tr>
+          <th>Règle</th>
+          <th>Comportement</th>
+          <th>Cas d'usage typique</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="rule-badge">.cascade</span></td>
+          <td>Supprime tous les objets liés automatiquement</td>
+          <td>Commandes liées à un client — si le client est supprimé, les commandes aussi</td>
+        </tr>
+        <tr>
+          <td><span class="rule-badge">.nullify</span></td>
+          <td>Met la référence à <code>nil</code> dans les objets liés</td>
+          <td>Produits liés à une catégorie — si la catégorie est supprimée, les produits restent mais sans catégorie</td>
+        </tr>
+        <tr>
+          <td><span class="rule-badge">.deny</span></td>
+          <td>Empêche la suppression si des objets liés existent encore</td>
+          <td>Compte bancaire avec des transactions — impossible de supprimer le compte tant qu'il y a des transactions</td>
+        </tr>
+        <tr>
+          <td><span class="rule-badge">.noAction</span></td>
+          <td>Ne fait rien — les références restent en place</td>
+          <td>Rarement utilisé. À éviter si possible (peut laisser des références orphelines).</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Lab CTA -->
+    <a href="../exercices/ex_m11.html" class="lab-cta" id="lab">
+      <div class="lab-text">
+        <h3> Passer au laboratoire</h3>
+        <p>Créer une application SwiftData de A à Z avec SwiftUI</p>
+      </div>
+      <span class="lab-arrow">→</span>
+    </a>
+
+  </main>
+
+  <!--  Footer  -->
+  <footer class="page-footer">
+    Développé par <a href="https://github.com/mathrob">Mathieu Robson</a> ·
+    IFM025921 Développement d'applications mobiles pour iOS &nbsp;©
+  </footer>
+
 </div>
 
-<footer class="footer">
-    <p>Développé par <a href="https://github.com/mathrob" style="color: white; text-decoration: underline;">Mathieu
-            Robson</a> &copy; <span id="current-year"></span></p>
-    <script>
-        document.getElementById("current-year").textContent =
-            new Date().getFullYear();
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
-    <script>
-        hljs.highlightAll();
-    </script>
-</footer>
-<div class="back-to-top" id="back-to-top">↑</div>
+<!-- ── TOC toggle mobile ───────────────────────────────────── -->
 <script>
-    const backToTopButton = document.getElementById("back-to-top");
-
-    window.addEventListener("scroll", () => {
-        if (window.scrollY > 300) {
-            backToTopButton.style.display = "block";
-        } else {
-            backToTopButton.style.display = "none";
-        }
+  document.querySelector('.toc-toggle')?.addEventListener('click', function() {
+    const toc = document.querySelector('.toc');
+    const open = toc.classList.toggle('open');
+    this.setAttribute('aria-expanded', open);
+  });
+  document.querySelectorAll('.toc a').forEach(a => {
+    a.addEventListener('click', () => {
+      document.querySelector('.toc')?.classList.remove('open');
+      const btn = document.querySelector('.toc-toggle');
+      if (btn) { btn.setAttribute('aria-expanded', 'false'); }
     });
+  });
+</script>
 
-    backToTopButton.addEventListener("click", () => {
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth",
-        });
+<!-- ── TOC highlight on scroll ──────────────────────────────── -->
+<script>
+  const links = document.querySelectorAll('.toc a');
+  const ids = [...links].map(a => a.getAttribute('href').slice(1));
+  const sections = ids.map(id => document.getElementById(id)).filter(Boolean);
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(a => a.classList.remove('active'));
+        const a = document.querySelector(`.toc a[href="#${e.target.id}"]`);
+        if (a) a.classList.add('active');
+      }
     });
+  }, { rootMargin: '-15% 0px -70% 0px' });
+  sections.forEach(s => obs.observe(s));
 </script>
 </body>
-
 </html>
